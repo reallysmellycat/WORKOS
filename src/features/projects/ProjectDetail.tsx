@@ -38,6 +38,7 @@ import {
   Input,
   Loading,
   Menu,
+  Modal,
   Page,
   Progress,
   Ring,
@@ -67,6 +68,7 @@ export default function ProjectDetail() {
   const [tab, setTab] = useState<Tab>('overview');
   const [newTitle, setNewTitle] = useState('');
   const [showDone, setShowDone] = useState(false);
+  const [tplName, setTplName] = useState<string | null>(null);
 
   const related = useLiveQuery(async () => {
     if (!id) return null;
@@ -119,11 +121,12 @@ export default function ProjectDetail() {
     navigate('/projects');
   };
 
-  const asTemplate = async () => {
-    const name = window.prompt('Template name', `${draft.title} template`);
-    if (!name) return;
-    await saveProjectAsTemplate(draft, tasks, name);
-    toast('Saved as a custom template');
+  const asTemplate = () => setTplName(`${draft.title} template`);
+  const saveTemplate = async () => {
+    if (!tplName?.trim()) return;
+    await saveProjectAsTemplate(draft, tasks, tplName.trim());
+    setTplName(null);
+    toast('Saved as a custom template — find it in Quick add → Project');
   };
 
   const newNote = async () => {
@@ -424,6 +427,25 @@ export default function ProjectDetail() {
           </Button>
         </aside>
       </div>
+      <Modal
+        open={tplName !== null}
+        onClose={() => setTplName(null)}
+        title="Save as template"
+        description="Milestones and tasks are saved with dates relative to the project start."
+        width="max-w-md"
+        footer={
+          <>
+            <Button variant="ghost" onClick={() => setTplName(null)}>
+              Cancel
+            </Button>
+            <Button variant="primary" onClick={saveTemplate} disabled={!tplName?.trim()}>
+              Save template
+            </Button>
+          </>
+        }
+      >
+        <Input autoFocus value={tplName ?? ''} onChange={(e) => setTplName(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && saveTemplate()} />
+      </Modal>
     </Page>
   );
 }
