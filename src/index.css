@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------- Design tokens ----------
+   Light: warm cream paper, charcoal ink, sage accent.
+   Dark: deep warm charcoal, softened ink, muted green accent.
+   Values are space-separated RGB so Tailwind can apply alpha. */
+:root {
+  --bg: 246 243 236;
+  --surface: 251 249 245;
+  --raised: 255 254 251;
+  --sunken: 239 235 226;
+  --line: 229 223 211;
+  --line-strong: 212 204 189;
+  --fg: 38 38 35;
+  --muted: 108 106 98;
+  --faint: 155 151 140;
+  --accent: 99 128 98;
+  --accent-fg: 255 255 255;
+  --accent-soft: 225 233 220;
+  --danger: 184 74 62;
+  --warn: 184 132 52;
+  --info: 82 118 150;
+  --ok: 86 138 96;
+  --shadow: 60 50 30;
+  color-scheme: light;
+}
+:root[data-accent='clay'] { --accent: 168 104 78; --accent-soft: 242 226 216; }
+:root[data-accent='slate'] { --accent: 84 110 138; --accent-soft: 222 230 238; }
+:root[data-accent='ochre'] { --accent: 160 124 52; --accent-soft: 241 232 208; }
+:root[data-accent='plum'] { --accent: 126 92 118; --accent-soft: 236 224 232; }
+:root[data-accent='ink'] { --accent: 52 56 54; --accent-soft: 228 226 220; }
+
+.dark {
+  --bg: 24 25 23;
+  --surface: 30 31 29;
+  --raised: 37 38 35;
+  --sunken: 20 21 19;
+  --line: 47 48 45;
+  --line-strong: 64 66 61;
+  --fg: 232 230 224;
+  --muted: 160 158 150;
+  --faint: 112 111 105;
+  --accent: 140 172 136;
+  --accent-fg: 20 24 20;
+  --accent-soft: 44 54 43;
+  --danger: 222 120 104;
+  --warn: 214 170 96;
+  --info: 128 164 196;
+  --ok: 132 180 138;
+  --shadow: 0 0 0;
+  color-scheme: dark;
+}
+.dark[data-accent='clay'] { --accent: 206 146 118; --accent-soft: 62 46 39; }
+.dark[data-accent='slate'] { --accent: 136 164 194; --accent-soft: 40 50 62; }
+.dark[data-accent='ochre'] { --accent: 206 172 102; --accent-soft: 60 52 34; }
+.dark[data-accent='plum'] { --accent: 186 150 176; --accent-soft: 56 44 54; }
+.dark[data-accent='ink'] { --accent: 214 212 204; --accent-soft: 52 52 50; }
+
+@layer base {
+  html, body, #root { height: 100%; }
+  body {
+    @apply bg-bg text-fg font-sans antialiased;
+    font-size: 14px;
+    font-feature-settings: 'cv11', 'ss01', 'ss03';
+    -webkit-tap-highlight-color: transparent;
+  }
+  ::selection { background: rgb(var(--accent) / 0.22); }
+  *:focus-visible { outline: 2px solid rgb(var(--accent) / 0.55); outline-offset: 1px; border-radius: 4px; }
+  input, textarea, select, button { font: inherit; color: inherit; }
+  input[type='date'], input[type='datetime-local'], input[type='time'] { color-scheme: inherit; }
+  .dark input[type='date']::-webkit-calendar-picker-indicator,
+  .dark input[type='time']::-webkit-calendar-picker-indicator,
+  .dark input[type='datetime-local']::-webkit-calendar-picker-indicator { filter: invert(0.8); }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--line-strong)); border-radius: 10px; border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+@layer components {
+  .card { @apply bg-surface border border-line rounded-lg; }
+  .glass { background: rgb(var(--raised) / 0.78); backdrop-filter: saturate(160%) blur(14px); -webkit-backdrop-filter: saturate(160%) blur(14px); }
+  .field {
+    @apply w-full bg-raised border border-line rounded-md px-2.5 py-1.5 text-[13px] placeholder:text-faint transition-colors;
+    @apply hover:border-line-strong focus:border-accent/60 focus:outline-none focus:ring-2 focus:ring-accent/15;
+  }
+  .label { @apply block text-2xs font-medium uppercase tracking-[0.06em] text-muted mb-1; }
+  .section-title { @apply text-2xs font-semibold uppercase tracking-[0.08em] text-faint; }
+  .row-hover { @apply hover:bg-sunken/60 transition-colors; }
+}
+
+/* ---------- Markdown prose ---------- */
+.prose-os { line-height: 1.65; font-size: 14.5px; }
+.prose-os > * + * { margin-top: 0.75em; }
+.prose-os h1 { font-family: theme('fontFamily.serif'); font-size: 1.75em; font-weight: 500; line-height: 1.2; letter-spacing: -0.01em; margin-top: 1.2em; }
+.prose-os h2 { font-family: theme('fontFamily.serif'); font-size: 1.35em; font-weight: 500; margin-top: 1.4em; }
+.prose-os h3 { font-size: 1.05em; font-weight: 600; margin-top: 1.2em; }
+.prose-os h1:first-child, .prose-os h2:first-child, .prose-os h3:first-child { margin-top: 0; }
+.prose-os ul { list-style: disc; padding-left: 1.4em; }
+.prose-os ol { list-style: decimal; padding-left: 1.4em; }
+.prose-os li + li { margin-top: 0.2em; }
+.prose-os li:has(> input[type='checkbox']) { list-style: none; margin-left: -1.3em; }
+.prose-os input[type='checkbox'] { margin-right: 0.45em; accent-color: rgb(var(--accent)); transform: translateY(1px); }
+.prose-os a { color: rgb(var(--accent)); text-decoration: underline; text-underline-offset: 2px; text-decoration-color: rgb(var(--accent) / 0.35); }
+.prose-os a.wikilink { text-decoration-style: dotted; }
+.prose-os a.wikilink.missing { color: rgb(var(--faint)); }
+.prose-os blockquote { border-left: 2px solid rgb(var(--line-strong)); padding-left: 1em; color: rgb(var(--muted)); font-style: italic; }
+.prose-os code { font-family: theme('fontFamily.mono'); font-size: 0.86em; background: rgb(var(--sunken)); padding: 0.1em 0.35em; border-radius: 4px; }
+.prose-os pre { background: rgb(var(--sunken)); padding: 0.9em 1em; border-radius: 8px; overflow-x: auto; }
+.prose-os pre code { background: none; padding: 0; }
+.prose-os hr { border: 0; border-top: 1px solid rgb(var(--line)); margin: 1.6em 0; }
+.prose-os img { max-width: 100%; border-radius: 8px; border: 1px solid rgb(var(--line)); }
+.prose-os table { width: 100%; border-collapse: collapse; font-size: 0.92em; }
+.prose-os th, .prose-os td { border-bottom: 1px solid rgb(var(--line)); padding: 0.45em 0.6em; text-align: left; }
+.prose-os th { font-weight: 600; }
+
+/* ---------- Recharts polish ---------- */
+.recharts-cartesian-grid line { stroke: rgb(var(--line)); }
+.recharts-text { fill: rgb(var(--faint)); font-size: 11px; }
+.recharts-tooltip-cursor { fill: rgb(var(--sunken) / 0.6); }
+
+/* ---------- Print (document export to PDF) ---------- */
+@media print {
+  body * { visibility: hidden; }
+  .print-area, .print-area * { visibility: visible; }
+  .print-area { position: absolute; inset: 0; padding: 0; color: #111; background: #fff; }
+  @page { margin: 18mm; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+}
