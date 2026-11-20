@@ -81,7 +81,9 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
     return out;
   }, [hits, q, navigate, quickAdd, openEntity]);
 
-  useEffect(() => setActive(0), [q]);
+  useEffect(() => {
+    setActive(0);
+  }, [q]);
   useEffect(() => {
     list.current?.querySelector(`[data-idx="${active}"]`)?.scrollIntoView({ block: 'nearest' });
   }, [active]);

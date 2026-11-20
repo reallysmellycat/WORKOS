@@ -93,7 +93,7 @@ export function FeedbackProvider({ children }: { children: ReactNode }) {
         )}
       </Modal>
       {createPortal(
-        <div className="fixed bottom-4 right-4 z-[60] flex flex-col gap-2 w-[min(360px,calc(100vw-2rem))]" aria-live="polite">
+        <div className="fixed bottom-[76px] right-4 z-[60] flex flex-col gap-2 w-[min(360px,calc(100vw-2rem))] min-[901px]:bottom-4" aria-live="polite">
           {toasts.map((t) => (
             <div key={t.id} className="flex items-center gap-2.5 rounded-lg border border-line bg-raised px-3 py-2.5 shadow-pop animate-in text-[13px]">
               {t.tone === 'ok' ? <CheckCircle2 className="h-4 w-4 text-ok shrink-0" /> : t.tone === 'error' ? <AlertTriangle className="h-4 w-4 text-danger shrink-0" /> : <Info className="h-4 w-4 text-info shrink-0" />}

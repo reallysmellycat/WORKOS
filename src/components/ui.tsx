@@ -96,7 +96,9 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaHTMLAttributes<H
       el.style.height = 'auto';
       el.style.height = el.scrollHeight + 2 + 'px';
     };
-    useEffect(() => grow(inner.current));
+    useEffect(() => {
+      grow(inner.current);
+    });
     return (
       <textarea
         ref={(el) => {

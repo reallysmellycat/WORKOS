@@ -16,7 +16,7 @@ import { ChevronLeft, ChevronRight, Plus } from 'lucide-react';
 import { useApp } from '@/app/context';
 import { update } from '@/lib/repo';
 import type { CalEvent, ContentItem, Task } from '@/lib/types';
-import { cn, toISODate, todayISO } from '@/lib/utils';
+import { safeGet, cn, toISODate, todayISO } from '@/lib/utils';
 import { Button, IconButton, Page, Tabs } from '@/components/ui';
 import { FILTER_GROUPS, SOURCE_STYLE, sourceColor, useCalendarItems, type CalItem, type CalSource } from './calendarData';
 
@@ -27,12 +27,18 @@ const HOUR_PX = 48;
 export default function CalendarPage() {
   const { settings, openEntity, openEvent } = useApp();
   const [params, setParams] = useSearchParams();
-  const [view, setView] = useState<View>(() => (localStorage.getItem('workos-cal-view') as View) || 'month');
+  const [view, setView] = useState<View>(() => (safeGet('workos-cal-view') as View) || 'month');
   const [cursor, setCursor] = useState(new Date());
   const [hidden, setHidden] = useState<Set<string>>(new Set());
   const weekOpts = { weekStartsOn: settings.weekStartsOn };
 
-  useEffect(() => localStorage.setItem('workos-cal-view', view), [view]);
+  useEffect(() => {
+    try {
+      localStorage.setItem('workos-cal-view', view);
+    } catch {
+      /* storage unavailable */
+    }
+  }, [view]);
   useEffect(() => {
     const ev = params.get('event');
     if (ev) {

@@ -193,7 +193,9 @@ function List({ items, empty }: { items: { key: string; text: string; sub?: stri
 function Reflection({ month }: { month: string }) {
   const row = useLiveQuery(async () => (await db.reviews.where('month').equals(month).first()) ?? null, [month]);
   const [draft, setDraft] = useState<Partial<MonthlyReview> | null>(null);
-  useEffect(() => setDraft(null), [month]);
+  useEffect(() => {
+    setDraft(null);
+  }, [month]);
   useEffect(() => {
     if (row !== undefined && draft === null) setDraft(row ?? { month });
   }, [row, draft, month]);

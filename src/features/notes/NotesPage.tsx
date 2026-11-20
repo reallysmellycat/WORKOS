@@ -6,7 +6,7 @@ import { db } from '@/lib/db';
 import { useDraft, useFolders, useMediaQuery, useNotes } from '@/lib/hooks';
 import { create, softDelete } from '@/lib/repo';
 import type { Folder, Note, NoteKind } from '@/lib/types';
-import { cn, downloadText, excerpt, fmtTs, slugify, timeAgo, wordCount } from '@/lib/utils';
+import { cn, safeGet, downloadText, excerpt, fmtTs, slugify, timeAgo, wordCount } from '@/lib/utils';
 import { DemoBadge, Empty, Field, IconButton, Input, Loading, Menu, SavedIndicator, Select } from '@/components/ui';
 import { Attachments, RefsEditor, TagInput } from '@/components/pickers';
 import { MarkdownEditor } from '@/components/Markdown';
@@ -149,7 +149,7 @@ function NoteEditor({ id, folders, onBack }: { id: string; folders: Folder[]; on
   const { settings } = useApp();
   const { confirm, toast } = useFeedback();
   const navigate = useNavigate();
-  const [side, setSide] = useState(() => localStorage.getItem('workos-note-side') !== '0');
+  const [side, setSide] = useState(() => safeGet('workos-note-side') !== '0');
 
   const backlinks = useLiveQuery(async () => {
     if (!draft) return [];
@@ -172,7 +172,11 @@ function NoteEditor({ id, folders, onBack }: { id: string; folders: Folder[]; on
 
   const toggleSide = () => {
     setSide((s) => {
-      localStorage.setItem('workos-note-side', s ? '0' : '1');
+      try {
+        localStorage.setItem('workos-note-side', s ? '0' : '1');
+      } catch {
+        /* storage unavailable */
+      }
       return !s;
     });
   };

@@ -155,3 +155,12 @@ export function groupBy<T, K extends string>(arr: T[], key: (t: T) => K): Record
 }
 
 export const alive = <T extends { deletedAt?: number | null }>(r: T) => !r.deletedAt;
+
+/** localStorage read that never throws (private mode, blocked storage). */
+export function safeGet(key: string): string | null {
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
+}

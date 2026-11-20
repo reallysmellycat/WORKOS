@@ -45,7 +45,9 @@ export function Layout({ settings, children }: { settings: Settings; children: R
 
   const notifications = useNotifications(settings);
 
-  useEffect(() => setMobileOpen(false), [location.pathname]);
+  useEffect(() => {
+    setMobileOpen(false);
+  }, [location.pathname]);
 
   useEffect(() => {
     pushBrowserNotifications(notifications, settings);

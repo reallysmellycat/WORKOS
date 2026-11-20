@@ -12,7 +12,7 @@ export function UpdatePrompt() {
 
   if (!needRefresh && !offlineReady) return null;
   return (
-    <div className="fixed bottom-4 left-4 z-[60] flex max-w-sm items-center gap-3 rounded-lg border border-line bg-raised px-3 py-2.5 text-[13px] shadow-pop animate-in">
+    <div className="fixed bottom-[76px] left-4 right-4 z-[60] flex max-w-sm sm:bottom-4 sm:right-auto items-center gap-3 rounded-lg border border-line bg-raised px-3 py-2.5 text-[13px] shadow-pop animate-in">
       {needRefresh ? <RefreshCw className="h-4 w-4 text-accent" /> : <WifiOff className="h-4 w-4 text-accent" />}
       <span className="flex-1">{needRefresh ? 'A new version of Work OS is available.' : 'Work OS is ready to use offline.'}</span>
       {needRefresh && (

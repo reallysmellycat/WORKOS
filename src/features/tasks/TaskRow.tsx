@@ -82,7 +82,11 @@ export const TaskRow = memo(function TaskRow({
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className={cn('truncate text-[13.5px]', done && 'text-faint line-through decoration-faint/60')}>{task.title}</span>
-          {task.isDemo && <DemoBadge />}
+          {task.isDemo && (
+            <span className="hidden sm:inline">
+              <DemoBadge />
+            </span>
+          )}
         </div>
         {!compact && (task.description || (showProject && project)) && (
           <div className="mt-0.5 flex items-center gap-2 text-xs text-faint">
@@ -117,7 +121,7 @@ export const TaskRow = memo(function TaskRow({
         )}
         <DueLabel date={task.dueDate} done={done} />
         {(task.priority === 'urgent' || task.priority === 'high') && !done && (
-          <span className={cn('text-2xs font-semibold uppercase tracking-wide', task.priority === 'urgent' ? 'text-danger' : 'text-warn')}>{pm.label}</span>
+          <span className={cn('hidden text-2xs font-semibold uppercase tracking-wide sm:inline', task.priority === 'urgent' ? 'text-danger' : 'text-warn')}>{pm.label}</span>
         )}
         {isOverdue(task) && <span className="sr-only">Overdue</span>}
       </div>

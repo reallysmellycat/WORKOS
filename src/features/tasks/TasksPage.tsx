@@ -5,7 +5,7 @@ import { useProjects, useTasks, useById } from '@/lib/hooks';
 import { isBlocked, isOverdue, PRIORITIES, priorityMeta, sortByScore, TASK_STATUSES } from '@/lib/domain';
 import { newTask, restore, setTaskStatus, softDelete, update } from '@/lib/repo';
 import type { Priority, Task, TaskStatus } from '@/lib/types';
-import { cn, daysUntil, todayISO } from '@/lib/utils';
+import { safeGet, cn, daysUntil, todayISO } from '@/lib/utils';
 import { Badge, Button, Empty, Input, Loading, Page, PageHeader, Select, Tabs } from '@/components/ui';
 import { useFeedback } from '@/components/feedback';
 import { useApp } from '@/app/context';
@@ -25,7 +25,7 @@ export default function TasksPage() {
   const { openTask } = useApp();
   const { toast, confirm } = useFeedback();
 
-  const [view, setView] = useState<View>(() => (localStorage.getItem('workos-tasks-view') as View) || 'list');
+  const [view, setView] = useState<View>(() => (safeGet('workos-tasks-view') as View) || 'list');
   const [smart, setSmart] = useState<Smart>((params.get('view') as Smart) || 'all');
   const [q, setQ] = useState('');
   const [prio, setPrio] = useState<Priority | ''>('');
@@ -38,7 +38,13 @@ export default function TasksPage() {
   const [newTitle, setNewTitle] = useState('');
   const [showFilters, setShowFilters] = useState(false);
 
-  useEffect(() => localStorage.setItem('workos-tasks-view', view), [view]);
+  useEffect(() => {
+    try {
+      localStorage.setItem('workos-tasks-view', view);
+    } catch {
+      /* storage unavailable */
+    }
+  }, [view]);
   useEffect(() => {
     const open = params.get('open');
     if (open) {
