@@ -99,7 +99,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[12vh] animate-fade" role="dialog" aria-modal="true" aria-label="Search">
       <div className="absolute inset-0 bg-black/25 dark:bg-black/50" onClick={onClose} />
-      <div className="relative w-full max-w-xl overflow-hidden rounded-xl border border-line bg-surface shadow-pop animate-in">
+      <div className="relative w-full max-w-xl overflow-hidden rounded-lg border border-line bg-surface shadow-lg animate-in">
         <div className="flex items-center gap-2.5 border-b border-line px-4">
           <Search className="h-4 w-4 text-faint" />
           <input
@@ -107,7 +107,7 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
             value={q}
             onChange={(e) => setQ(e.target.value)}
             placeholder="Search everything, or type a command…"
-            className="h-12 flex-1 bg-transparent text-[15px] outline-none placeholder:text-faint"
+            className="h-12 flex-1 bg-transparent text-body-l outline-none placeholder:text-faint"
             onKeyDown={(e) => {
               if (e.key === 'Escape') onClose();
               else if (e.key === 'ArrowDown') {
@@ -135,19 +135,19 @@ export function CommandPalette({ open, onClose }: { open: boolean; onClose: () =
                   data-idx={i}
                   onMouseMove={() => setActive(i)}
                   onClick={() => run(r)}
-                  className={cn('flex w-full items-center gap-3 rounded-md px-2.5 py-2 text-left', i === active ? 'bg-sunken' : '')}
+                  className={cn('flex w-full items-center gap-3 rounded-sm px-2.5 py-2 text-left', i === active ? 'bg-sunken' : '')}
                 >
-                  {r.icon ? <r.icon className="h-4 w-4 shrink-0 text-faint" /> : <span className="w-[70px] shrink-0 text-2xs uppercase tracking-wide text-faint">{r.sub?.split(' · ')[0]}</span>}
+                  {r.icon ? <r.icon className="h-4 w-4 shrink-0 text-faint" /> : <span className="w-[70px] shrink-0 text-caption uppercase tracking-wide text-faint">{r.sub?.split(' · ')[0]}</span>}
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13.5px]">{r.label}</span>
-                    {!r.icon && r.sub?.includes(' · ') && <span className="block truncate text-xs text-faint">{r.sub.split(' · ').slice(1).join(' · ')}</span>}
+                    <span className="block truncate text-body-m">{r.label}</span>
+                    {!r.icon && r.sub?.includes(' · ') && <span className="block truncate text-body-s text-faint">{r.sub.split(' · ').slice(1).join(' · ')}</span>}
                   </span>
                   {i === active && <CornerDownLeft className="h-3.5 w-3.5 text-faint" />}
                 </button>
               </div>
             );
           })}
-          {q && !hits.length && <p className="px-3 py-2 text-xs text-faint">No matching items — you can create one above.</p>}
+          {q && !hits.length && <p className="px-3 py-2 text-body-s text-faint">No matching items — you can create one above.</p>}
         </div>
       </div>
     </div>,

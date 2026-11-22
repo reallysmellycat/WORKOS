@@ -1,3 +1,4 @@
+import { CHART_ROLES, roleColor, type ColorRole } from './tokens';
 import type {
   CampaignStatus,
   ContentStatus,
@@ -171,23 +172,27 @@ export function engagementRate(engagement?: number | null, reach?: number | null
   return (engagement / base) * 100;
 }
 
-export const PLATFORM_COLORS: Record<string, string> = {
-  LinkedIn: '#4F7CA8',
-  Instagram: '#B4707E',
-  TikTok: '#4A4A48',
-  X: '#6E6E6A',
-  YouTube: '#B5574B',
-  Newsletter: '#8C7A4E',
-  Blog: '#6F8F6C',
+/**
+ * Platform identity colours, mapped onto palette roles (DESIGN.md §12) so they
+ * follow the theme. Returned values are CSS strings usable in `style`; charts
+ * resolve them with `resolveColor` from lib/tokens.
+ */
+const PLATFORM_ROLES: Record<string, ColorRole> = {
+  LinkedIn: 'info',
+  Instagram: 'clay',
+  TikTok: 'fg',
+  X: 'muted',
+  YouTube: 'danger',
+  Newsletter: 'ochre',
+  Blog: 'accent',
 };
 
-const FALLBACK = ['#6F8F6C', '#B88A4E', '#5E7F9E', '#9C6B8E', '#A3745C', '#7E8C5A', '#5F8C8A'];
 export function colorFor(key: string, i = 0): string {
-  if (PLATFORM_COLORS[key]) return PLATFORM_COLORS[key];
+  if (PLATFORM_ROLES[key]) return roleColor(PLATFORM_ROLES[key]);
   let h = i;
   for (const c of key) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  return FALLBACK[h % FALLBACK.length];
+  return roleColor(CHART_ROLES[h % CHART_ROLES.length]);
 }
 
-/** Chart series palette — muted, warm, distinguishable in both themes. */
-export const SERIES = ['#6F8F6C', '#B88A4E', '#5E7F9E', '#A3745C', '#9C6B8E', '#7E8C5A'];
+/** Chart series colours as CSS strings (resolve before passing to SVG attributes). */
+export const SERIES = CHART_ROLES.map((r) => roleColor(r));

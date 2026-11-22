@@ -51,13 +51,13 @@ export default function MyDay() {
     <Page>
       <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <p className="flex items-center gap-1.5 text-[13px] text-faint">
+          <p className="flex items-center gap-1.5 text-body-s text-faint">
             <Sun className="h-3.5 w-3.5 text-warn" /> My Day
           </p>
-          <h1 className="mt-1 font-serif text-[32px] font-medium leading-tight tracking-tight">{format(new Date(), 'EEEE, d MMMM')}</h1>
+          <h1 className="mt-1 font-serif text-h1 font-medium leading-tight tracking-tight">{format(new Date(), 'EEEE, d MMMM')}</h1>
         </div>
         <div className="w-full max-w-[240px]">
-          <div className="mb-1.5 flex justify-between text-xs text-muted">
+          <div className="mb-1.5 flex justify-between text-body-s text-muted">
             <span>Today's progress</span>
             <span className="tabular-nums">
               {doneToday.length}/{total}
@@ -72,7 +72,7 @@ export default function MyDay() {
           <div className="card p-1.5">
             <div className="flex items-center gap-2.5 px-2 py-1.5">
               <Plus className="h-4 w-4 text-faint" />
-              <input value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} placeholder="Add a task for today" className="flex-1 bg-transparent py-1 text-[14px] outline-none placeholder:text-faint" />
+              <input value={title} onChange={(e) => setTitle(e.target.value)} onKeyDown={(e) => e.key === 'Enter' && add()} placeholder="Add a task for today" className="flex-1 bg-transparent py-1 text-body-m outline-none placeholder:text-faint" />
             </div>
             <div className="mx-2 h-px bg-line" />
             {plan.length === 0 ? (
@@ -123,18 +123,18 @@ export default function MyDay() {
             }
           >
             {(schedule ?? []).filter((s) => s.source !== 'task').length === 0 ? (
-              <p className="text-[13px] text-faint">No meetings or blocks today. Protect some time for focused work.</p>
+              <p className="text-body-s text-faint">No meetings or blocks today. Protect some time for focused work.</p>
             ) : (
               <div className="space-y-1">
                 {(schedule ?? [])
                   .filter((s) => s.source !== 'task')
                   .map((s) => (
-                    <button key={s.key} onClick={() => openEntity(s.open.type, s.open.id)} className="-mx-1.5 flex w-full items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left row-hover">
+                    <button key={s.key} onClick={() => openEntity(s.open.type, s.open.id)} className="-mx-1.5 flex w-full items-center gap-2.5 rounded-sm px-1.5 py-1.5 text-left row-hover">
                       <span className="h-7 w-[3px] rounded-full" style={{ background: sourceColor(s.source) }} />
-                      <span className="w-12 text-xs tabular-nums text-faint">{s.startTime ?? 'All day'}</span>
+                      <span className="w-12 text-body-s tabular-nums text-faint">{s.startTime ?? 'All day'}</span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-[13px]">{s.title}</span>
-                        {s.endTime && <span className="block text-2xs text-faint">until {s.endTime}</span>}
+                        <span className="block truncate text-body-s">{s.title}</span>
+                        {s.endTime && <span className="block text-caption text-faint">until {s.endTime}</span>}
                       </span>
                     </button>
                   ))}
@@ -144,14 +144,14 @@ export default function MyDay() {
 
           <Card title="Suggestions" icon={Sun}>
             {suggestions.length === 0 ? (
-              <p className="text-[13px] text-faint">No suggestions — nothing urgent is waiting.</p>
+              <p className="text-body-s text-faint">No suggestions — nothing urgent is waiting.</p>
             ) : (
               <div className="-mx-1.5">
                 {suggestions.map((t) => (
-                  <div key={t.id} className="group flex items-center gap-2 rounded-md px-1.5 py-1.5 row-hover">
+                  <div key={t.id} className="group flex items-center gap-2 rounded-sm px-1.5 py-1.5 row-hover">
                     <button className="min-w-0 flex-1 text-left" onClick={() => openEntity('task', t.id)}>
-                      <div className="truncate text-[13px]">{t.title}</div>
-                      <div className="text-2xs text-faint">{reason(t, today)}</div>
+                      <div className="truncate text-body-s">{t.title}</div>
+                      <div className="text-caption text-faint">{reason(t, today)}</div>
                     </button>
                     <Button size="xs" icon={Plus} onClick={() => update<Task>('tasks', t.id, { myDay: today }, { log: false })}>
                       Today
@@ -160,7 +160,7 @@ export default function MyDay() {
                 ))}
               </div>
             )}
-            <p className="mt-2 text-2xs text-faint">Suggested by simple rules (priority, due date, status) — not AI.</p>
+            <p className="mt-2 text-caption text-faint">Suggested by simple rules (priority, due date, status) — not AI.</p>
           </Card>
         </div>
       </div>
@@ -186,7 +186,7 @@ function DailyNote({ date }: { date: string }) {
     if (v !== null) await db.kv.put({ key, value: v });
   }, 500, text !== null);
   return (
-    <Card title="Daily notes" action={<span className="text-2xs text-faint">{status === 'saved' ? 'Saved' : status === 'pending' || status === 'saving' ? 'Saving…' : ''}</span>}>
+    <Card title="Daily notes" action={<span className="text-caption text-faint">{status === 'saved' ? 'Saved' : status === 'pending' || status === 'saving' ? 'Saving…' : ''}</span>}>
       <Textarea autoGrow rows={4} value={text ?? ''} onChange={(e) => setText(e.target.value)} placeholder="Intentions, notes from today, things to remember tomorrow…" className="!border-0 !bg-transparent !px-0 !ring-0" />
     </Card>
   );

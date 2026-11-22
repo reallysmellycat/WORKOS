@@ -66,7 +66,7 @@ export function EventModal({ id, date, onClose }: { id: string | null; date?: st
       }
     >
       <div className="space-y-3">
-        <Input autoFocus value={ev.title ?? ''} onChange={(e) => set({ title: e.target.value })} placeholder="Event title" className="!text-[15px] !py-2" onKeyDown={(e) => e.key === 'Enter' && save()} />
+        <Input autoFocus value={ev.title ?? ''} onChange={(e) => set({ title: e.target.value })} placeholder="Event title" className="!text-body-l !py-2" onKeyDown={(e) => e.key === 'Enter' && save()} />
         <div className="grid grid-cols-2 gap-3">
           <Field label="Type">
             <Select value={ev.kind} onChange={(e) => set({ kind: e.target.value as EventKind })}>
@@ -87,7 +87,7 @@ export function EventModal({ id, date, onClose }: { id: string | null; date?: st
             <Input type="time" value={ev.endTime ?? ''} onChange={(e) => set({ endTime: e.target.value || null })} disabled={allDay} />
           </Field>
         </div>
-        <label className="flex items-center gap-2 text-[13px] text-muted">
+        <label className="flex items-center gap-2 text-body-s text-muted">
           <input type="checkbox" checked={allDay} onChange={(e) => set(e.target.checked ? { startTime: null, endTime: null } : { startTime: '09:00', endTime: '10:00' })} className="accent-[rgb(var(--accent))]" />
           All day
         </label>
@@ -97,7 +97,7 @@ export function EventModal({ id, date, onClose }: { id: string | null; date?: st
         <Field label="Notes">
           <Textarea rows={3} value={ev.notes ?? ''} onChange={(e) => set({ notes: e.target.value })} />
         </Field>
-        {ev.kind === 'reminder' && <p className="text-xs text-faint">Reminders appear in your notification centre on the day.</p>}
+        {ev.kind === 'reminder' && <p className="text-body-s text-faint">Reminders appear in your notification centre on the day.</p>}
       </div>
     </Modal>
   );

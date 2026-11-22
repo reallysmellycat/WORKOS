@@ -79,7 +79,7 @@ export default function CalendarPage() {
   return (
     <Page wide>
       <div className="mb-5 flex flex-wrap items-center gap-3">
-        <h1 className="min-w-[200px] text-xl font-semibold tracking-tight">{title}</h1>
+        <h1 className="min-w-[200px] text-h4 font-semibold tracking-tight">{title}</h1>
         <div className="flex items-center gap-1">
           <IconButton icon={ChevronLeft} label="Previous" onClick={() => step(-1)} />
           <Button size="sm" onClick={() => setCursor(new Date())}>
@@ -106,7 +106,7 @@ export default function CalendarPage() {
                 else n.add(g.key);
                 setHidden(n);
               }}
-              className={cn('flex items-center gap-1.5 rounded-full border px-2.5 h-6 text-xs transition-colors', off ? 'border-line text-faint line-through' : 'border-line-strong text-muted bg-raised')}
+              className={cn('flex items-center gap-1.5 rounded-full border px-2.5 h-6 text-body-s transition-colors', off ? 'border-line text-faint line-through' : 'border-line-strong text-muted bg-raised')}
             >
               <span className="h-2 w-2 rounded-full" style={{ background: off ? 'transparent' : sourceColor(g.sources[0]), border: `1.5px solid ${sourceColor(g.sources[0])}` }} />
               {g.label}
@@ -123,9 +123,9 @@ export default function CalendarPage() {
         <div className="grid gap-4 lg:grid-cols-[1fr_300px]">
           <TimeGrid days={[cursor]} byDate={byDate} onOpen={open} onSlot={(d) => openEvent(null, d)} onMove={move} />
           <div className="card p-4">
-            <h3 className="mb-2 text-[13px] font-semibold">Everything on this day</h3>
+            <h3 className="mb-2 text-body-s font-semibold">Everything on this day</h3>
             {(byDate.get(toISODate(cursor)) ?? []).length === 0 ? (
-              <p className="text-[13px] text-faint">Nothing scheduled.</p>
+              <p className="text-body-s text-faint">Nothing scheduled.</p>
             ) : (
               (byDate.get(toISODate(cursor)) ?? []).map((i) => <ItemPill key={i.key} item={i} onOpen={open} detailed />)
             )}
@@ -151,7 +151,7 @@ function ItemPill({ item, onOpen, detailed, draggable }: { item: CalItem; onOpen
         onOpen(item);
       }}
       title={`${SOURCE_STYLE[item.source].label}: ${item.title}${item.sub ? ' — ' + item.sub : ''}`}
-      className={cn('group mb-0.5 flex w-full items-center gap-1.5 rounded px-1.5 py-[3px] text-left text-[11.5px] leading-tight transition-colors hover:brightness-95', item.done && 'opacity-55')}
+      className={cn('group mb-0.5 flex w-full items-center gap-1.5 rounded-sm px-1.5 py-[3px] text-left text-caption leading-tight transition-colors hover:brightness-95', item.done && 'opacity-55')}
       style={{ background: `color-mix(in srgb, ${color} 13%, transparent)`, boxShadow: `inset 2px 0 0 ${color}` }}
     >
       {item.startTime && <span className="shrink-0 tabular-nums text-faint">{item.startTime}</span>}
@@ -191,7 +191,7 @@ function MonthGrid({
     <div className="card overflow-hidden">
       <div className="grid grid-cols-7 border-b border-line bg-raised/50">
         {heads.map((h) => (
-          <div key={h} className="px-2 py-2 text-2xs font-semibold uppercase tracking-wider text-faint">
+          <div key={h} className="px-2 py-2 text-caption font-semibold uppercase tracking-wider text-faint">
             {h}
           </div>
         ))}
@@ -230,7 +230,7 @@ function MonthGrid({
                     onZoom(iso);
                   }}
                   className={cn(
-                    'flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-xs tabular-nums hover:bg-sunken',
+                    'flex h-6 min-w-6 items-center justify-center rounded-full px-1.5 text-body-s tabular-nums hover:bg-sunken',
                     iso === today ? 'bg-accent font-semibold text-accent-fg hover:bg-accent' : muted ? 'text-faint' : 'text-muted',
                   )}
                 >
@@ -247,7 +247,7 @@ function MonthGrid({
                     e.stopPropagation();
                     onZoom(iso);
                   }}
-                  className="px-1.5 text-2xs font-medium text-muted hover:text-fg"
+                  className="px-1.5 text-caption font-medium text-muted hover:text-fg"
                 >
                   +{list.length - 4} more
                 </button>
@@ -284,7 +284,7 @@ function TimeGrid({ days, byDate, onOpen, onSlot, onMove }: { days: Date[]; byDa
                   if (k) onMove(k, iso);
                 }}
               >
-                <div className={cn('mb-1 text-xs', iso === today ? 'font-semibold text-accent' : 'text-muted')}>
+                <div className={cn('mb-1 text-body-s', iso === today ? 'font-semibold text-accent-deep' : 'text-muted')}>
                   {format(d, 'EEE')} <span className="tabular-nums">{format(d, 'd')}</span>
                 </div>
                 {allDay.map((i) => (
@@ -297,7 +297,7 @@ function TimeGrid({ days, byDate, onOpen, onSlot, onMove }: { days: Date[]; byDa
         <div className="relative grid" style={{ gridTemplateColumns: `56px repeat(${days.length}, 1fr)` }}>
           <div>
             {HOURS.map((h) => (
-              <div key={h} className="relative pr-2 text-right text-2xs text-faint tabular-nums" style={{ height: HOUR_PX }}>
+              <div key={h} className="relative pr-2 text-right text-caption text-faint tabular-nums" style={{ height: HOUR_PX }}>
                 <span className="relative -top-2">{String(h).padStart(2, '0')}:00</span>
               </div>
             ))}
@@ -324,7 +324,7 @@ function TimeGrid({ days, byDate, onOpen, onSlot, onMove }: { days: Date[]; byDa
                         e.stopPropagation();
                         onOpen(i);
                       }}
-                      className={cn('absolute left-1 right-1 overflow-hidden rounded-md px-2 py-1 text-left text-[11.5px] leading-tight shadow-soft', i.done && 'opacity-55')}
+                      className={cn('absolute left-1 right-1 overflow-hidden rounded-sm px-2 py-1 text-left text-caption leading-tight shadow-xs', i.done && 'opacity-55')}
                       style={{ top, height: h, background: `color-mix(in srgb, ${color} 16%, rgb(var(--raised)))`, boxShadow: `inset 2.5px 0 0 ${color}` }}
                     >
                       <div className="truncate font-medium">{i.title}</div>

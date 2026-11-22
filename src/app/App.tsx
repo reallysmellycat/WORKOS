@@ -8,6 +8,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { Onboarding } from '@/features/onboarding/Onboarding';
 import { UpdatePrompt } from '@/components/UpdatePrompt';
 import { requestPersistentStorage } from '@/lib/db';
+import { resolveColor } from '@/lib/tokens';
 import { ensureBuiltInTemplates } from '@/lib/templates';
 
 const Dashboard = lazy(() => import('@/features/dashboard/Dashboard'));
@@ -38,7 +39,7 @@ function useThemeSync(s: Settings | undefined) {
       document.documentElement.classList.toggle('dark', dark);
       if (s.accent === 'sage') delete document.documentElement.dataset.accent;
       else document.documentElement.dataset.accent = s.accent;
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', dark ? '#181917' : '#F6F3EC');
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', resolveColor('rgb(var(--bg))'));
       try {
         localStorage.setItem('workos-theme', s.theme);
         localStorage.setItem('workos-accent', s.accent === 'sage' ? '' : s.accent);

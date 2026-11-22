@@ -257,8 +257,8 @@ export function MarkdownEditor({
         }
       }}
       className={cn(
-        'w-full resize-none bg-transparent outline-none leading-[1.7] text-[14.5px] placeholder:text-faint',
-        serif && 'font-serif text-[16.5px]',
+        'w-full resize-none bg-transparent outline-none leading-[1.7] text-body-m placeholder:text-faint',
+        serif && 'font-serif text-h4',
       )}
       style={{ minHeight }}
     />
@@ -281,7 +281,7 @@ export function MarkdownEditor({
           {value.trim() ? (
             <MarkdownView source={value} onToggleCheckbox={(i) => onChange(toggleNthCheckbox(value, i))} />
           ) : (
-            <p className="text-faint text-[13px]">Nothing to preview yet.</p>
+            <p className="text-faint text-body-s">Nothing to preview yet.</p>
           )}
         </div>
       )}

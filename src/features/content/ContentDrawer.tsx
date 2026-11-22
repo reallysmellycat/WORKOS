@@ -44,7 +44,7 @@ function ContentEditor({ id, onClose }: { id: string; onClose: () => void }) {
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[52px] shrink-0 items-center gap-2 border-b border-line px-5">
-        <span className="text-[13px] font-medium">Content</span>
+        <span className="text-body-s font-medium">Content</span>
         {draft.isDemo && <DemoBadge />}
         <div className="flex-1" />
         <SavedIndicator status={status} />
@@ -76,7 +76,7 @@ function ContentEditor({ id, onClose }: { id: string; onClose: () => void }) {
         <IconButton icon={X} label="Close" onClick={onClose} />
       </div>
       <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-        <Textarea autoGrow rows={1} value={draft.title} onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 text-[19px] font-semibold" aria-label="Title" />
+        <Textarea autoGrow rows={1} value={draft.title} onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 text-h4 font-semibold" aria-label="Title" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <Field label="Status">
             <Select value={draft.status} onChange={(e) => set({ status: e.target.value as ContentItem['status'] })}>
@@ -134,7 +134,7 @@ function ContentEditor({ id, onClose }: { id: string; onClose: () => void }) {
           <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
             {METRIC_FIELDS.map((m) => (
               <label key={m.key} className="block">
-                <span className="mb-0.5 block text-2xs text-faint">{m.label}</span>
+                <span className="mb-0.5 block text-caption text-faint">{m.label}</span>
                 <Input
                   type="number"
                   min={0}
@@ -144,7 +144,7 @@ function ContentEditor({ id, onClose }: { id: string; onClose: () => void }) {
               </label>
             ))}
           </div>
-          <p className="mt-2 text-xs text-muted">
+          <p className="mt-2 text-body-s text-muted">
             Engagement: <strong className="text-fg tabular-nums">{eng.toLocaleString()}</strong>
             {rate !== null && (
               <>
@@ -153,7 +153,7 @@ function ContentEditor({ id, onClose }: { id: string; onClose: () => void }) {
               </>
             )}
           </p>
-          <p className="mt-1 text-2xs text-faint">Copy figures from each platform's own analytics. Work OS does not connect to social accounts.</p>
+          <p className="mt-1 text-caption text-faint">Copy figures from each platform's own analytics. Work OS does not connect to social accounts.</p>
         </div>
 
         <div>

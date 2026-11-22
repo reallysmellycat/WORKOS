@@ -95,7 +95,7 @@ const ok = (c, m) => { if (!c) throw new Error('FAILED: ' + m); console.log('  â
 
   console.log('Theme');
   await p.goto(BASE + '/settings?tab=appearance');
-  await p.click('button:has-text("dark")');
+  await p.click('button:has-text("Dusk")');
   await p.waitForFunction(() => document.documentElement.classList.contains('dark'));
   ok(await p.evaluate(() => document.documentElement.classList.contains('dark')), 'dark mode applied');
   await p.reload();

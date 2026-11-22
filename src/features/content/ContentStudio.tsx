@@ -97,7 +97,7 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
       <div className="card overflow-hidden">
         <div className="flex items-center gap-2 border-b border-line px-3 py-2">
           <IconButton icon={ChevronLeft} label="Previous month" onClick={() => setCursor(addMonths(cursor, -1))} />
-          <span className="min-w-[130px] text-center text-[13.5px] font-semibold">{format(cursor, 'MMMM yyyy')}</span>
+          <span className="min-w-[130px] text-center text-body-m font-semibold">{format(cursor, 'MMMM yyyy')}</span>
           <IconButton icon={ChevronRight} label="Next month" onClick={() => setCursor(addMonths(cursor, 1))} />
           <Button size="xs" variant="ghost" onClick={() => setCursor(new Date())}>
             Today
@@ -105,7 +105,7 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
         </div>
         <div className="grid grid-cols-7">
           {days.slice(0, 7).map((d) => (
-            <div key={d.toISOString()} className="border-b border-line px-2 py-1.5 text-2xs font-semibold uppercase tracking-wider text-faint">
+            <div key={d.toISOString()} className="border-b border-line px-2 py-1.5 text-caption font-semibold uppercase tracking-wider text-faint">
               {format(d, 'EEE')}
             </div>
           ))}
@@ -130,7 +130,7 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
                 className={cn('group min-h-[104px] border-b border-r border-line p-1.5 [&:nth-child(7n)]:border-r-0', !isSameMonth(d, cursor) && 'bg-sunken/30', over === iso && 'bg-accent-soft/60')}
               >
                 <div className="mb-1 flex items-center justify-between">
-                  <span className={cn('flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-xs tabular-nums', iso === today ? 'bg-accent font-semibold text-accent-fg' : 'text-faint')}>{format(d, 'd')}</span>
+                  <span className={cn('flex h-5 min-w-5 items-center justify-center rounded-full px-1 text-body-s tabular-nums', iso === today ? 'bg-accent font-semibold text-accent-fg' : 'text-faint')}>{format(d, 'd')}</span>
                   <button onClick={() => quickAdd({ type: 'content', date: iso })} className="text-faint opacity-0 hover:text-fg group-hover:opacity-100" aria-label="Add content on this day">
                     <Plus className="h-3.5 w-3.5" />
                   </button>
@@ -141,7 +141,7 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
                     draggable
                     onDragStart={(e) => e.dataTransfer.setData('text/content-id', c.id)}
                     onClick={() => openContent(c.id)}
-                    className={cn('mb-0.5 flex w-full items-center gap-1.5 rounded border border-line bg-raised px-1.5 py-1 text-left text-[11.5px] shadow-soft hover:border-line-strong', c.status === 'published' && 'opacity-60')}
+                    className={cn('mb-0.5 flex w-full items-center gap-1.5 rounded-sm border border-line bg-raised px-1.5 py-1 text-left text-caption shadow-xs hover:border-line-strong', c.status === 'published' && 'opacity-60')}
                     title={`${c.platform} · ${contentStatusMeta(c.status).label}`}
                   >
                     <PlatformDot p={c.platform} />
@@ -154,11 +154,11 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
         </div>
       </div>
       <div className="card p-3">
-        <h3 className="mb-1 text-[13px] font-semibold">Unscheduled</h3>
-        <p className="mb-2 text-xs text-faint">Drag onto a day to schedule.</p>
-        {unscheduled.length === 0 && <p className="text-xs text-faint">Everything has a date.</p>}
+        <h3 className="mb-1 text-body-s font-semibold">Unscheduled</h3>
+        <p className="mb-2 text-body-s text-faint">Drag onto a day to schedule.</p>
+        {unscheduled.length === 0 && <p className="text-body-s text-faint">Everything has a date.</p>}
         {unscheduled.map((c) => (
-          <button key={c.id} draggable onDragStart={(e) => e.dataTransfer.setData('text/content-id', c.id)} onClick={() => openContent(c.id)} className="mb-1 flex w-full items-center gap-2 rounded-md border border-line bg-raised px-2 py-1.5 text-left text-[12.5px] hover:border-line-strong">
+          <button key={c.id} draggable onDragStart={(e) => e.dataTransfer.setData('text/content-id', c.id)} onClick={() => openContent(c.id)} className="mb-1 flex w-full items-center gap-2 rounded-sm border border-line bg-raised px-2 py-1.5 text-left text-body-s hover:border-line-strong">
             <PlatformDot p={c.platform} />
             <span className="flex-1 truncate">{c.title}</span>
             <Badge tone={contentStatusMeta(c.status).tone}>{contentStatusMeta(c.status).label}</Badge>
@@ -166,7 +166,7 @@ function ContentCalendar({ items }: { items: ContentItem[] }) {
         ))}
         <div className="mt-4 space-y-1 border-t border-line pt-3">
           {[...new Set(items.map((i) => i.platform))].map((p) => (
-            <div key={p} className="flex items-center gap-2 text-xs text-muted">
+            <div key={p} className="flex items-center gap-2 text-body-s text-muted">
               <PlatformDot p={p} /> {p}
             </div>
           ))}
@@ -196,19 +196,19 @@ function Pipeline({ items }: { items: ContentItem[] }) {
               const id = e.dataTransfer.getData('text/content-id');
               if (id) void update<ContentItem>('content', id, { status: s.value as ContentStatus });
             }}
-            className={cn('min-h-[320px] rounded-lg bg-sunken/50 p-2', over === s.value && 'bg-accent-soft/60 ring-1 ring-accent/30')}
+            className={cn('min-h-[320px] rounded-md bg-sunken/50 p-2', over === s.value && 'bg-accent-soft/60 ring-1 ring-accent/30')}
           >
             <div className="flex items-center gap-2 px-1.5 pb-2 pt-1">
               <Badge tone={s.tone} dot>
                 {s.label}
               </Badge>
-              <span className="text-xs text-faint">{list.length}</span>
+              <span className="text-body-s text-faint">{list.length}</span>
             </div>
             <div className="space-y-1.5">
               {list.map((c) => (
-                <button key={c.id} draggable onDragStart={(e) => e.dataTransfer.setData('text/content-id', c.id)} onClick={() => openContent(c.id)} className="block w-full rounded-md border border-line bg-raised p-2.5 text-left shadow-soft hover:border-line-strong">
-                  <div className="text-[13px] font-medium leading-snug">{c.title}</div>
-                  <div className="mt-1.5 flex items-center gap-1.5 text-xs text-faint">
+                <button key={c.id} draggable onDragStart={(e) => e.dataTransfer.setData('text/content-id', c.id)} onClick={() => openContent(c.id)} className="block w-full rounded-sm border border-line bg-raised p-2.5 text-left shadow-xs hover:border-line-strong">
+                  <div className="text-body-s font-medium leading-snug">{c.title}</div>
+                  <div className="mt-1.5 flex items-center gap-1.5 text-body-s text-faint">
                     <PlatformDot p={c.platform} />
                     {c.platform} · {c.contentType}
                     <span className="flex-1" />
@@ -230,9 +230,9 @@ function ContentList({ items }: { items: ContentItem[] }) {
   if (!items.length) return <div className="card"><Empty icon={Sparkles} title="No content yet" /></div>;
   return (
     <div className="card overflow-x-auto">
-      <table className="w-full min-w-[760px] text-[13px]">
+      <table className="w-full min-w-[760px] text-body-s">
         <thead>
-          <tr className="border-b border-line text-left text-2xs uppercase tracking-wider text-faint">
+          <tr className="border-b border-line text-left text-caption uppercase tracking-wider text-faint">
             <th className="px-4 py-2.5 font-semibold">Title</th>
             <th className="px-3 py-2.5 font-semibold">Platform</th>
             <th className="px-3 py-2.5 font-semibold">Status</th>
@@ -345,9 +345,9 @@ function IdeaBank() {
         </div>
         <div className="card p-1.5">
           {[{ value: 'all' as const, label: 'Everything' }, ...KINDS].map((k) => (
-            <button key={k.value} onClick={() => setKind(k.value)} className={cn('flex w-full items-center justify-between rounded-md px-2.5 py-1.5 text-[13px]', kind === k.value ? 'bg-sunken font-medium' : 'text-muted hover:bg-sunken/60')}>
+            <button key={k.value} onClick={() => setKind(k.value)} className={cn('flex w-full items-center justify-between rounded-sm px-2.5 py-1.5 text-body-s', kind === k.value ? 'bg-sunken font-medium' : 'text-muted hover:bg-sunken/60')}>
               {k.label}
-              <span className="text-xs text-faint">{k.value === 'all' ? ideas.length : ideas.filter((i) => i.kind === k.value).length}</span>
+              <span className="text-body-s text-faint">{k.value === 'all' ? ideas.length : ideas.filter((i) => i.kind === k.value).length}</span>
             </button>
           ))}
         </div>
@@ -377,9 +377,9 @@ function IdeaBank() {
                     }}
                   />
                 </div>
-                <p className="whitespace-pre-wrap text-[13.5px] leading-relaxed">{i.text}</p>
+                <p className="whitespace-pre-wrap text-body-m leading-relaxed">{i.text}</p>
                 {i.url && (
-                  <a href={i.url} target="_blank" rel="noopener noreferrer" className="mt-1 block truncate text-xs text-accent hover:underline">
+                  <a href={i.url} target="_blank" rel="noopener noreferrer" className="mt-1 block truncate text-body-s text-accent-deep hover:underline">
                     {i.url}
                   </a>
                 )}
@@ -436,7 +436,7 @@ function SocialAnalytics({ content }: { content: ContentItem[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="card flex flex-wrap items-center gap-3 px-4 py-3 text-[13px] text-muted">
+      <div className="card flex flex-wrap items-center gap-3 px-4 py-3 text-body-s text-muted">
         <span className="flex-1">Metrics are entered by you from each platform's analytics — Work OS never connects to or pulls from your social accounts.</span>
         <Button variant="primary" size="sm" icon={Plus} onClick={() => setAdding(true)}>
           Record metrics
@@ -445,14 +445,14 @@ function SocialAnalytics({ content }: { content: ContentItem[] }) {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
         {summary.map((s) => (
           <div key={s.platform} className="card p-4">
-            <div className="flex items-center gap-2 text-xs text-muted">
+            <div className="flex items-center gap-2 text-body-s text-muted">
               <PlatformDot p={s.platform} /> {s.platform}
             </div>
-            <div className="mt-2 text-[22px] font-semibold tabular-nums">{compactNumber(s.followers)}</div>
-            <div className="text-xs text-faint">
+            <div className="mt-2 text-h3 font-semibold tabular-nums">{compactNumber(s.followers)}</div>
+            <div className="text-body-s text-faint">
               followers{s.followerChange !== null && <span className={s.followerChange >= 0 ? 'text-ok' : 'text-danger'}> · {s.followerChange >= 0 ? '+' : ''}{compactNumber(s.followerChange)} in 30d</span>}
             </div>
-            <div className="mt-1 text-2xs text-faint">Last recorded {fmtDate(s.latest.date, 'd MMM')}</div>
+            <div className="mt-1 text-caption text-faint">Last recorded {fmtDate(s.latest.date, 'd MMM')}</div>
           </div>
         ))}
         <div className="card p-4">
@@ -476,20 +476,20 @@ function SocialAnalytics({ content }: { content: ContentItem[] }) {
       </Card>
       <div className="grid gap-4 lg:grid-cols-2">
         <Card title="Posts published per month">
-          {pub.platforms.length ? <Bars data={pub.data} x="month" series={pub.platforms.map((p) => ({ key: p, color: colorFor(p) }))} stacked height={200} /> : <p className="text-[13px] text-faint">No published content yet.</p>}
+          {pub.platforms.length ? <Bars data={pub.data} x="month" series={pub.platforms.map((p) => ({ key: p, color: colorFor(p) }))} stacked height={200} /> : <p className="text-body-s text-faint">No published content yet.</p>}
         </Card>
         <Card title="Top posts by engagement">
           {top.length ? (
             top.map(({ c, eng, rate }) => (
-              <div key={c.id} className="flex items-center gap-2 py-1.5 text-[13px]">
+              <div key={c.id} className="flex items-center gap-2 py-1.5 text-body-s">
                 <PlatformDot p={c.platform} />
                 <span className="flex-1 truncate">{c.title}</span>
                 <span className="tabular-nums text-muted">{compactNumber(eng)}</span>
-                <span className="w-14 text-right text-xs tabular-nums text-faint">{rate !== null ? `${rate.toFixed(1)}%` : ''}</span>
+                <span className="w-14 text-right text-body-s tabular-nums text-faint">{rate !== null ? `${rate.toFixed(1)}%` : ''}</span>
               </div>
             ))
           ) : (
-            <p className="text-[13px] text-faint">Add performance figures to published posts to rank them.</p>
+            <p className="text-body-s text-faint">Add performance figures to published posts to rank them.</p>
           )}
         </Card>
       </div>
@@ -505,14 +505,14 @@ function SnapshotTable({ snaps }: { snaps: SocialSnapshot[] }) {
   if (!snaps.length) return null;
   return (
     <div className="card">
-      <button onClick={() => setShow((s) => !s)} className="w-full px-4 py-3 text-left text-[13px] font-semibold">
+      <button onClick={() => setShow((s) => !s)} className="w-full px-4 py-3 text-left text-body-s font-semibold">
         {show ? 'Hide' : 'Show'} recorded snapshots ({snaps.length})
       </button>
       {show && (
         <div className="overflow-x-auto border-t border-line">
-          <table className="w-full min-w-[620px] text-[13px]">
+          <table className="w-full min-w-[620px] text-body-s">
             <thead>
-              <tr className="border-b border-line text-left text-2xs uppercase tracking-wider text-faint">
+              <tr className="border-b border-line text-left text-caption uppercase tracking-wider text-faint">
                 {['Date', 'Platform', 'Followers', 'Reach', 'Impressions', 'Engagement', 'Views', ''].map((h) => (
                   <th key={h} className="px-3 py-2 font-semibold">
                     {h}

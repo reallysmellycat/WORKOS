@@ -25,17 +25,18 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   iconRight?: LucideIcon;
 }
 
+// DESIGN.md §6 Buttons: graphite primary, neutral secondary, ghost, 12px radius (8px compact).
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-ink text-ink-fg hover:opacity-90 active:scale-[0.98] shadow-soft',
-  secondary: 'bg-raised text-fg shadow-[inset_0_0_0_1px_rgb(var(--line))] hover:shadow-[inset_0_0_0_1px_rgb(var(--line-strong))] active:scale-[0.98]',
-  ghost: 'text-muted hover:text-fg hover:bg-sunken/80 active:scale-[0.98]',
-  subtle: 'bg-sunken text-fg hover:bg-line/60 active:scale-[0.98]',
-  danger: 'bg-danger text-white hover:brightness-110 active:scale-[0.98]',
+  primary: 'bg-ink text-ink-fg shadow-sm hover:-translate-y-px hover:shadow-md active:translate-y-0 active:scale-[0.98]',
+  secondary: 'bg-raised/80 text-fg shadow-[inset_0_0_0_1px_rgb(var(--line)/var(--line-alpha)),var(--shadow-xs)] hover:bg-raised hover:shadow-[inset_0_0_0_1px_rgb(var(--line-strong)/var(--line-strong-alpha)),var(--shadow-sm)] active:scale-[0.98]',
+  ghost: 'text-muted hover:text-fg hover:bg-sunken/40 active:scale-[0.98]',
+  subtle: 'bg-sunken/45 text-fg hover:bg-sunken/70 active:scale-[0.98]',
+  danger: 'bg-danger text-raised shadow-sm hover:brightness-110 active:scale-[0.98]',
 };
 const SIZES: Record<Size, string> = {
-  xs: 'h-6 px-2 text-xs gap-1 rounded-md',
-  sm: 'h-7 px-2.5 text-[12.5px] gap-1.5 rounded-md',
-  md: 'h-8 px-3.5 text-[13px] gap-1.5 rounded-lg',
+  xs: 'h-6 px-2 text-caption gap-1 rounded-sm',
+  sm: 'h-8 px-3 text-body-s gap-1.5 rounded-md',
+  md: 'h-9 px-4 text-body-s gap-2 rounded-md',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -47,16 +48,16 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type}
       className={cn(
-        'inline-flex items-center justify-center font-medium whitespace-nowrap transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none select-none',
+        'inline-flex items-center justify-center font-semibold whitespace-nowrap transition-all duration-fast ease-out disabled:opacity-40 disabled:pointer-events-none select-none',
         VARIANTS[variant],
         SIZES[size],
         className,
       )}
       {...rest}
     >
-      {Icon && <Icon className={size === 'xs' ? 'h-3 w-3' : 'h-3.5 w-3.5'} strokeWidth={2} />}
+      {Icon && <Icon className={size === 'xs' ? 'h-3 w-3' : 'h-[15px] w-[15px]'} strokeWidth={1.9} />}
       {children}
-      {IconR && <IconR className="h-3.5 w-3.5" strokeWidth={2} />}
+      {IconR && <IconR className="h-[15px] w-[15px]" strokeWidth={1.9} />}
     </button>
   );
 });
@@ -70,14 +71,14 @@ export const IconButton = forwardRef<HTMLButtonElement, ButtonHTMLAttributes<HTM
         aria-label={label}
         title={label}
         className={cn(
-          'inline-flex items-center justify-center rounded-md text-muted hover:text-fg hover:bg-sunken/80 transition-colors disabled:opacity-40',
-          size === 'sm' ? 'h-6 w-6' : 'h-7 w-7',
-          active && 'bg-sunken text-fg',
+          'inline-flex items-center justify-center rounded-full text-muted transition-colors duration-fast hover:bg-sunken/45 hover:text-fg disabled:opacity-40',
+          size === 'sm' ? 'h-7 w-7' : 'h-9 w-9',
+          active && 'bg-sunken/60 text-fg',
           className,
         )}
         {...rest}
       >
-        <Icon className={size === 'sm' ? 'h-3.5 w-3.5' : 'h-4 w-4'} strokeWidth={1.9} />
+        <Icon className={size === 'sm' ? 'h-[14px] w-[14px]' : 'h-[18px] w-[18px]'} strokeWidth={1.8} />
       </button>
     );
   },
@@ -133,7 +134,7 @@ export function Field({ label, children, hint, className }: { label: string; chi
     <label className={cn('block', className)}>
       <span className="label">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-xs text-faint">{hint}</span>}
+      {hint && <span className="mt-1 block text-body-s text-faint">{hint}</span>}
     </label>
   );
 }
@@ -153,7 +154,7 @@ export function Checkbox({ checked, onChange, label, className, size = 'md', ton
       className={cn(
         'group/cb relative shrink-0 inline-flex items-center justify-center rounded-full transition-all duration-200',
         dim,
-        checked ? 'bg-accent text-accent-fg animate-pop' : cn('shadow-[inset_0_0_0_1.5px_rgb(var(--line-strong))] hover:shadow-[inset_0_0_0_1.5px_rgb(var(--accent))]', tone),
+        checked ? 'bg-accent text-accent-fg animate-pop' : cn('shadow-[inset_0_0_0_1.5px_rgb(var(--faint)/0.75)] hover:shadow-[inset_0_0_0_1.5px_rgb(var(--accent))]', tone),
         className,
       )}
     >
@@ -178,9 +179,9 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
       aria-checked={checked}
       aria-label={label}
       onClick={() => onChange(!checked)}
-      className={cn('relative h-[18px] w-8 rounded-full transition-colors shrink-0', checked ? 'bg-accent' : 'bg-line-strong')}
+      className={cn('relative h-5 w-9 rounded-full transition-colors duration-normal shrink-0', checked ? 'bg-accent' : 'bg-sunken')}
     >
-      <span className={cn('absolute top-[2px] h-[14px] w-[14px] rounded-full bg-white shadow transition-all', checked ? 'left-[16px]' : 'left-[2px]')} />
+      <span className={cn('absolute top-[2px] h-4 w-4 rounded-full bg-raised shadow-sm transition-all duration-normal ease-spring', checked ? 'left-[18px]' : 'left-[2px]')} />
     </button>
   );
 }
@@ -189,7 +190,7 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
 const TONES: Record<Tone, string> = {
   neutral: 'text-muted',
   muted: 'text-muted',
-  accent: 'text-accent',
+  accent: 'text-accent-deep',
   info: 'text-info',
   warn: 'text-warn',
   danger: 'text-danger',
@@ -198,7 +199,7 @@ const TONES: Record<Tone, string> = {
 /** Quiet status label: a coloured dot + text on a hairline pill (no loud fills). */
 export function Badge({ tone = 'neutral', children, className, dot = true }: { tone?: Tone; children: ReactNode; className?: string; dot?: boolean }) {
   return (
-    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2 h-[20px] text-[11px] font-medium whitespace-nowrap bg-raised/70 shadow-[inset_0_0_0_1px_rgb(var(--line))]', TONES[tone], className)}>
+    <span className={cn('inline-flex h-[22px] items-center gap-1.5 whitespace-nowrap rounded-full bg-raised/60 px-2.5 text-caption font-semibold shadow-[inset_0_0_0_1px_rgb(var(--line)/var(--line-alpha))]', TONES[tone], className)}>
       {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
       <span className={tone === 'neutral' || tone === 'muted' ? 'text-muted' : 'text-fg/80'}>{children}</span>
     </span>
@@ -207,7 +208,7 @@ export function Badge({ tone = 'neutral', children, className, dot = true }: { t
 
 export function DemoBadge() {
   return (
-    <span className="inline-flex items-center rounded-sm border border-dashed border-line-strong px-1 font-mono text-[9px] uppercase tracking-[0.1em] text-faint" title="Demo content — remove it in Settings → Data">
+    <span className="inline-flex items-center rounded-xs border border-dashed border-line-strong px-1 font-mono text-micro uppercase tracking-[0.1em] text-faint" title="Demo content — remove it in Settings → Data">
       Demo
     </span>
   );
@@ -215,7 +216,7 @@ export function DemoBadge() {
 
 export function Tag({ name, color, onRemove }: { name: string; color?: string; onRemove?: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-sunken/80 px-2 h-[20px] text-[11px] text-muted">
+    <span className="inline-flex items-center gap-1 rounded-full bg-sunken/80 px-2 h-[20px] text-caption text-muted">
       <span className="h-1.5 w-1.5 rounded-full" style={{ background: color ?? 'rgb(var(--faint))' }} />
       {name}
       {onRemove && (
@@ -231,7 +232,7 @@ export function Tag({ name, color, onRemove }: { name: string; color?: string; o
 export function Progress({ value, className, tone = 'accent' }: { value: number; className?: string; tone?: 'accent' | 'ok' | 'warn' | 'ink' }) {
   const bg = tone === 'ok' ? 'bg-ok' : tone === 'warn' ? 'bg-warn' : tone === 'ink' ? 'bg-fg' : 'bg-accent';
   return (
-    <div className={cn('h-[3px] w-full rounded-full bg-line/70 overflow-hidden', className)} role="progressbar" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100}>
+    <div className={cn('h-1 w-full rounded-full bg-sunken/60 overflow-hidden', className)} role="progressbar" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100}>
       <div className={cn('h-full origin-left rounded-full transition-[width] duration-700 ease-out animate-grow', bg)} style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
     </div>
   );
@@ -243,13 +244,13 @@ export function Ring({ value, size = 36, stroke = 3.5, label }: { value: number;
   return (
     <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(var(--line))" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" style={{ stroke: 'rgb(var(--sunken) / 0.6)' }} strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
           r={r}
           fill="none"
-          stroke="rgb(var(--accent))"
+          style={{ stroke: 'rgb(var(--accent-deep))' }}
           strokeWidth={stroke}
           strokeLinecap="round"
           strokeDasharray={c}
@@ -257,7 +258,7 @@ export function Ring({ value, size = 36, stroke = 3.5, label }: { value: number;
           className="transition-all duration-1000 ease-out"
         />
       </svg>
-      <span className="absolute font-mono text-[10px] tabular-nums text-muted">{label ?? `${Math.round(value)}`}</span>
+      <span className="absolute font-mono text-micro tabular-nums text-muted">{label ?? `${Math.round(value)}`}</span>
     </div>
   );
 }
@@ -273,8 +274,8 @@ export function Empty({ icon: Icon, title, children, action, compact }: { icon?:
           <Icon className={cn('relative text-faint', compact ? 'h-4 w-4' : 'h-5 w-5')} strokeWidth={1.5} />
         </div>
       )}
-      <p className={cn(compact ? 'text-[13px] font-medium' : 'display text-[26px]')}>{title}</p>
-      {children && <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-muted">{children}</p>}
+      <p className={cn(compact ? 'text-body-s font-medium' : 'display text-h2')}>{title}</p>
+      {children && <p className="mt-1.5 max-w-sm text-body-s leading-relaxed text-muted">{children}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );
@@ -286,7 +287,7 @@ export function Spinner({ className }: { className?: string }) {
 
 export function Loading() {
   return (
-    <div className="mx-auto w-full max-w-[1180px] space-y-4 px-6 py-10 sm:px-10" aria-busy="true" aria-label="Loading">
+    <div className="w-full space-y-4 px-gutter py-10" aria-busy="true" aria-label="Loading">
       <div className="skeleton h-3 w-28" />
       <div className="skeleton h-10 w-72" />
       <div className="grid gap-4 pt-4 sm:grid-cols-3">
@@ -329,19 +330,19 @@ export function Modal({
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[10vh] animate-fade" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-[rgb(var(--desk)/0.55)] backdrop-blur-[6px]" onClick={onClose} />
-      <div className={cn('relative w-full rounded-2xl bg-surface shadow-pop animate-scale max-h-[80vh] flex flex-col ring-1 ring-line/80', width)}>
+      <div className="absolute inset-0 bg-desk/50 backdrop-blur-sm" onClick={onClose} />
+      <div className={cn('elevated relative flex max-h-[80vh] w-full flex-col !rounded-xl !shadow-xl animate-scale', width)}>
         {title && (
-          <div className="flex items-start justify-between gap-4 px-5 pt-4 pb-3">
+          <div className="flex items-start justify-between gap-4 px-6 pt-5 pb-3">
             <div>
-              <h2 className="display text-[24px]">{title}</h2>
-              {description && <p className="mt-0.5 text-[13px] text-muted">{description}</p>}
+              <h2 className="display text-h3">{title}</h2>
+              {description && <p className="mt-0.5 text-body-s text-muted">{description}</p>}
             </div>
             <IconButton icon={X} label="Close" onClick={onClose} className="-mr-1.5 -mt-0.5" />
           </div>
         )}
-        <div className="px-5 pb-4 overflow-y-auto">{children}</div>
-        {footer && <div className="flex items-center justify-end gap-2 border-t border-line px-5 py-3 bg-sunken/40 rounded-b-2xl">{footer}</div>}
+        <div className="overflow-y-auto px-6 pb-5">{children}</div>
+        {footer && <div className="flex items-center justify-end gap-2 rounded-b-xl border-t border-line bg-sunken/20 px-6 py-3.5">{footer}</div>}
       </div>
     </div>,
     document.body,
@@ -353,8 +354,8 @@ export function Drawer({ open, onClose, children, width = 'max-w-[560px]' }: { o
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-40 flex justify-end animate-fade" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-[rgb(var(--desk)/0.35)] backdrop-blur-[2px]" onClick={onClose} />
-      <div className={cn('relative m-0 h-full w-full bg-surface shadow-pop ring-1 ring-line/80 flex flex-col animate-drawer sm:m-2 sm:h-[calc(100%-1rem)] sm:rounded-2xl overflow-hidden', width)}>{children}</div>
+      <div className="absolute inset-0 bg-desk/35 backdrop-blur-[2px]" onClick={onClose} />
+      <div className={cn('elevated relative m-0 flex h-full w-full flex-col overflow-hidden !rounded-none !shadow-xl animate-drawer sm:m-3 sm:h-[calc(100%-1.5rem)] sm:!rounded-xl', width)}>{children}</div>
     </div>,
     document.body,
   );
@@ -387,7 +388,7 @@ export function Menu({ trigger, items, align = 'right', width = 'w-48' }: { trig
     <div className="relative inline-block" ref={ref}>
       {trigger(() => setOpen((o) => !o))}
       {open && (
-        <div className={cn('absolute z-30 mt-1.5 rounded-xl bg-raised/95 backdrop-blur p-1 shadow-pop ring-1 ring-line/80 animate-scale origin-top', width, align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left')} role="menu">
+        <div className={cn('elevated absolute z-30 mt-2 p-1.5 animate-scale', width, align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left')} role="menu">
           {items.map((it, i) =>
             it === 'divider' ? (
               <div key={i} className="my-1 h-px bg-line" />
@@ -403,13 +404,13 @@ export function Menu({ trigger, items, align = 'right', width = 'w-48' }: { trig
                   it.onClick();
                 }}
                 className={cn(
-                  'flex w-full items-center gap-2 rounded-md px-2 py-1.5 text-left text-[13px] disabled:opacity-40',
-                  it.danger ? 'text-danger hover:bg-danger/10' : 'hover:bg-sunken',
+                  'flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-body-s transition-colors duration-fast disabled:opacity-40',
+                  it.danger ? 'text-danger hover:bg-danger/10' : 'hover:bg-sunken/40',
                 )}
               >
                 {it.icon && <it.icon className="h-3.5 w-3.5 opacity-70" />}
                 <span className="flex-1">{it.label}</span>
-                {it.checked && <Check className="h-3.5 w-3.5 text-accent" />}
+                {it.checked && <Check className="h-3.5 w-3.5 text-accent-deep" />}
               </button>
             ),
           )}
@@ -438,31 +439,31 @@ export function Tabs<T extends string>({ value, onChange, tabs, className }: { v
           type="button"
           aria-selected={value === t.value}
           onClick={() => onChange(t.value)}
-          className={cn('flex items-center gap-1.5 pb-2 pt-1 text-[13px] transition-colors whitespace-nowrap', value === t.value ? 'text-fg font-medium' : 'text-faint hover:text-muted')}
+          className={cn('flex items-center gap-1.5 whitespace-nowrap pb-2.5 pt-1 text-body-s font-medium transition-colors duration-fast', value === t.value ? 'text-fg' : 'text-faint hover:text-muted')}
         >
           {t.icon && <t.icon className="h-3.5 w-3.5" strokeWidth={1.8} />}
           {t.label}
-          {t.count !== undefined && <span className="font-mono text-[10.5px] tabular-nums text-faint">{t.count}</span>}
+          {t.count !== undefined && <span className="font-mono text-micro tabular-nums text-faint">{t.count}</span>}
         </button>
       ))}
       <span className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-line" />
-      {bar && <span className="pointer-events-none absolute bottom-0 h-[1.5px] bg-fg transition-all duration-300 ease-out" style={{ left: bar.left, width: bar.width }} />}
+      {bar && <span className="pointer-events-none absolute bottom-0 h-[2px] rounded-full bg-fg transition-all duration-smooth ease-out" style={{ left: bar.left, width: bar.width }} />}
     </div>
   );
 }
 
 /**
- * Editorial page masthead: mono eyebrow, large serif title, quiet subtitle.
- * The eyebrow defaults to the section of the current page (e.g. "Work — 04").
+ * Workspace masthead: mono eyebrow, Instrument Serif title, quiet subtitle.
+ * The eyebrow defaults to the workspace the page belongs to (see app/nav.ts).
  */
 export function PageHeader({ title, subtitle, actions, eyebrow, children }: { title: ReactNode; subtitle?: ReactNode; actions?: ReactNode; icon?: LucideIcon; eyebrow?: ReactNode; children?: ReactNode }) {
   return (
-    <header className="mb-8 animate-in">
-      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+    <header className="mb-10 animate-in">
+      <div className="flex flex-wrap items-end justify-between gap-x-8 gap-y-5">
         <div className="min-w-0 max-w-3xl">
-          {eyebrow !== null && <div className="eyebrow mb-3">{eyebrow ?? <AutoEyebrow />}</div>}
-          <h1 className="display text-[40px] sm:text-[52px]">{title}</h1>
-          {subtitle && <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted">{subtitle}</p>}
+          {eyebrow !== null && <div className="eyebrow mb-4">{eyebrow ?? <AutoEyebrow />}</div>}
+          <h1 className="display text-display-l">{title}</h1>
+          {subtitle && <p className="mt-3 max-w-xl text-body-m text-muted">{subtitle}</p>}
         </div>
         {actions && <div className="flex flex-wrap items-center gap-2 pb-1">{actions}</div>}
       </div>
@@ -474,14 +475,19 @@ export function PageHeader({ title, subtitle, actions, eyebrow, children }: { ti
 function AutoEyebrow() {
   const n = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] || 'home' : '';
   const map: Record<string, string> = {
-    home: 'Home', 'my-day': 'Home — Today', calendar: 'Home — Calendar', tasks: 'Work — 01', projects: 'Work — 02', campaigns: 'Work — 03', content: 'Work — 04', ideas: 'Work — 05',
-    library: 'Knowledge — 01', documents: 'Knowledge — 02', notes: 'Knowledge — 03', analytics: 'Performance — 01', reviews: 'Performance — 02', assistant: 'System — AI', settings: 'System — Settings',
+    home: 'Home', 'my-day': 'Home · Today', calendar: 'Calendar', tasks: 'Tasks · Execution', projects: 'Projects · Workspace', campaigns: 'Studio · Communications',
+    content: 'Studio · Editorial', ideas: 'Library · Inbox', library: 'Library · Archive', documents: 'Library · Documents', notes: 'Library · Notes',
+    analytics: 'Insights · Performance', reviews: 'Insights · Monthly', assistant: 'Intelligence', settings: 'System · Settings',
   };
-  return <>{map[n] ?? 'Work OS'}</>;
+  return <>{map[n] ?? 'WorkOS'}</>;
 }
 
-export function Page({ children, className, wide }: { children: ReactNode; className?: string; wide?: boolean }) {
-  return <div className={cn('mx-auto w-full px-5 sm:px-10 py-8 sm:py-10', wide ? 'max-w-[1480px]' : 'max-w-[1220px]', className)}>{children}</div>;
+/**
+ * Full-width workspace canvas (DESIGN.md §8). Uses the page gutter tokens;
+ * pass `reading` only for long-form text that needs a measure.
+ */
+export function Page({ children, className, reading }: { children: ReactNode; className?: string; wide?: boolean; reading?: boolean }) {
+  return <div className={cn('w-full px-gutter pb-24 pt-8 sm:pt-10', reading && 'mx-auto max-w-reading', className)}>{children}</div>;
 }
 
 /** A titled region separated by a hairline rule — the default way to group content (instead of boxing everything). */
@@ -489,10 +495,10 @@ export function Section({ title, children, action, className, eyebrow }: { title
   return (
     <section className={cn('animate-in', className)}>
       {(title || action) && (
-        <header className="mb-4 flex items-end justify-between gap-3 border-b border-line pb-2.5">
+        <header className="mb-5 flex items-end justify-between gap-3 border-b border-line pb-3">
           <div>
-            {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
-            {title && <h2 className="display text-[22px]">{title}</h2>}
+            {eyebrow && <div className="eyebrow mb-2">{eyebrow}</div>}
+            {title && <h2 className="display text-h2">{title}</h2>}
           </div>
           {action}
         </header>
@@ -502,13 +508,38 @@ export function Section({ title, children, action, className, eyebrow }: { title
   );
 }
 
+type PanelVariant = 'solid' | 'glass' | 'workspace' | 'ink' | 'elevated';
+/**
+ * Floating surface (DESIGN.md §6).
+ *  solid      — Level 2 work panel (default)
+ *  glass      — Level 2 translucent panel over the environment
+ *  workspace  — large Level 2 region (22px radius, deeper shadow)
+ *  elevated   — Level 3 (menus, popovers, dialogs)
+ *  ink        — inverse graphite panel for the single most important block
+ */
+export function Panel({ variant = 'solid', as: As = 'section', className, children, ...rest }: { variant?: PanelVariant; as?: 'section' | 'div' | 'article' | 'aside'; className?: string; children: ReactNode } & React.HTMLAttributes<HTMLElement>) {
+  const v: Record<PanelVariant, string> = {
+    solid: 'panel',
+    glass: 'glass rounded-lg',
+    workspace: 'workspace',
+    elevated: 'elevated',
+    ink: 'ink-panel grain overflow-hidden',
+  };
+  return (
+    <As className={cn(v[variant], className)} {...rest}>
+      {children}
+    </As>
+  );
+}
+
+/** A titled Level-2 panel. Use when grouping genuinely helps; prefer Section otherwise. */
 export function Card({ children, className, title, action, icon: Icon, padded = true }: { children: ReactNode; className?: string; title?: ReactNode; action?: ReactNode; icon?: LucideIcon; padded?: boolean }) {
   return (
-    <section className={cn('card', className)}>
+    <section className={cn('panel', className)}>
       {title && (
-        <header className="flex items-center justify-between gap-2 px-5 pt-4 pb-2.5">
-          <h3 className="flex items-center gap-2 eyebrow !text-muted">
-            {Icon && <Icon className="h-3 w-3" strokeWidth={2} />}
+        <header className="flex items-center justify-between gap-2 px-5 pb-3 pt-4">
+          <h3 className="eyebrow flex items-center gap-2 !text-muted">
+            {Icon && <Icon className="h-3.5 w-3.5" strokeWidth={1.8} />}
             {title}
           </h3>
           {action}
@@ -519,24 +550,25 @@ export function Card({ children, className, title, action, icon: Icon, padded = 
   );
 }
 
+/** Metric: mono label, mono tabular value (DESIGN.md §2 — numbers are technical). */
 export function Stat({ label, value, sub, tone }: { label: string; value: ReactNode; sub?: ReactNode; tone?: 'ok' | 'danger' | 'muted' }) {
   return (
     <div className="min-w-0">
       <div className="eyebrow">{label}</div>
-      <div className="num mt-2.5 text-[40px]">{value}</div>
-      {sub && <div className={cn('meta mt-1.5', tone === 'ok' ? 'text-ok' : tone === 'danger' ? 'text-danger' : 'text-muted')}>{sub}</div>}
+      <div className="num mt-3 text-h1">{value}</div>
+      {sub && <div className={cn('meta mt-2', tone === 'ok' ? 'text-ok' : tone === 'danger' ? 'text-danger' : 'text-muted')}>{sub}</div>}
     </div>
   );
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-line bg-raised px-1 font-mono text-[10px] text-faint">{children}</kbd>;
+  return <kbd className="inline-flex h-5 min-w-5 items-center justify-center rounded-xs bg-sunken/45 px-1 font-mono text-micro text-muted">{children}</kbd>;
 }
 
 export function SavedIndicator({ status }: { status: 'idle' | 'pending' | 'saving' | 'saved' | 'error' }) {
   const text = { idle: 'All changes saved', pending: 'Editing…', saving: 'Saving…', saved: 'Saved', error: 'Could not save' }[status];
   return (
-    <span className={cn('inline-flex items-center gap-1.5 font-mono text-[10.5px]', status === 'error' ? 'text-danger' : 'text-faint')} aria-live="polite">
+    <span className={cn('inline-flex items-center gap-1.5 font-mono text-micro', status === 'error' ? 'text-danger' : 'text-faint')} aria-live="polite">
       <span className={cn('h-1.5 w-1.5 rounded-full', status === 'pending' || status === 'saving' ? 'bg-warn animate-pulse' : status === 'error' ? 'bg-danger' : 'bg-ok')} />
       {text}
     </span>

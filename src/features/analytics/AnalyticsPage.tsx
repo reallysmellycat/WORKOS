@@ -1,3 +1,4 @@
+import { resolveColor, roleColor, useThemeVersion } from '@/lib/tokens';
 import { useEffect, useMemo, useState } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { CartesianGrid, Line, LineChart, ReferenceLine, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
@@ -15,7 +16,7 @@ import { completedByWeek, contentTotals, coverageByMonth, projectsCompletedByMon
 
 type Tab = 'overview' | 'kpis';
 
-const TONE_COLOR: Record<string, string> = { muted: '#A6A196', info: '#5E7F9E', warn: '#B88A4E', ok: '#6F8F6C', neutral: '#8C8780', accent: '#6F8F6C', danger: '#B5574B' };
+const TONE_COLOR: Record<string, string> = { muted: roleColor('sunken'), info: roleColor('info'), warn: roleColor('ochre'), ok: roleColor('accent'), neutral: roleColor('faint'), accent: roleColor('accent'), danger: roleColor('danger') };
 
 export default function AnalyticsPage() {
   const [params] = useSearchParams();
@@ -68,7 +69,7 @@ function Overview() {
       </div>
 
       <Card title="Task throughput · last 12 weeks">
-        <Bars data={weeks} x="label" series={[{ key: 'created', label: 'Created', color: '#C9C2B4' }, { key: 'completed', label: 'Completed' }]} height={230} />
+        <Bars data={weeks} x="label" series={[{ key: 'created', label: 'Created', color: roleColor('sunken') }, { key: 'completed', label: 'Completed', color: roleColor('accent') }]} height={230} />
       </Card>
 
       <div className="grid gap-5 md:grid-cols-2">
@@ -76,16 +77,16 @@ function Overview() {
           <StatusBar parts={TASK_STATUSES.map((s) => ({ label: s.label, value: topTasks.filter((t) => t.status === s.value).length, color: TONE_COLOR[s.tone] }))} />
           <div className="mt-4 grid grid-cols-3 gap-3 text-center">
             <div>
-              <div className="text-[17px] font-semibold tabular-nums text-danger">{topTasks.filter((t) => t.status !== 'completed' && t.dueDate && t.dueDate < todayISO()).length}</div>
-              <div className="text-2xs uppercase tracking-wide text-faint">Overdue</div>
+              <div className="text-h4 font-semibold tabular-nums text-danger">{topTasks.filter((t) => t.status !== 'completed' && t.dueDate && t.dueDate < todayISO()).length}</div>
+              <div className="text-caption uppercase tracking-wide text-faint">Overdue</div>
             </div>
             <div>
-              <div className="text-[17px] font-semibold tabular-nums">{topTasks.filter((t) => t.status !== 'completed' && !t.dueDate).length}</div>
-              <div className="text-2xs uppercase tracking-wide text-faint">No due date</div>
+              <div className="text-h4 font-semibold tabular-nums">{topTasks.filter((t) => t.status !== 'completed' && !t.dueDate).length}</div>
+              <div className="text-caption uppercase tracking-wide text-faint">No due date</div>
             </div>
             <div>
-              <div className="text-[17px] font-semibold tabular-nums">{topTasks.filter((t) => t.recurrence && t.status !== 'completed').length}</div>
-              <div className="text-2xs uppercase tracking-wide text-faint">Recurring</div>
+              <div className="text-h4 font-semibold tabular-nums">{topTasks.filter((t) => t.recurrence && t.status !== 'completed').length}</div>
+              <div className="text-caption uppercase tracking-wide text-faint">Recurring</div>
             </div>
           </div>
         </Card>
@@ -99,18 +100,18 @@ function Overview() {
 
       <Card title="Project progress">
         {active.length === 0 ? (
-          <p className="text-[13px] text-faint">No active projects.</p>
+          <p className="text-body-s text-faint">No active projects.</p>
         ) : (
           <div className="space-y-3">
             {active.map((p) => {
               const prog = projectProgress(p, tasks);
               return (
-                <Link key={p.id} to={`/projects/${p.id}`} className="-mx-2 grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 rounded-md px-2 py-1 sm:grid-cols-[220px_1fr_auto] row-hover">
-                  <span className="truncate text-[13px] font-medium">{p.title}</span>
-                  <span className="text-xs tabular-nums text-muted sm:order-last">{prog.percent}%</span>
+                <Link key={p.id} to={`/projects/${p.id}`} className="-mx-2 grid grid-cols-[1fr_auto] items-center gap-x-4 gap-y-1 rounded-sm px-2 py-1 sm:grid-cols-[220px_1fr_auto] row-hover">
+                  <span className="truncate text-body-s font-medium">{p.title}</span>
+                  <span className="text-body-s tabular-nums text-muted sm:order-last">{prog.percent}%</span>
                   <div className="col-span-2 sm:col-span-1">
                     <Progress value={prog.percent} />
-                    <div className="mt-0.5 text-2xs text-faint">{prog.explanation}</div>
+                    <div className="mt-0.5 text-caption text-faint">{prog.explanation}</div>
                   </div>
                 </Link>
               );
@@ -121,8 +122,8 @@ function Overview() {
 
       <div className="grid gap-5 md:grid-cols-2">
         <Card title="Content published per month">
-          {pub.platforms.length ? <Bars data={pub.data} x="month" series={pub.platforms.map((p) => ({ key: p, color: colorFor(p) }))} stacked height={200} /> : <p className="text-[13px] text-faint">No published content yet.</p>}
-          <div className="mt-3 flex gap-5 text-xs text-muted">
+          {pub.platforms.length ? <Bars data={pub.data} x="month" series={pub.platforms.map((p) => ({ key: p, color: colorFor(p) }))} stacked height={200} /> : <p className="text-body-s text-faint">No published content yet.</p>}
+          <div className="mt-3 flex gap-5 text-body-s text-muted">
             <span>
               Total reach <strong className="text-fg tabular-nums">{compactNumber(totals.reach)}</strong>
             </span>
@@ -136,7 +137,7 @@ function Overview() {
         </Card>
         <Card title="Coverage per month">
           <Bars data={cov} x="month" series={[{ key: 'pieces', label: 'Pieces' }]} height={200} />
-          <div className="mt-3 text-xs text-muted">
+          <div className="mt-3 text-body-s text-muted">
             Reach over 6 months <strong className="text-fg tabular-nums">{compactNumber(cov.reduce((s, c) => s + c.reach, 0))}</strong>
           </div>
         </Card>
@@ -144,12 +145,12 @@ function Overview() {
 
       <Card title="Campaign performance" padded={false}>
         {campaigns.length === 0 ? (
-          <p className="px-4 pb-4 text-[13px] text-faint">No campaigns yet.</p>
+          <p className="px-4 pb-4 text-body-s text-faint">No campaigns yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[640px] text-[13px]">
+            <table className="w-full min-w-[640px] text-body-s">
               <thead>
-                <tr className="border-y border-line text-left text-2xs uppercase tracking-wider text-faint">
+                <tr className="border-y border-line text-left text-caption uppercase tracking-wider text-faint">
                   <th className="px-4 py-2 font-semibold">Campaign</th>
                   <th className="px-3 py-2 font-semibold">Status</th>
                   <th className="px-3 py-2 text-right font-semibold">Coverage</th>
@@ -167,7 +168,7 @@ function Overview() {
                   return (
                     <tr key={c.id} className="border-b border-line last:border-0">
                       <td className="px-4 py-2.5">
-                        <Link to={`/campaigns/${c.id}`} className="font-medium hover:text-accent">
+                        <Link to={`/campaigns/${c.id}`} className="font-medium hover:text-accent-deep">
                           {c.name}
                         </Link>
                       </td>
@@ -205,6 +206,7 @@ function kpiStats(k: KPI, entries: KPIEntry[]) {
 }
 
 function KPIs({ focus }: { focus: string | null }) {
+  useThemeVersion();
   const kpis = useKPIs();
   const entries = useKPIEntries();
   const { toast, confirm } = useFeedback();
@@ -220,7 +222,7 @@ function KPIs({ focus }: { focus: string | null }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between gap-3">
-        <p className="text-[13px] text-muted">Track anything that matters to you — define the measure, a target, and record values over time.</p>
+        <p className="text-body-s text-muted">Track anything that matters to you — define the measure, a target, and record values over time.</p>
         <Button variant="primary" icon={Plus} onClick={() => setEditing('new')}>
           New KPI
         </Button>
@@ -240,8 +242,8 @@ function KPIs({ focus }: { focus: string | null }) {
               <section key={k.id} id={`kpi-${k.id}`} className={cn('card p-4', focus === k.id && 'ring-2 ring-accent/40')}>
                 <div className="flex items-start gap-2">
                   <div className="min-w-0 flex-1">
-                    <h3 className="text-[14px] font-semibold">{k.name}</h3>
-                    <p className="text-xs text-faint">
+                    <h3 className="text-body-m font-semibold">{k.name}</h3>
+                    <p className="text-body-s text-faint">
                       {k.period[0].toUpperCase() + k.period.slice(1)} · {k.direction === 'up' ? 'higher is better' : 'lower is better'}
                       {k.unit ? ` · ${k.unit}` : ''}
                     </p>
@@ -270,11 +272,11 @@ function KPIs({ focus }: { focus: string | null }) {
                 </div>
                 <div className="mt-3 flex items-end gap-4">
                   <div>
-                    <div className="text-[28px] font-semibold leading-none tabular-nums">{st.cur ? fmtNumber(st.cur.value) : '—'}</div>
-                    <div className="mt-1 text-xs text-faint">{st.cur ? `as of ${fmtDate(st.cur.date, 'd MMM yyyy')}` : 'No values yet'}</div>
+                    <div className="text-h2 font-semibold leading-none tabular-nums">{st.cur ? fmtNumber(st.cur.value) : '—'}</div>
+                    <div className="mt-1 text-body-s text-faint">{st.cur ? `as of ${fmtDate(st.cur.date, 'd MMM yyyy')}` : 'No values yet'}</div>
                   </div>
                   {st.change !== null && (
-                    <span className={cn('mb-4 inline-flex items-center gap-1 text-xs', st.good ? 'text-ok' : 'text-danger')}>
+                    <span className={cn('mb-4 inline-flex items-center gap-1 text-body-s', st.good ? 'text-ok' : 'text-danger')}>
                       {st.change >= 0 ? <TrendingUp className="h-3.5 w-3.5" /> : <TrendingDown className="h-3.5 w-3.5" />}
                       {st.change >= 0 ? '+' : ''}
                       {fmtNumber(st.change)}
@@ -284,7 +286,7 @@ function KPIs({ focus }: { focus: string | null }) {
                   <div className="flex-1" />
                   {k.target != null && (
                     <div className="w-32 text-right">
-                      <div className="text-xs text-muted">
+                      <div className="text-body-s text-muted">
                         Target <span className="tabular-nums text-fg">{fmtNumber(k.target)}</span>
                       </div>
                       <Progress className="mt-1" value={st.toTarget ?? 0} tone={(st.toTarget ?? 0) >= 100 ? 'ok' : 'accent'} />
@@ -298,16 +300,16 @@ function KPIs({ focus }: { focus: string | null }) {
                         <CartesianGrid vertical={false} />
                         <XAxis dataKey="date" tickLine={false} axisLine={false} fontSize={11} minTickGap={12} />
                         <YAxis tickLine={false} axisLine={false} fontSize={11} width={44} tickFormatter={(v) => compactNumber(v)} domain={['auto', 'auto']} />
-                        <Tooltip contentStyle={{ background: 'rgb(var(--raised))', border: '1px solid rgb(var(--line))', borderRadius: 6, fontSize: 12 }} />
-                        {k.target != null && <ReferenceLine y={k.target} stroke="rgb(var(--faint))" strokeDasharray="4 4" label={{ value: 'Target', position: 'insideTopRight', fontSize: 10, fill: 'rgb(var(--faint))' }} />}
-                        <Line type="monotone" dataKey="value" name={k.name} stroke={k.color ?? '#6F8F6C'} strokeWidth={2} dot={{ r: 2.5 }} />
+                        <Tooltip contentStyle={{ background: 'rgb(var(--raised))', border: '1px solid rgb(var(--line) / var(--line-alpha))', borderRadius: 'var(--radius-md)', fontSize: 'var(--text-caption)', boxShadow: 'var(--shadow-lg)' }} />
+                        {k.target != null && <ReferenceLine y={k.target} stroke={resolveColor(roleColor('faint'))} strokeDasharray="4 4" label={{ value: 'Target', position: 'insideTopRight', fontSize: 10, fill: resolveColor(roleColor('faint')) }} />}
+                        <Line type="monotone" dataKey="value" name={k.name} stroke={resolveColor(k.color ?? roleColor('accent'))} strokeWidth={2} dot={{ r: 2.5 }} />
                       </LineChart>
                     </ResponsiveContainer>
                   </div>
                 ) : (
-                  <p className="mt-4 text-xs text-faint">Record at least two values to see a trend.</p>
+                  <p className="mt-4 text-body-s text-faint">Record at least two values to see a trend.</p>
                 )}
-                {k.description && <p className="mt-2 text-xs text-muted">{k.description}</p>}
+                {k.description && <p className="mt-2 text-body-s text-muted">{k.description}</p>}
               </section>
             );
           })}
@@ -393,14 +395,14 @@ function HistoryModal({ kpi, entries, onClose }: { kpi: KPI; entries: KPIEntry[]
   return (
     <Modal open onClose={onClose} title={`${kpi.name} — history`}>
       {sorted.length === 0 ? (
-        <p className="text-[13px] text-faint">No values recorded.</p>
+        <p className="text-body-s text-faint">No values recorded.</p>
       ) : (
         <div className="divide-y divide-line">
           {sorted.map((e) => (
             <div key={e.id} className="flex items-center gap-3 py-2">
               <Input type="date" className="w-40" defaultValue={e.date} onBlur={(ev) => ev.target.value && ev.target.value !== e.date && update<KPIEntry>('kpiEntries', e.id, { date: ev.target.value }, { log: false })} />
               <Input type="number" className="w-28" defaultValue={e.value} onBlur={(ev) => ev.target.value !== '' && Number(ev.target.value) !== e.value && update<KPIEntry>('kpiEntries', e.id, { value: Number(ev.target.value) }, { log: false })} />
-              <span className="flex-1 truncate text-xs text-muted">{e.note}</span>
+              <span className="flex-1 truncate text-body-s text-muted">{e.note}</span>
               <IconButton icon={Trash2} size="sm" label="Delete value" onClick={() => softDelete('kpiEntries', e.id)} />
             </div>
           ))}

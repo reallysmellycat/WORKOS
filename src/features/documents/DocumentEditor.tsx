@@ -85,7 +85,7 @@ export default function DocumentEditor() {
           </Button>
           {draft.isDemo && <DemoBadge />}
           <div className="flex-1" />
-          <span className="hidden text-xs text-faint sm:inline">{wordCount(draft.body).toLocaleString()} words · ~{Math.max(1, Math.round(wordCount(draft.body) / 230))} min read</span>
+          <span className="hidden text-body-s text-faint sm:inline">{wordCount(draft.body).toLocaleString()} words · ~{Math.max(1, Math.round(wordCount(draft.body) / 230))} min read</span>
           <SavedIndicator status={status} />
           <Button size="sm" variant={focus ? 'subtle' : 'ghost'} onClick={() => setFocus((f) => !f)}>
             {focus ? 'Exit focus' : 'Focus'}
@@ -108,12 +108,12 @@ export default function DocumentEditor() {
           <IconButton icon={PanelRight} label="Toggle details" active={side && !focus} onClick={() => setSide((s) => !s)} className="hidden lg:inline-flex" />
           <Menu trigger={(t) => <IconButton icon={MoreHorizontal} label="Document actions" onClick={t} />} items={[{ label: 'Move to Trash', icon: Trash2, danger: true, onClick: remove }]} />
         </div>
-        <div className="mx-auto max-w-[780px] px-5 py-8 sm:px-12" style={{ ["--sticky-top" as string]: "94px" } as React.CSSProperties}>
+        <div className="mx-auto max-w-reading px-5 py-8 sm:px-12" style={{ ["--sticky-top" as string]: "calc(var(--nav-height) + 44px)" } as React.CSSProperties}>
           <input
             value={draft.title}
             onChange={(e) => set({ title: e.target.value })}
             placeholder="Untitled document"
-            className="mb-6 w-full bg-transparent font-serif text-[34px] font-medium leading-tight tracking-tight outline-none placeholder:text-faint"
+            className="mb-6 w-full bg-transparent font-serif text-h1 font-medium leading-tight tracking-tight outline-none placeholder:text-faint"
           />
           <MarkdownEditor value={draft.body} onChange={(body) => set({ body })} owner={{ type: 'document', id: draft.id }} minHeight={560} serif />
         </div>
@@ -155,13 +155,13 @@ export default function DocumentEditor() {
           <div>
             <span className="label">Attached to</span>
             <RefsEditor refs={draft.refs} onChange={(refs) => set({ refs })} />
-            <p className="mt-1 text-2xs text-faint">Link this document to projects, campaigns or tasks so it shows up there.</p>
+            <p className="mt-1 text-caption text-faint">Link this document to projects, campaigns or tasks so it shows up there.</p>
           </div>
           <div>
             <span className="label">Files</span>
             <Attachments owner={{ type: 'document', id: draft.id }} />
           </div>
-          <p className="text-2xs text-faint">
+          <p className="text-caption text-faint">
             Created {fmtTs(draft.createdAt, 'd MMM yyyy')} · edited {timeAgo(record?.updatedAt ?? draft.updatedAt)}
           </p>
         </aside>

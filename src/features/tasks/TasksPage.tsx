@@ -258,8 +258,8 @@ export default function TasksPage() {
       )}
 
       {selected.size > 0 && (
-        <div className="glass sticky top-[calc(var(--sticky-top,0px)+8px)] z-10 mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-line px-3 py-2 shadow-pop animate-in">
-          <span className="text-[13px] font-medium">{selected.size} selected</span>
+        <div className="glass sticky top-[calc(var(--sticky-top,0px)+8px)] z-10 mb-3 flex flex-wrap items-center gap-2 rounded-md border border-line px-3 py-2 shadow-lg animate-in">
+          <span className="text-body-s font-medium">{selected.size} selected</span>
           <div className="h-4 w-px bg-line" />
           <Button size="sm" icon={CheckSquare} onClick={bulk.complete}>
             Complete
@@ -311,11 +311,11 @@ export default function TasksPage() {
               onChange={(e) => setNewTitle(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && addInline()}
               placeholder="Add a task and press Enter"
-              className="flex-1 bg-transparent py-1 text-[13.5px] outline-none placeholder:text-faint"
+              className="flex-1 bg-transparent py-1 text-body-m outline-none placeholder:text-faint"
             />
             {filtered.length > 0 && (
               <button
-                className="text-xs text-faint hover:text-fg"
+                className="text-body-s text-faint hover:text-fg"
                 onClick={() => setSelected(selected.size === filtered.length ? new Set() : new Set(filtered.map((t) => t.id)))}
               >
                 {selected.size === filtered.length ? 'Deselect all' : 'Select all'}
@@ -487,17 +487,17 @@ function Board({
               const id = e.dataTransfer.getData('text/task-id');
               if (id) void drop(col.key, id);
             }}
-            className={cn('flex min-h-[300px] flex-col rounded-lg bg-sunken/50 p-2 transition-colors', over === col.key && 'bg-accent-soft/60 ring-1 ring-accent/30')}
+            className={cn('flex min-h-[300px] flex-col rounded-md bg-sunken/50 p-2 transition-colors', over === col.key && 'bg-accent-soft/60 ring-1 ring-accent/30')}
           >
             <div className="flex items-center gap-2 px-1.5 pb-2 pt-1">
               <Badge tone={col.tone} dot>
                 {col.label}
               </Badge>
-              <span className="text-xs text-faint tabular-nums">{items.length}</span>
+              <span className="text-body-s text-faint tabular-nums">{items.length}</span>
             </div>
             <div className="flex flex-col gap-1.5">
               {items.map((t) => (
-                <div key={t.id} className="rounded-md border border-line bg-raised shadow-soft">
+                <div key={t.id} className="rounded-sm border border-line bg-raised shadow-xs">
                   <TaskRow
                     task={t}
                     project={t.projectId ? (projectMap.get(t.projectId) as never) : null}
@@ -507,7 +507,7 @@ function Board({
                   />
                 </div>
               ))}
-              {items.length === 0 && <div className="rounded-md border border-dashed border-line-strong/70 py-6 text-center text-xs text-faint">Drop tasks here</div>}
+              {items.length === 0 && <div className="rounded-sm border border-dashed border-line-strong/70 py-6 text-center text-body-s text-faint">Drop tasks here</div>}
             </div>
           </div>
         );

@@ -141,8 +141,8 @@ export function QuickAdd({ preset, onClose }: { preset: QuickAddPreset; onClose:
               type="button"
               onClick={() => setType(t.value)}
               className={cn(
-                'flex items-center gap-1.5 rounded-md px-2 h-7 text-[12.5px] transition-colors',
-                type === t.value ? 'bg-accent-soft text-accent font-medium' : 'text-muted hover:bg-sunken',
+                'flex items-center gap-1.5 rounded-sm px-2 h-7 text-body-s transition-colors',
+                type === t.value ? 'bg-accent-soft text-accent-deep font-medium' : 'text-muted hover:bg-sunken',
               )}
             >
               <t.icon className="h-3.5 w-3.5" />
@@ -161,7 +161,7 @@ export function QuickAdd({ preset, onClose }: { preset: QuickAddPreset; onClose:
             value={title}
             onChange={(e) => setTitle(e.target.value)}
             placeholder={placeholder[type]}
-            className="w-full bg-transparent py-2 text-[17px] font-medium outline-none placeholder:text-faint"
+            className="w-full bg-transparent py-2 text-h4 font-medium outline-none placeholder:text-faint"
             onKeyDown={(e) => {
               if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
                 e.preventDefault();
@@ -232,9 +232,9 @@ export function QuickAdd({ preset, onClose }: { preset: QuickAddPreset; onClose:
               )}
             </div>
           )}
-          {type === 'idea' && <p className="mt-1 text-xs text-faint">Ideas land in your inbox uncategorised. You decide what they become.</p>}
+          {type === 'idea' && <p className="mt-1 text-body-s text-faint">Ideas land in your inbox uncategorised. You decide what they become.</p>}
           <div className="mt-5 flex items-center justify-between gap-2 border-t border-line pt-3">
-            <span className="hidden sm:flex items-center gap-1.5 text-2xs text-faint">
+            <span className="hidden sm:flex items-center gap-1.5 text-caption text-faint">
               <Kbd>Enter</Kbd> save {!opensPage && (<><Kbd>⌘ Enter</Kbd> save & open</>)} <Kbd>Esc</Kbd> close
             </span>
             <div className="flex gap-2 ml-auto">

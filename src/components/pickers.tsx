@@ -42,13 +42,13 @@ export function TagInput({ value, onChange, placeholder = 'Add tag…' }: { valu
             } else if (e.key === 'Backspace' && !text && value.length) onChange(value.slice(0, -1));
           }}
           placeholder={value.length ? '' : placeholder}
-          className="min-w-[80px] flex-1 bg-transparent outline-none text-[13px] placeholder:text-faint"
+          className="min-w-[80px] flex-1 bg-transparent outline-none text-body-s placeholder:text-faint"
         />
       </div>
       {focus && suggestions.length > 0 && (
-        <div className="absolute z-20 mt-1 w-full rounded-lg border border-line bg-raised p-1 shadow-pop">
+        <div className="absolute z-20 mt-1 w-full rounded-md border border-line bg-raised p-1 shadow-lg">
           {suggestions.map((s) => (
-            <button key={s} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => add(s)} className="flex w-full items-center gap-2 rounded px-2 py-1 text-left text-[13px] hover:bg-sunken">
+            <button key={s} type="button" onMouseDown={(e) => e.preventDefault()} onClick={() => add(s)} className="flex w-full items-center gap-2 rounded-sm px-2 py-1 text-left text-body-s hover:bg-sunken">
               <span className="h-2 w-2 rounded-full" style={{ background: colors.get(s) }} />
               {s}
             </button>
@@ -110,12 +110,12 @@ export function ChecklistEditor({ items, onChange }: { items: ChecklistItem[]; o
   return (
     <div className="space-y-0.5">
       {items.map((it) => (
-        <div key={it.id} className="group flex items-center gap-2 rounded-md px-1 py-1 row-hover">
+        <div key={it.id} className="group flex items-center gap-2 rounded-sm px-1 py-1 row-hover">
           <Checkbox size="sm" checked={it.done} onChange={(v) => onChange(items.map((x) => (x.id === it.id ? { ...x, done: v } : x)))} />
           <input
             value={it.text}
             onChange={(e) => onChange(items.map((x) => (x.id === it.id ? { ...x, text: e.target.value } : x)))}
-            className={cn('flex-1 bg-transparent text-[13px] outline-none', it.done && 'line-through text-faint')}
+            className={cn('flex-1 bg-transparent text-body-s outline-none', it.done && 'line-through text-faint')}
           />
           <IconButton icon={X} label="Remove item" size="sm" className="opacity-0 group-hover:opacity-100" onClick={() => onChange(items.filter((x) => x.id !== it.id))} />
         </div>
@@ -132,7 +132,7 @@ export function ChecklistEditor({ items, onChange }: { items: ChecklistItem[]; o
             }
           }}
           placeholder="Add item and press Enter"
-          className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-faint"
+          className="flex-1 bg-transparent text-body-s outline-none placeholder:text-faint"
         />
       </div>
     </div>
@@ -153,9 +153,9 @@ export function LinksEditor({ links, onChange }: { links: LinkItem[]; onChange: 
   return (
     <div className="space-y-1.5">
       {links.map((l) => (
-        <div key={l.id} className="group flex items-center gap-2 rounded-md px-1 py-1 row-hover">
+        <div key={l.id} className="group flex items-center gap-2 rounded-sm px-1 py-1 row-hover">
           <Link2 className="h-3.5 w-3.5 text-faint shrink-0" />
-          <a href={l.url} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-[13px] hover:text-accent">
+          <a href={l.url} target="_blank" rel="noopener noreferrer" className="flex-1 truncate text-body-s hover:text-accent-deep">
             {l.title}
           </a>
           <ExternalLink className="h-3 w-3 text-faint" />
@@ -194,9 +194,9 @@ export function RefsEditor({ refs, onChange, exclude }: { refs: EntityRef[]; onC
   return (
     <div className="space-y-1">
       {resolved.map(({ ref, title, exists }) => (
-        <div key={refKey(ref)} className="group flex items-center gap-2 rounded-md px-1 py-1 row-hover">
-          <span className="w-16 shrink-0 text-2xs uppercase tracking-wide text-faint">{ENTITY[ref.type].label}</span>
-          <button className={cn('flex-1 truncate text-left text-[13px] hover:text-accent', !exists && 'text-faint line-through')} onClick={() => exists && openEntity(ref.type, ref.id)}>
+        <div key={refKey(ref)} className="group flex items-center gap-2 rounded-sm px-1 py-1 row-hover">
+          <span className="w-16 shrink-0 text-caption uppercase tracking-wide text-faint">{ENTITY[ref.type].label}</span>
+          <button className={cn('flex-1 truncate text-left text-body-s hover:text-accent-deep', !exists && 'text-faint line-through')} onClick={() => exists && openEntity(ref.type, ref.id)}>
             {title}
           </button>
           <IconButton icon={X} label="Unlink" size="sm" className="opacity-0 group-hover:opacity-100" onClick={() => onChange(refs.filter((r) => refKey(r) !== refKey(ref)))} />
@@ -237,16 +237,16 @@ export function EntitySearch({ onPick, onCancel, types = LINKABLE, exclude }: { 
     return out.slice(0, 12);
   }, [q]);
   return (
-    <div className="rounded-lg border border-line bg-raised p-1.5 shadow-soft">
+    <div className="rounded-md border border-line bg-raised p-1.5 shadow-xs">
       <Input autoFocus value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search projects, tasks, notes…" onKeyDown={(e) => e.key === 'Escape' && onCancel()} />
       <div className="mt-1 max-h-56 overflow-y-auto">
         {(results ?? []).map((r) => (
-          <button key={refKey(r.ref)} type="button" onClick={() => onPick(r.ref)} className="flex w-full items-center gap-2 rounded px-2 py-1.5 text-left text-[13px] hover:bg-sunken">
-            <span className="w-16 shrink-0 text-2xs uppercase tracking-wide text-faint">{ENTITY[r.ref.type].label}</span>
+          <button key={refKey(r.ref)} type="button" onClick={() => onPick(r.ref)} className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-left text-body-s hover:bg-sunken">
+            <span className="w-16 shrink-0 text-caption uppercase tracking-wide text-faint">{ENTITY[r.ref.type].label}</span>
             <span className="truncate">{r.title}</span>
           </button>
         ))}
-        {results && !results.length && <p className="px-2 py-2 text-xs text-faint">No matches.</p>}
+        {results && !results.length && <p className="px-2 py-2 text-body-s text-faint">No matches.</p>}
       </div>
       <div className="mt-1 flex justify-end">
         <Button size="xs" variant="ghost" onClick={onCancel}>
@@ -266,12 +266,12 @@ export function Backlinks({ target }: { target: EntityRef }) {
     const docs = (await db.documents.toArray()).filter((d) => !d.deletedAt && match(d.refs));
     return [...notes.map((n) => ({ id: n.id, title: n.title, type: 'note' as const })), ...docs.map((d) => ({ id: d.id, title: d.title, type: 'document' as const }))];
   }, [target.type, target.id]);
-  if (!items?.length) return <p className="text-xs text-faint">No notes or documents link here yet.</p>;
+  if (!items?.length) return <p className="text-body-s text-faint">No notes or documents link here yet.</p>;
   return (
     <div className="space-y-0.5">
       {items.map((i) => (
-        <button key={i.id} onClick={() => navigate(ENTITY[i.type].route(i.id))} className="flex w-full items-center gap-2 rounded-md px-1 py-1 text-left text-[13px] row-hover">
-          <span className="w-16 shrink-0 text-2xs uppercase tracking-wide text-faint">{ENTITY[i.type].label}</span>
+        <button key={i.id} onClick={() => navigate(ENTITY[i.type].route(i.id))} className="flex w-full items-center gap-2 rounded-sm px-1 py-1 text-left text-body-s row-hover">
+          <span className="w-16 shrink-0 text-caption uppercase tracking-wide text-faint">{ENTITY[i.type].label}</span>
           <span className="truncate">{i.title || 'Untitled'}</span>
         </button>
       ))}
@@ -301,26 +301,26 @@ export function Attachments({ owner }: { owner: EntityRef }) {
         setDrag(false);
         void upload(e.dataTransfer.files);
       }}
-      className={cn('rounded-lg transition-colors', drag && 'bg-accent-soft/60 ring-1 ring-accent/40')}
+      className={cn('rounded-md transition-colors', drag && 'bg-accent-soft/60 ring-1 ring-accent/40')}
     >
       <div className="space-y-0.5">
         {(files ?? []).map((f) => (
-          <div key={f.id} className="group flex items-center gap-2 rounded-md px-1 py-1 row-hover">
+          <div key={f.id} className="group flex items-center gap-2 rounded-sm px-1 py-1 row-hover">
             <FileIcon className="h-3.5 w-3.5 text-faint shrink-0" />
-            <button className="flex-1 truncate text-left text-[13px] hover:text-accent" onClick={() => openFile(f)}>
+            <button className="flex-1 truncate text-left text-body-s hover:text-accent-deep" onClick={() => openFile(f)}>
               {f.name}
             </button>
-            <span className="text-2xs text-faint tabular-nums">{fmtBytes(f.size)}</span>
+            <span className="text-caption text-faint tabular-nums">{fmtBytes(f.size)}</span>
             <IconButton icon={Download} label="Download" size="sm" onClick={() => downloadBlob(f.blob, f.name)} />
             <IconButton icon={Trash2} label="Move to Trash" size="sm" className="opacity-0 group-hover:opacity-100" onClick={() => softDelete('files', f.id)} />
           </div>
         ))}
       </div>
-      <button onClick={() => input.current?.click()} className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-md border border-dashed border-line-strong py-2 text-xs text-muted hover:border-accent hover:text-accent">
+      <button onClick={() => input.current?.click()} className="mt-1 flex w-full items-center justify-center gap-1.5 rounded-sm border border-dashed border-line-strong py-2 text-body-s text-muted hover:border-accent hover:text-accent-deep">
         <Paperclip className="h-3.5 w-3.5" /> Attach files (or drop here)
       </button>
       <input ref={input} type="file" multiple hidden onChange={(e) => e.target.files && upload(e.target.files)} />
-      <p className="mt-1 text-2xs text-faint">Files are stored privately in this browser and included in full backups.</p>
+      <p className="mt-1 text-caption text-faint">Files are stored privately in this browser and included in full backups.</p>
     </div>
   );
 }

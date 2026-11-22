@@ -46,15 +46,15 @@ export function ActivityFeed({ entityIds, limit = 12, compact }: { entityIds?: s
         return (
           <li key={a.id}>
             <button
-              className="flex w-full items-center gap-2.5 rounded-md px-1.5 py-1.5 text-left row-hover"
+              className="flex w-full items-center gap-2.5 rounded-sm px-1.5 py-1.5 text-left row-hover"
               onClick={() => a.action !== 'deleted' && openEntity(a.entity, a.entityId)}
             >
               <Icon className={`h-3.5 w-3.5 shrink-0 ${a.action === 'completed' ? 'text-ok' : a.action === 'deleted' ? 'text-danger' : 'text-faint'}`} />
-              <span className="min-w-0 flex-1 truncate text-[13px]">
+              <span className="min-w-0 flex-1 truncate text-body-s">
                 <span className="text-muted">{VERB[a.action]}</span>
                 {!compact && <span className="text-faint"> {ENTITY[a.entity].label.toLowerCase()}</span>} <span className="text-fg">{a.title}</span>
               </span>
-              <span className="shrink-0 text-2xs text-faint tabular-nums">{timeAgo(a.at)}</span>
+              <span className="shrink-0 text-caption text-faint tabular-nums">{timeAgo(a.at)}</span>
             </button>
           </li>
         );

@@ -97,7 +97,7 @@ export default function ProjectDetail() {
   if (record === null || (record && record.deletedAt))
     return (
       <Page>
-        <Empty icon={Info} title="Project not found" action={<Link to="/projects" className="text-[13px] text-accent hover:underline">All projects</Link>}>
+        <Empty icon={Info} title="Project not found" action={<Link to="/projects" className="text-body-s text-accent-deep hover:underline">All projects</Link>}>
           It may have been moved to the Trash (Settings → Trash).
         </Empty>
       </Page>
@@ -166,7 +166,7 @@ export default function ProjectDetail() {
             rows={1}
             value={draft.title}
             onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })}
-            className="!border-0 !bg-transparent !px-0 !ring-0 font-serif text-[30px] font-medium leading-tight tracking-tight"
+            className="!border-0 !bg-transparent !px-0 !ring-0 font-serif text-h2 font-medium leading-tight tracking-tight"
             aria-label="Project title"
           />
           <Textarea
@@ -175,7 +175,7 @@ export default function ProjectDetail() {
             value={draft.description ?? ''}
             onChange={(e) => set({ description: e.target.value })}
             placeholder="One-line description"
-            className="!border-0 !bg-transparent !px-0 !ring-0 text-[14px] text-muted"
+            className="!border-0 !bg-transparent !px-0 !ring-0 text-body-m text-muted"
           />
 
           <div className="mt-4 mb-5">
@@ -214,23 +214,23 @@ export default function ProjectDetail() {
                     .slice(0, 5)
                     .map((t) => <TaskRow key={t.id} task={t} showProject={false} compact blocked={isBlocked(t, taskMap)} subCount={subCounts.get(t.id)} />)
                 ) : (
-                  <p className="text-[13px] text-faint">No open tasks.</p>
+                  <p className="text-body-s text-faint">No open tasks.</p>
                 )}
               </Card>
               {(related.campaigns.length > 0 || related.content.length > 0) && (
                 <Card title="Campaigns & content" icon={Megaphone}>
                   {related.campaigns.map((c) => (
-                    <Link key={c.id} to={`/campaigns/${c.id}`} className="flex items-center gap-2 rounded-md px-1 py-1.5 row-hover">
+                    <Link key={c.id} to={`/campaigns/${c.id}`} className="flex items-center gap-2 rounded-sm px-1 py-1.5 row-hover">
                       <Megaphone className="h-3.5 w-3.5 text-faint" />
-                      <span className="flex-1 truncate text-[13px]">{c.name}</span>
+                      <span className="flex-1 truncate text-body-s">{c.name}</span>
                       <Badge tone={campaignStatusMeta(c.status).tone}>{campaignStatusMeta(c.status).label}</Badge>
                     </Link>
                   ))}
                   {related.content.map((c) => (
-                    <button key={c.id} onClick={() => openContent(c.id)} className="flex w-full items-center gap-2 rounded-md px-1 py-1.5 text-left row-hover">
+                    <button key={c.id} onClick={() => openContent(c.id)} className="flex w-full items-center gap-2 rounded-sm px-1 py-1.5 text-left row-hover">
                       <Sparkles className="h-3.5 w-3.5 text-faint" />
-                      <span className="flex-1 truncate text-[13px]">{c.title}</span>
-                      <span className="text-xs text-faint">{c.platform}</span>
+                      <span className="flex-1 truncate text-body-s">{c.title}</span>
+                      <span className="text-body-s text-faint">{c.platform}</span>
                       <Badge tone={contentStatusMeta(c.status).tone}>{contentStatusMeta(c.status).label}</Badge>
                     </button>
                   ))}
@@ -256,7 +256,7 @@ export default function ProjectDetail() {
                     }
                   }}
                   placeholder="Add a task to this project"
-                  className="flex-1 bg-transparent py-1 text-[13.5px] outline-none placeholder:text-faint"
+                  className="flex-1 bg-transparent py-1 text-body-m outline-none placeholder:text-faint"
                 />
               </div>
               <div className="mx-2 mb-1 h-px bg-line" />
@@ -288,13 +288,13 @@ export default function ProjectDetail() {
               >
                 {related.notes.length ? (
                   related.notes.map((n) => (
-                    <Link key={n.id} to={`/notes/${n.id}`} className="block rounded-md px-2 py-2 row-hover">
-                      <div className="text-[13.5px] font-medium">{n.title || 'Untitled'}</div>
-                      <div className="truncate text-xs text-faint">{excerpt(n.body, 120) || 'Empty note'}</div>
+                    <Link key={n.id} to={`/notes/${n.id}`} className="block rounded-sm px-2 py-2 row-hover">
+                      <div className="text-body-m font-medium">{n.title || 'Untitled'}</div>
+                      <div className="truncate text-body-s text-faint">{excerpt(n.body, 120) || 'Empty note'}</div>
                     </Link>
                   ))
                 ) : (
-                  <p className="text-[13px] text-faint">No linked notes. Link any note to this project from the note's sidebar.</p>
+                  <p className="text-body-s text-faint">No linked notes. Link any note to this project from the note's sidebar.</p>
                 )}
               </Card>
               <Card
@@ -308,14 +308,14 @@ export default function ProjectDetail() {
               >
                 {related.docs.length ? (
                   related.docs.map((d) => (
-                    <Link key={d.id} to={`/documents/${d.id}`} className="flex items-center gap-2 rounded-md px-2 py-2 row-hover">
+                    <Link key={d.id} to={`/documents/${d.id}`} className="flex items-center gap-2 rounded-sm px-2 py-2 row-hover">
                       <FileText className="h-3.5 w-3.5 text-faint" />
-                      <span className="flex-1 truncate text-[13.5px]">{d.title || 'Untitled'}</span>
+                      <span className="flex-1 truncate text-body-m">{d.title || 'Untitled'}</span>
                       <Badge>{d.status === 'final' ? 'Final' : d.status === 'in_review' ? 'In review' : 'Draft'}</Badge>
                     </Link>
                   ))
                 ) : (
-                  <p className="text-[13px] text-faint">No linked documents.</p>
+                  <p className="text-body-s text-faint">No linked documents.</p>
                 )}
               </Card>
             </div>
@@ -345,12 +345,12 @@ export default function ProjectDetail() {
             <div className="flex items-center gap-3">
               <Ring value={prog.percent} size={52} stroke={4} label={`${prog.percent}%`} />
               <div className="min-w-0">
-                <div className="text-[13px] font-semibold">Progress</div>
-                <div className="text-xs text-muted leading-snug">{prog.explanation}</div>
+                <div className="text-body-s font-semibold">Progress</div>
+                <div className="text-body-s text-muted leading-snug">{prog.explanation}</div>
               </div>
             </div>
             <div className="mt-4 flex items-center justify-between">
-              <span className="text-xs text-muted">Set progress manually</span>
+              <span className="text-body-s text-muted">Set progress manually</span>
               <Toggle checked={draft.progressMode === 'manual'} onChange={(v) => set({ progressMode: v ? 'manual' : 'auto', manualProgress: v ? prog.percent : draft.manualProgress })} label="Manual progress" />
             </div>
             {draft.progressMode === 'manual' && (
@@ -365,7 +365,7 @@ export default function ProjectDetail() {
                 aria-label="Manual progress"
               />
             )}
-            <details className="mt-3 text-xs text-faint">
+            <details className="mt-3 text-body-s text-faint">
               <summary className="cursor-pointer hover:text-muted">How is this calculated?</summary>
               <p className="mt-1.5 leading-relaxed">
                 Automatic progress is the share of this project's top-level tasks that are completed. If the project has milestones too, the
@@ -400,7 +400,7 @@ export default function ProjectDetail() {
               </Field>
             </div>
             {draft.deadline && (
-              <p className="flex items-center gap-1.5 text-xs text-muted">
+              <p className="flex items-center gap-1.5 text-body-s text-muted">
                 <CalendarDays className="h-3 w-3" />
                 {draft.status === 'completed' ? `Deadline was ${fmtDate(draft.deadline, 'd MMM yyyy')}` : `Due ${relativeDay(draft.deadline).toLowerCase()}`}
               </p>
@@ -453,8 +453,8 @@ export default function ProjectDetail() {
 function MiniStat({ label, value }: { label: string; value: React.ReactNode }) {
   return (
     <div>
-      <div className="text-[17px] font-semibold tabular-nums">{value}</div>
-      <div className="text-2xs uppercase tracking-wide text-faint">{label}</div>
+      <div className="text-h4 font-semibold tabular-nums">{value}</div>
+      <div className="text-caption uppercase tracking-wide text-faint">{label}</div>
     </div>
   );
 }
@@ -475,13 +475,13 @@ function MilestonesEditor({ project, onChange }: { project: Project; onChange: (
                 <input
                   value={m.title}
                   onChange={(e) => onChange(project.milestones.map((x) => (x.id === m.id ? { ...x, title: e.target.value } : x)))}
-                  className={cn('min-w-0 flex-1 bg-transparent text-[13.5px] outline-none', m.done && 'text-faint line-through')}
+                  className={cn('min-w-0 flex-1 bg-transparent text-body-m outline-none', m.done && 'text-faint line-through')}
                 />
                 <input
                   type="date"
                   value={m.date ?? ''}
                   onChange={(e) => onChange(project.milestones.map((x) => (x.id === m.id ? { ...x, date: e.target.value || null } : x)))}
-                  className="w-[130px] bg-transparent text-xs text-muted outline-none"
+                  className="w-[130px] bg-transparent text-body-s text-muted outline-none"
                 />
                 <IconButton icon={X} size="sm" label="Remove milestone" className="opacity-0 group-hover:opacity-100" onClick={() => onChange(project.milestones.filter((x) => x.id !== m.id))} />
               </div>

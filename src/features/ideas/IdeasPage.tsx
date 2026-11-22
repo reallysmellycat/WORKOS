@@ -102,7 +102,7 @@ export default function IdeasPage() {
             }
           }}
           placeholder="What's on your mind?  (Enter to save · Shift+Enter for a new line — extra lines become details)"
-          className="!border-0 !bg-transparent !px-1 !ring-0 text-[15px]"
+          className="!border-0 !bg-transparent !px-1 !ring-0 text-body-l"
         />
         <div className="flex justify-end">
           <Button variant="primary" size="sm" icon={Lightbulb} onClick={capture} disabled={!text.trim()}>
@@ -142,7 +142,7 @@ export default function IdeasPage() {
           {list.map((i) => (
             <article key={i.id} className="card group flex flex-col p-3.5">
               <div className="flex items-start gap-2">
-                <p className="flex-1 whitespace-pre-wrap text-[14px] leading-snug">{i.text}</p>
+                <p className="flex-1 whitespace-pre-wrap text-body-m leading-snug">{i.text}</p>
                 <Menu
                   trigger={(t) => <IconButton icon={MoreHorizontal} size="sm" label="Idea actions" onClick={t} className="opacity-60 group-hover:opacity-100" />}
                   items={[
@@ -163,12 +163,12 @@ export default function IdeasPage() {
                   ]}
                 />
               </div>
-              {i.details && <p className="mt-1.5 line-clamp-3 whitespace-pre-wrap text-[13px] text-muted">{i.details}</p>}
+              {i.details && <p className="mt-1.5 line-clamp-3 whitespace-pre-wrap text-body-s text-muted">{i.details}</p>}
               <div className="mt-3 flex flex-wrap items-center gap-2">
                 {i.category && <Badge tone="accent">{i.category}</Badge>}
                 <TagList tags={i.tags} />
                 {i.isDemo && <DemoBadge />}
-                <span className="text-2xs text-faint">{timeAgo(i.createdAt)}</span>
+                <span className="text-caption text-faint">{timeAgo(i.createdAt)}</span>
                 <div className="flex-1" />
                 {i.status === 'inbox' && (
                   <Button size="xs" icon={ArrowRightLeft} onClick={() => setConverting(i)}>
@@ -176,7 +176,7 @@ export default function IdeasPage() {
                   </Button>
                 )}
                 {i.status === 'converted' && i.convertedTo && (
-                  <button className="text-xs text-accent hover:underline" onClick={() => (i.convertedTo!.type === 'task' ? openTask(i.convertedTo!.id) : navigate(ENTITY[i.convertedTo!.type].route(i.convertedTo!.id)))}>
+                  <button className="text-body-s text-accent-deep hover:underline" onClick={() => (i.convertedTo!.type === 'task' ? openTask(i.convertedTo!.id) : navigate(ENTITY[i.convertedTo!.type].route(i.convertedTo!.id)))}>
                     → {ENTITY[i.convertedTo.type].label}
                   </button>
                 )}
@@ -189,15 +189,15 @@ export default function IdeasPage() {
       <Modal open={!!converting} onClose={() => setConverting(null)} title="Convert idea" description={converting?.text}>
         <div className="grid gap-2">
           {TARGETS.map((t) => (
-            <button key={t.value} onClick={() => converting && convert(converting, t.value)} className="flex items-center gap-3 rounded-lg border border-line p-3 text-left hover:border-accent hover:bg-accent-soft/30">
-              <t.icon className="h-4 w-4 text-accent" />
+            <button key={t.value} onClick={() => converting && convert(converting, t.value)} className="flex items-center gap-3 rounded-md border border-line p-3 text-left hover:border-accent hover:bg-accent-soft/30">
+              <t.icon className="h-4 w-4 text-accent-deep" />
               <span className="flex-1">
-                <span className="block text-[13.5px] font-medium">{t.label}</span>
-                <span className="block text-xs text-muted">{t.hint}</span>
+                <span className="block text-body-m font-medium">{t.label}</span>
+                <span className="block text-body-s text-muted">{t.hint}</span>
               </span>
             </button>
           ))}
-          <p className="mt-1 text-xs text-faint">The idea moves to “Converted” and keeps a link to what it became.</p>
+          <p className="mt-1 text-body-s text-faint">The idea moves to “Converted” and keeps a link to what it became.</p>
         </div>
       </Modal>
 

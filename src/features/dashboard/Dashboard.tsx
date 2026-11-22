@@ -45,11 +45,11 @@ export default function Dashboard() {
   const toggle = (s: HomeSection) => void saveSettings({ home: { ...home, hidden: home.hidden.includes(s) ? home.hidden.filter((x) => x !== s) : [...home.hidden, s] } });
 
   return (
-    <div className="mx-auto w-full max-w-[1320px] px-5 py-8 sm:px-10 sm:py-12">
-      <div className="absolute right-5 top-[62px] z-10 sm:right-8">
+    <div className="relative w-full px-gutter pb-24 pt-6 sm:pt-8">
+      <div className="absolute right-[var(--page-gutter)] top-6 z-20 sm:top-8">
         <IconButton icon={SlidersHorizontal} label="Arrange home" onClick={() => setArranging((a) => !a)} active={arranging} />
         {arranging && (
-          <div className="absolute right-0 top-9 w-[280px] rounded-2xl bg-raised/95 p-3 shadow-pop ring-1 ring-line/80 backdrop-blur animate-scale origin-top-right">
+          <div className="absolute right-0 top-9 w-[280px] rounded-xl bg-raised/95 p-3 shadow-lg ring-1 ring-line/80 backdrop-blur animate-scale origin-top-right">
             <div className="mb-2 flex items-center justify-between px-1">
               <span className="eyebrow">Arrange home</span>
               <IconButton icon={X} size="sm" label="Close" onClick={() => setArranging(false)} />
@@ -57,8 +57,8 @@ export default function Dashboard() {
             {home.order.map((s, i) => {
               const hidden = home.hidden.includes(s);
               return (
-                <div key={s} className="flex items-center gap-1 rounded-lg px-1.5 py-1 hover:bg-sunken/70">
-                  <span className={cn('flex-1 text-[13px]', hidden && 'text-faint line-through')}>{SECTION_META[s].label}</span>
+                <div key={s} className="flex items-center gap-1 rounded-md px-1.5 py-1 hover:bg-sunken/70">
+                  <span className={cn('flex-1 text-body-s', hidden && 'text-faint line-through')}>{SECTION_META[s].label}</span>
                   <IconButton icon={ArrowUp} size="sm" label="Move up" disabled={i === 0} onClick={() => move(s, -1)} />
                   <IconButton icon={ArrowDown} size="sm" label="Move down" disabled={i === home.order.length - 1} onClick={() => move(s, 1)} />
                   <IconButton icon={hidden ? EyeOff : Eye} size="sm" label={hidden ? 'Show' : 'Hide'} onClick={() => toggle(s)} />
@@ -75,8 +75,8 @@ export default function Dashboard() {
       <Masthead name={settings.name} />
 
       {demo && (
-        <div className="mb-10 flex flex-wrap items-center gap-3 border-y border-dashed border-line-strong py-3 text-[13px]">
-          <FlaskConical className="h-4 w-4 text-accent" />
+        <div className="mb-10 flex flex-wrap items-center gap-3 border-y border-dashed border-line-strong py-3 text-body-s">
+          <FlaskConical className="h-4 w-4 text-accent-deep" />
           <span className="flex-1 text-muted">
             You're exploring <strong className="font-medium text-fg">demo content</strong>, marked “Demo”. Your own items are never mixed in.
           </span>
@@ -92,8 +92,8 @@ export default function Dashboard() {
         </div>
       )}
       {backupNudge && !demo && (
-        <div className="mb-10 flex flex-wrap items-center gap-3 border-y border-line py-3 text-[13px]">
-          <ShieldCheck className="h-4 w-4 text-accent" />
+        <div className="mb-10 flex flex-wrap items-center gap-3 border-y border-line py-3 text-body-s">
+          <ShieldCheck className="h-4 w-4 text-accent-deep" />
           <span className="flex-1 text-muted">{settings.lastExportAt ? "It's been a while since your last backup." : "You haven't made a backup yet."} Your data lives only in this browser.</span>
           <Link to="/settings?tab=data" className="font-medium text-fg underline decoration-line-strong underline-offset-4 hover:decoration-fg">
             Back up now
@@ -101,14 +101,14 @@ export default function Dashboard() {
         </div>
       )}
 
-      <div className="grid grid-flow-row-dense grid-cols-1 gap-x-12 gap-y-14 lg:grid-cols-12">
+      <div className="grid grid-flow-row-dense grid-cols-1 gap-grid lg:grid-cols-12">
         {visible.map((s) => (
           <div key={s} className={SECTION_META[s].span}>
             <ErrorBoundary inline>{RENDER[s]()}</ErrorBoundary>
           </div>
         ))}
       </div>
-      {visible.length === 0 && <p className="py-20 text-center text-[13px] text-muted">Every section is hidden. Use the arrange button (top right) to bring some back.</p>}
+      {visible.length === 0 && <p className="py-20 text-center text-body-s text-muted">Every section is hidden. Use the arrange button (top right) to bring some back.</p>}
     </div>
   );
 }

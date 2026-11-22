@@ -1,6 +1,6 @@
 # Development status
 
-_Last updated: 2026-11-20_
+_Last updated: 2026-11-22_
 
 ## Summary
 
@@ -11,7 +11,7 @@ All six planned phases have a working first implementation. The app builds, pass
 ### Phase 1 — Foundation
 - [x] Vite + React + TypeScript + Tailwind project
 - [x] Design system: warm cream/sage light theme and a separately tuned dark theme (CSS tokens in `src/index.css`), 6 accent colours, Inter + Newsreader fonts bundled locally (they work offline)
-- [x] App shell: collapsible sidebar, glass top bar, breadcrumb, mobile drawer and bottom tab bar
+- [x] App shell: integrated glass top navigation, workspace selector, contextual sub-navigation, floating quick add, mobile bottom bar (the sidebar was removed in the design-system pass)
 - [x] Local database (Dexie/IndexedDB), schema v1, with migration pattern documented
 - [x] Autosave (debounced, flushed on tab hide/close) with a "Saved" indicator
 - [x] JSON export (with files and no API keys), validated import (merge/replace), CSV exports, restore points (daily + before import), Trash with restore and permanent delete, erase-all with typed confirmation
@@ -57,12 +57,26 @@ All six planned phases have a working first implementation. The app builds, pass
 - [x] Unit tests (`src/test/core.test.ts`) and an E2E smoke script (`scripts/e2e-smoke.cjs`)
 - [x] README, this file, CLAUDE.md
 
+## Design system (Nov 2026)
+- [x] `DESIGN.md`: the permanent visual/UX specification (typography, colour, spacing, radius, components, glass and elevation, layout, navigation, workspace composition, motion, data visualisation, icons, accessibility, governance, visual audit)
+- [x] Tokens: `src/styles/tokens.css` (primitives), `themes.css` (Daylight + Dusk semantic roles, accent variants), `globals.css` (base, surfaces, type roles, prose, charts); Tailwind reads tokens only, and its default type/radius/shadow scales were removed
+- [x] Fonts: Manrope (interface), Instrument Serif (editorial), IBM Plex Mono (technical), all bundled locally
+- [x] Applied across every screen:
+  - 501 font sizes, 134 radii and 30 shadows migrated to tokens
+  - hard-coded chart, platform and tag colours moved to roles
+  - top navigation replaces the sidebar
+  - full-width canvas
+  - home sections as floating workspaces
+  - `Panel` and `ProjectPreview` components
+- [x] Fixed: SVG colours given through CSS variables never rendered (progress rings, momentum chart); they now resolve through `src/lib/tokens.ts`
+
 ## In progress / next up
 - Nothing is mid-way. Suggested next steps, in priority order:
   1. Run on real data for a week and refine anything that feels slow or clunky
-  2. Replace the remaining `window.prompt` dialog (rename library folder) with a styled modal
-  3. Custom social metric fields in snapshots (the data model has `custom`, but there's no UI yet)
-  4. Optional per-task time estimates and a weekly planning view
+  2. Recompose Content Studio, Library and Analytics per DESIGN.md §10 (they use the system's tokens and components but keep conventional layouts)
+  3. Replace the remaining `window.prompt` dialog (rename library folder) with a styled modal
+  4. Custom social metric fields in snapshots (the data model has `custom`, but there's no UI yet)
+  5. Optional per-task time estimates and a weekly planning view
 
 ## Known issues and limitations
 - **No cross-device sync.** Data is per browser. Use backup files to move data.

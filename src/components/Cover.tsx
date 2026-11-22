@@ -49,7 +49,7 @@ export const Cover = memo(function Cover({ seed, color, className, rounded = tru
   const P = PALETTES[palette];
   const r = (n: number) => ((h >> n) & 0xff) / 255; // 0..1 pseudo-random from hash bits
   return (
-    <div className={cn('relative overflow-hidden', rounded && 'rounded-lg', className)} style={{ background: P.bg }} aria-hidden>
+    <div className={cn('relative overflow-hidden', rounded && 'rounded-md', className)} style={{ background: P.bg }} aria-hidden>
       <svg viewBox="0 0 200 120" preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full">
         {motif === 'horizon' && (
           <>
@@ -113,7 +113,7 @@ export function CoverPicker({ seed, value, onChange }: { seed: string; value?: s
         <span className="label">Motif</span>
         <div className="grid grid-cols-6 gap-1.5">
           {MOTIFS.map((m) => (
-            <button key={m} onClick={() => onChange(`${m}|${cur.palette}`)} className={cn('rounded-md p-0.5 transition', cur.motif === m ? 'ring-2 ring-fg/60' : 'opacity-80 hover:opacity-100')} title={m} aria-label={`Motif ${m}`}>
+            <button key={m} onClick={() => onChange(`${m}|${cur.palette}`)} className={cn('rounded-sm p-0.5 transition', cur.motif === m ? 'ring-2 ring-fg/60' : 'opacity-80 hover:opacity-100')} title={m} aria-label={`Motif ${m}`}>
               <Cover seed={seed} color={`${m}|${cur.palette}`} className="aspect-[5/3]" rounded />
             </button>
           ))}
@@ -123,7 +123,7 @@ export function CoverPicker({ seed, value, onChange }: { seed: string; value?: s
         <span className="label">Palette</span>
         <div className="flex flex-wrap gap-1.5">
           {PALETTE_KEYS.map((p) => (
-            <button key={p} onClick={() => onChange(`${cur.motif}|${p}`)} className={cn('flex h-7 items-center gap-1.5 rounded-full pl-1 pr-2.5 text-xs transition', cur.palette === p ? 'bg-ink text-ink-fg' : 'bg-sunken text-muted hover:text-fg')}>
+            <button key={p} onClick={() => onChange(`${cur.motif}|${p}`)} className={cn('flex h-7 items-center gap-1.5 rounded-full pl-1 pr-2.5 text-body-s transition', cur.palette === p ? 'bg-ink text-ink-fg' : 'bg-sunken text-muted hover:text-fg')}>
               <span className="h-5 w-5 rounded-full" style={{ background: `linear-gradient(135deg, ${PALETTES[p].bg} 50%, ${PALETTES[p].a} 50%)` }} />
               {PALETTES[p].name}
             </button>

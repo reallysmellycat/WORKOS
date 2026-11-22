@@ -26,10 +26,10 @@ export default function ReviewsPage() {
     <Page>
       <div className="mb-6 flex flex-wrap items-end gap-3">
         <div className="flex-1">
-          <p className="flex items-center gap-1.5 text-[13px] text-faint">
+          <p className="flex items-center gap-1.5 text-body-s text-faint">
             <CalendarCheck className="h-3.5 w-3.5" /> Monthly review
           </p>
-          <h1 className="mt-1 font-serif text-[32px] font-medium leading-tight tracking-tight">{format(date, 'MMMM yyyy')}</h1>
+          <h1 className="mt-1 font-serif text-h1 font-medium leading-tight tracking-tight">{format(date, 'MMMM yyyy')}</h1>
         </div>
         <div className="flex items-center gap-1">
           <IconButton icon={ChevronLeft} label="Previous month" onClick={() => go(-1)} />
@@ -59,16 +59,16 @@ export default function ReviewsPage() {
 
             {(data.completedProjects.length > 0 || data.topContent || data.coverage.length > 0) && (
               <Card title="Major achievements" icon={Trophy}>
-                <ul className="space-y-1.5 text-[13.5px]">
+                <ul className="space-y-1.5 text-body-m">
                   {data.completedProjects.map((p) => (
                     <li key={p.id} className="flex gap-2">
                       <Trophy className="mt-0.5 h-3.5 w-3.5 shrink-0 text-warn" />
-                      Completed project <Link to={`/projects/${p.id}`} className="font-medium hover:text-accent">{p.title}</Link>
+                      Completed project <Link to={`/projects/${p.id}`} className="font-medium hover:text-accent-deep">{p.title}</Link>
                     </li>
                   ))}
                   {data.topContent && (
                     <li className="flex gap-2">
-                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent" />
+                      <Sparkles className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-deep" />
                       Best-performing post: <span className="font-medium">{data.topContent.title}</span> ({compactNumber(engagementOf(data.topContent.metrics))} engagements on {data.topContent.platform})
                     </li>
                   )}
@@ -93,17 +93,17 @@ export default function ReviewsPage() {
 
             <Card title="Projects" icon={FolderKanban}>
               {data.active.length === 0 && data.completedProjects.length === 0 ? (
-                <p className="text-[13px] text-faint">No project activity.</p>
+                <p className="text-body-s text-faint">No project activity.</p>
               ) : (
                 <div className="space-y-2.5">
                   {[...data.completedProjects, ...data.active].map((p) => (
-                    <Link key={p.id} to={`/projects/${p.id}`} className="-mx-2 flex items-center gap-3 rounded-md px-2 py-1 row-hover">
-                      <span className="w-48 truncate text-[13px]">{p.title}</span>
+                    <Link key={p.id} to={`/projects/${p.id}`} className="-mx-2 flex items-center gap-3 rounded-sm px-2 py-1 row-hover">
+                      <span className="w-48 truncate text-body-s">{p.title}</span>
                       <Progress value={p.progress} tone={p.status === 'completed' ? 'ok' : 'accent'} />
-                      <span className="w-10 text-right text-xs tabular-nums text-muted">{p.progress}%</span>
+                      <span className="w-10 text-right text-body-s tabular-nums text-muted">{p.progress}%</span>
                     </Link>
                   ))}
-                  <p className="text-2xs text-faint">Progress shown is the current value.</p>
+                  <p className="text-caption text-faint">Progress shown is the current value.</p>
                 </div>
               )}
             </Card>
@@ -114,14 +114,14 @@ export default function ReviewsPage() {
               </Card>
               <Card title="Campaign activity" icon={Megaphone}>
                 {data.campaignRows.length === 0 ? (
-                  <p className="text-[13px] text-faint">No campaign activity recorded.</p>
+                  <p className="text-body-s text-faint">No campaign activity recorded.</p>
                 ) : (
                   data.campaignRows.map((c) => (
                     <div key={c.id} className="py-1">
-                      <Link to={`/campaigns/${c.id}`} className="text-[13px] font-medium hover:text-accent">
+                      <Link to={`/campaigns/${c.id}`} className="text-body-s font-medium hover:text-accent-deep">
                         {c.name}
                       </Link>
-                      <div className="text-xs text-faint">
+                      <div className="text-body-s text-faint">
                         {[c.coverage && `${c.coverage} coverage`, c.releases && `${c.releases} release(s) distributed`, c.activities && `${c.activities} activities done`].filter(Boolean).join(' · ')}
                       </div>
                     </div>
@@ -132,15 +132,15 @@ export default function ReviewsPage() {
 
             <Card title="KPI progress" icon={Gauge}>
               {data.kpiRows.length === 0 ? (
-                <p className="text-[13px] text-faint">No KPI values recorded this month.</p>
+                <p className="text-body-s text-faint">No KPI values recorded this month.</p>
               ) : (
                 <div className="divide-y divide-line">
                   {data.kpiRows.map((k) => (
-                    <div key={k.id} className="flex items-center gap-3 py-2 text-[13px]">
+                    <div key={k.id} className="flex items-center gap-3 py-2 text-body-s">
                       <span className="flex-1">{k.name}</span>
                       <span className="tabular-nums">{k.value}</span>
-                      {k.prev !== null && <span className={cn('w-20 text-right text-xs tabular-nums', (k.value - k.prev) * (k.direction === 'up' ? 1 : -1) >= 0 ? 'text-ok' : 'text-danger')}>{k.value - k.prev >= 0 ? '+' : ''}{k.value - k.prev}</span>}
-                      {k.target != null && <span className="w-24 text-right text-xs text-faint">target {k.target}</span>}
+                      {k.prev !== null && <span className={cn('w-20 text-right text-body-s tabular-nums', (k.value - k.prev) * (k.direction === 'up' ? 1 : -1) >= 0 ? 'text-ok' : 'text-danger')}>{k.value - k.prev >= 0 ? '+' : ''}{k.value - k.prev}</span>}
+                      {k.target != null && <span className="w-24 text-right text-body-s text-faint">target {k.target}</span>}
                     </div>
                   ))}
                 </div>
@@ -152,12 +152,12 @@ export default function ReviewsPage() {
             <Reflection month={month} />
             <Card title="Past reviews">
               {!past?.length ? (
-                <p className="text-xs text-faint">Reviews you write will be listed here.</p>
+                <p className="text-body-s text-faint">Reviews you write will be listed here.</p>
               ) : (
                 past.map((r) => (
-                  <Link key={r.id} to={`/reviews/${r.month}`} className={cn('-mx-1.5 flex items-center gap-2 rounded-md px-1.5 py-1.5 text-[13px] row-hover', r.month === month && 'bg-sunken')}>
+                  <Link key={r.id} to={`/reviews/${r.month}`} className={cn('-mx-1.5 flex items-center gap-2 rounded-sm px-1.5 py-1.5 text-body-s row-hover', r.month === month && 'bg-sunken')}>
                     <span className="flex-1">{format(parse(r.month + '-01', 'yyyy-MM-dd', new Date()), 'MMMM yyyy')}</span>
-                    {r.rating ? <span className="text-xs text-warn">{'★'.repeat(r.rating)}</span> : null}
+                    {r.rating ? <span className="text-body-s text-warn">{'★'.repeat(r.rating)}</span> : null}
                   </Link>
                 ))
               )}
@@ -171,18 +171,18 @@ export default function ReviewsPage() {
 
 function List({ items, empty }: { items: { key: string; text: string; sub?: string; warn?: boolean }[]; empty: string }) {
   const [all, setAll] = useState(false);
-  if (!items.length) return <p className="text-[13px] text-faint">{empty}</p>;
+  if (!items.length) return <p className="text-body-s text-faint">{empty}</p>;
   const shown = all ? items : items.slice(0, 8);
   return (
     <div>
       {shown.map((i) => (
-        <div key={i.key} className="flex items-center gap-2 py-1 text-[13px]">
+        <div key={i.key} className="flex items-center gap-2 py-1 text-body-s">
           <span className="flex-1 truncate">{i.text}</span>
-          <span className={cn('shrink-0 text-xs', i.warn ? 'text-danger' : 'text-faint')}>{i.sub}</span>
+          <span className={cn('shrink-0 text-body-s', i.warn ? 'text-danger' : 'text-faint')}>{i.sub}</span>
         </div>
       ))}
       {items.length > 8 && (
-        <button onClick={() => setAll((a) => !a)} className="mt-1 text-xs text-muted hover:text-accent">
+        <button onClick={() => setAll((a) => !a)} className="mt-1 text-body-s text-muted hover:text-accent-deep">
           {all ? 'Show less' : `Show all ${items.length}`}
         </button>
       )}
@@ -220,7 +220,7 @@ function Reflection({ month }: { month: string }) {
     </label>
   );
   return (
-    <Card title="Your reflections" action={<span className="text-2xs text-faint">{status === 'saved' ? 'Saved' : status === 'pending' || status === 'saving' ? 'Saving…' : ''}</span>}>
+    <Card title="Your reflections" action={<span className="text-caption text-faint">{status === 'saved' ? 'Saved' : status === 'pending' || status === 'saving' ? 'Saving…' : ''}</span>}>
       <div className="space-y-3">
         <div>
           <span className="label">How did the month feel?</span>

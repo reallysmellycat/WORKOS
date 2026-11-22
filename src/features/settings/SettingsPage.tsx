@@ -66,7 +66,7 @@ export default function SettingsPage() {
             <button
               key={t.value}
               onClick={() => setParams({ tab: t.value })}
-              className={cn('flex shrink-0 items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px]', tab === t.value ? 'bg-sunken font-medium text-fg' : 'text-muted hover:bg-sunken/60')}
+              className={cn('flex shrink-0 items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-body-s', tab === t.value ? 'bg-sunken font-medium text-fg' : 'text-muted hover:bg-sunken/60')}
             >
               <t.icon className="h-3.5 w-3.5" /> {t.label}
             </button>
@@ -93,8 +93,8 @@ function Row({ label, hint, children }: { label: string; hint?: React.ReactNode;
   return (
     <div className="flex flex-col gap-2 border-b border-line py-3.5 last:border-0 sm:flex-row sm:items-center sm:gap-6">
       <div className="min-w-0 flex-1">
-        <div className="text-[13.5px] font-medium">{label}</div>
-        {hint && <div className="mt-0.5 text-xs leading-relaxed text-muted">{hint}</div>}
+        <div className="text-body-m font-medium">{label}</div>
+        {hint && <div className="mt-0.5 text-body-s leading-relaxed text-muted">{hint}</div>}
       </div>
       <div className="shrink-0">{children}</div>
     </div>
@@ -133,23 +133,23 @@ function General({ s }: { s: Settings }) {
   );
 }
 
-const ACCENTS: { value: Settings['accent']; label: string; color: string }[] = [
-  { value: 'sage', label: 'Sage', color: '#63805F' },
-  { value: 'clay', label: 'Clay', color: '#A8684E' },
-  { value: 'slate', label: 'Slate', color: '#546E8A' },
-  { value: 'ochre', label: 'Ochre', color: '#A07C34' },
-  { value: 'plum', label: 'Plum', color: '#7E5C76' },
-  { value: 'ink', label: 'Ink', color: '#343836' },
+const ACCENTS: { value: Settings['accent']; label: string; role: string }[] = [
+  { value: 'sage', label: 'Sage', role: '--color-accent-primary' },
+  { value: 'deep', label: 'Deep sage', role: '--color-accent-deep' },
+  { value: 'teal', label: 'Teal', role: '--color-accent-teal' },
+  { value: 'warm', label: 'Warm', role: '--color-accent-warm' },
+  { value: 'violet', label: 'Violet', role: '--color-accent-violet' },
+  { value: 'graphite', label: 'Graphite', role: '--color-graphite-soft' },
 ];
 
 function Appearance({ s }: { s: Settings }) {
   return (
     <Card title="Appearance">
       <Row label="Theme">
-        <div className="flex gap-1 rounded-lg bg-sunken/70 p-0.5">
+        <div className="flex gap-1 rounded-full bg-sunken/45 p-1">
           {(['light', 'dark', 'system'] as const).map((t) => (
-            <button key={t} onClick={() => saveSettings({ theme: t })} className={cn('h-7 rounded-md px-3 text-[12.5px] capitalize', s.theme === t ? 'bg-raised font-medium shadow-soft' : 'text-muted')}>
-              {t}
+            <button key={t} onClick={() => saveSettings({ theme: t })} className={cn('h-7 rounded-full px-3.5 text-body-s font-medium capitalize transition-colors duration-fast', s.theme === t ? 'bg-raised shadow-xs' : 'text-muted hover:text-fg')}>
+              {t === 'light' ? 'Daylight' : t === 'dark' ? 'Dusk' : 'System'}
             </button>
           ))}
         </div>
@@ -157,12 +157,9 @@ function Appearance({ s }: { s: Settings }) {
       <Row label="Accent colour">
         <div className="flex gap-2">
           {ACCENTS.map((a) => (
-            <button key={a.value} onClick={() => saveSettings({ accent: a.value })} title={a.label} aria-label={a.label} className={cn('h-7 w-7 rounded-full ring-offset-2 ring-offset-surface transition', s.accent === a.value && 'ring-2 ring-fg/40')} style={{ background: a.color }} />
+            <button key={a.value} onClick={() => saveSettings({ accent: a.value })} title={a.label} aria-label={a.label} className={cn('h-7 w-7 rounded-full ring-offset-2 ring-offset-surface transition', s.accent === a.value && 'ring-2 ring-fg/40')} style={{ background: `rgb(var(${a.role}))` }} />
           ))}
         </div>
-      </Row>
-      <Row label="Sidebar" hint="You can also collapse it with the button at the bottom of the sidebar.">
-        <Toggle checked={!s.sidebarCollapsed} onChange={(v) => saveSettings({ sidebarCollapsed: !v })} label="Expanded sidebar" />
       </Row>
     </Card>
   );
@@ -285,7 +282,7 @@ function DataBackup({ s }: { s: Settings }) {
   return (
     <>
       <Card title="Back up your data" icon={HardDrive}>
-        <p className="mb-3 text-[13px] leading-relaxed text-muted">
+        <p className="mb-3 text-body-s leading-relaxed text-muted">
           Everything lives in this browser on this device. A backup file contains all your records and files, so you can restore them here or on another device. API keys are never included.
         </p>
         <div className="flex flex-wrap items-center gap-2">
@@ -306,12 +303,12 @@ function DataBackup({ s }: { s: Settings }) {
             Import a backup…
           </Button>
           <input ref={fileRef} type="file" accept="application/json,.json" hidden onChange={(e) => { if (e.target.files?.[0]) void onFile(e.target.files[0]); e.target.value = ''; }} />
-          <span className="text-xs text-faint">{s.lastExportAt ? `Last backup ${timeAgo(s.lastExportAt)}` : 'No backup yet'}</span>
+          <span className="text-body-s text-faint">{s.lastExportAt ? `Last backup ${timeAgo(s.lastExportAt)}` : 'No backup yet'}</span>
         </div>
       </Card>
 
       <Card title="Export spreadsheets (CSV)">
-        <p className="mb-3 text-[13px] text-muted">Open these in Excel, Numbers or Google Sheets. CSV exports are for reporting — use the JSON backup to restore.</p>
+        <p className="mb-3 text-body-s text-muted">Open these in Excel, Numbers or Google Sheets. CSV exports are for reporting — use the JSON backup to restore.</p>
         <div className="flex flex-wrap gap-2">
           {Object.keys(CSV_EXPORTS).map((k) => (
             <Button key={k} size="sm" icon={Download} onClick={() => exportCSV(k as keyof typeof CSV_EXPORTS)}>
@@ -330,7 +327,7 @@ function DataBackup({ s }: { s: Settings }) {
           </Button>
         }
       >
-        <p className="mb-3 text-[13px] text-muted">
+        <p className="mb-3 text-body-s text-muted">
           Work OS automatically keeps a daily snapshot of your records (the last 10), plus one before every import. Snapshots don't include file contents, and they live in this browser — they're a safety net, not a replacement for backups.
         </p>
         <Row label="Automatic daily snapshot">
@@ -338,10 +335,10 @@ function DataBackup({ s }: { s: Settings }) {
         </Row>
         <div className="mt-2 space-y-1">
           {(snaps ?? []).map((sn) => (
-            <div key={sn.id} className="flex items-center gap-3 rounded-md px-1 py-1.5 row-hover">
-              <span className="text-[13px]">{fmtTs(sn.at, 'd MMM yyyy, HH:mm')}</span>
+            <div key={sn.id} className="flex items-center gap-3 rounded-sm px-1 py-1.5 row-hover">
+              <span className="text-body-s">{fmtTs(sn.at, 'd MMM yyyy, HH:mm')}</span>
               <Badge>{sn.reason === 'auto' ? 'Daily' : sn.reason === 'manual' ? 'Manual' : sn.reason === 'before-import' ? 'Before import' : 'Before reset'}</Badge>
-              <span className="text-xs text-faint">{fmtBytes(sn.size)}</span>
+              <span className="text-body-s text-faint">{fmtBytes(sn.size)}</span>
               <div className="flex-1" />
               <Button
                 size="xs"
@@ -356,7 +353,7 @@ function DataBackup({ s }: { s: Settings }) {
               </Button>
             </div>
           ))}
-          {snaps && !snaps.length && <p className="text-xs text-faint">No restore points yet.</p>}
+          {snaps && !snaps.length && <p className="text-body-s text-faint">No restore points yet.</p>}
         </div>
       </Card>
 
@@ -389,7 +386,7 @@ function DataBackup({ s }: { s: Settings }) {
           <Badge tone={persisted ? 'ok' : 'warn'}>{persisted ? 'Protected' : 'Best effort'}</Badge>
         </Row>
         {counts && (
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-muted">
+          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-body-s text-muted">
             {Object.entries(counts).map(([k, v]) => (
               <span key={k}>
                 {k}: <span className="tabular-nums text-fg">{v}</span>
@@ -397,7 +394,7 @@ function DataBackup({ s }: { s: Settings }) {
             ))}
           </div>
         )}
-        <p className="mt-2 text-2xs text-faint">Database schema version {SCHEMA_VERSION}.</p>
+        <p className="mt-2 text-caption text-faint">Database schema version {SCHEMA_VERSION}.</p>
       </Card>
 
       <Card title="Danger zone">
@@ -442,8 +439,8 @@ function DataBackup({ s }: { s: Settings }) {
           </>
         }
       >
-        <p className="text-[13px] text-muted">The file is valid and contains:</p>
-        <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-[13px] sm:grid-cols-3">
+        <p className="text-body-s text-muted">The file is valid and contains:</p>
+        <div className="mt-2 grid grid-cols-2 gap-x-6 gap-y-1 text-body-s sm:grid-cols-3">
           {Object.entries(pending?.counts ?? {})
             .filter(([, n]) => n)
             .map(([t, n]) => (
@@ -452,7 +449,7 @@ function DataBackup({ s }: { s: Settings }) {
               </span>
             ))}
         </div>
-        <ul className="mt-4 space-y-1.5 text-xs text-muted">
+        <ul className="mt-4 space-y-1.5 text-body-s text-muted">
           <li>
             <strong className="text-fg">Merge</strong> adds new items and updates items only where the backup's copy is newer. Nothing is deleted.
           </li>
@@ -503,16 +500,16 @@ function TrashPanel() {
         )
       }
     >
-      <p className="mb-3 text-[13px] text-muted">Deleted items stay here until you remove them permanently. Restoring brings an item back exactly as it was.</p>
+      <p className="mb-3 text-body-s text-muted">Deleted items stay here until you remove them permanently. Restoring brings an item back exactly as it was.</p>
       {items.length === 0 ? (
-        <p className="py-6 text-center text-[13px] text-faint">The Trash is empty.</p>
+        <p className="py-6 text-center text-body-s text-faint">The Trash is empty.</p>
       ) : (
         <div className="divide-y divide-line">
           {items.map((i) => (
             <div key={i.table + i.id} className="flex items-center gap-3 py-2">
-              <span className="w-24 shrink-0 text-2xs uppercase tracking-wide text-faint">{i.label}</span>
-              <span className="min-w-0 flex-1 truncate text-[13px]">{i.title}</span>
-              <span className="hidden text-xs text-faint sm:inline">{timeAgo(i.deletedAt)}</span>
+              <span className="w-24 shrink-0 text-caption uppercase tracking-wide text-faint">{i.label}</span>
+              <span className="min-w-0 flex-1 truncate text-body-s">{i.title}</span>
+              <span className="hidden text-body-s text-faint sm:inline">{timeAgo(i.deletedAt)}</span>
               <Button size="xs" icon={RotateCcw} onClick={async () => { await restore(i.table, i.id); toast('Restored'); }}>
                 Restore
               </Button>
@@ -537,11 +534,11 @@ function ListEditor({ label, hint, values, onChange }: { label: string; hint?: s
   const [text, setText] = useState('');
   return (
     <div className="border-b border-line py-3.5 last:border-0">
-      <div className="text-[13.5px] font-medium">{label}</div>
-      {hint && <div className="mb-2 text-xs text-muted">{hint}</div>}
+      <div className="text-body-m font-medium">{label}</div>
+      {hint && <div className="mb-2 text-body-s text-muted">{hint}</div>}
       <div className="mt-2 flex flex-wrap gap-1.5">
         {values.map((v) => (
-          <span key={v} className="inline-flex h-6 items-center gap-1 rounded-full border border-line bg-raised pl-2.5 pr-1 text-xs">
+          <span key={v} className="inline-flex h-6 items-center gap-1 rounded-full border border-line bg-raised pl-2.5 pr-1 text-body-s">
             {v}
             <button onClick={() => onChange(values.filter((x) => x !== v))} className="text-faint hover:text-danger" aria-label={`Remove ${v}`}>
               <X className="h-3 w-3" />
@@ -555,14 +552,15 @@ function ListEditor({ label, hint, values, onChange }: { label: string; hint?: s
             setText('');
           }}
         >
-          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Add…" className="h-6 w-28 rounded-full border border-dashed border-line-strong bg-transparent px-2.5 text-xs outline-none focus:border-accent" />
+          <input value={text} onChange={(e) => setText(e.target.value)} placeholder="Add…" className="h-6 w-28 rounded-full border border-dashed border-line-strong bg-transparent px-2.5 text-body-s outline-none focus:border-accent" />
         </form>
       </div>
     </div>
   );
 }
 
-const TAG_COLORS = ['#6F8F6C', '#B88A4E', '#5E7F9E', '#A3745C', '#9C6B8E', '#7E8C5A', '#B5574B', '#5F8C8A', '#8C8780'];
+// Tag colours are palette roles (stored as CSS strings so they follow the theme).
+const TAG_COLORS = ['accent', 'teal', 'clay', 'info', 'violet', 'ochre', 'danger', 'accent-deep', 'faint'].map((r) => `rgb(var(--${r}))`);
 
 function Customise({ s }: { s: Settings }) {
   const [tag, setTag] = useState('');
@@ -577,7 +575,7 @@ function Customise({ s }: { s: Settings }) {
   return (
     <>
       <Card title="Labels (tags) & colours">
-        <p className="mb-3 text-[13px] text-muted">Tags work everywhere. Give the ones you use most a colour so they're easy to spot.</p>
+        <p className="mb-3 text-body-s text-muted">Tags work everywhere. Give the ones you use most a colour so they're easy to spot.</p>
         <div className="space-y-1.5">
           {s.tags.map((t) => (
             <div key={t.name} className="flex items-center gap-2">
@@ -586,7 +584,7 @@ function Customise({ s }: { s: Settings }) {
                   <button key={c} onClick={() => saveSettings({ tags: s.tags.map((x) => (x.name === t.name ? { ...x, color: c } : x)) })} className={cn('h-4 w-4 rounded-full', t.color === c && 'ring-2 ring-fg/40 ring-offset-1 ring-offset-surface')} style={{ background: c }} aria-label={`Colour ${c}`} />
                 ))}
               </div>
-              <span className="flex-1 text-[13px]">{t.name}</span>
+              <span className="flex-1 text-body-s">{t.name}</span>
               <IconButton icon={X} size="sm" label="Remove label" onClick={() => saveSettings({ tags: s.tags.filter((x) => x.name !== t.name) })} />
             </div>
           ))}
@@ -605,10 +603,10 @@ function Customise({ s }: { s: Settings }) {
           </Button>
         </form>
         {unregistered.length > 0 && (
-          <div className="mt-3 text-xs text-muted">
+          <div className="mt-3 text-body-s text-muted">
             Tags in use without a colour:{' '}
             {unregistered.map((t) => (
-              <button key={t} className="mr-1.5 text-accent hover:underline" onClick={() => saveSettings({ tags: [...s.tags, { name: t, color: TAG_COLORS[s.tags.length % TAG_COLORS.length] }] })}>
+              <button key={t} className="mr-1.5 text-accent-deep hover:underline" onClick={() => saveSettings({ tags: [...s.tags, { name: t, color: TAG_COLORS[s.tags.length % TAG_COLORS.length] }] })}>
                 +{t}
               </button>
             ))}
@@ -622,12 +620,12 @@ function Customise({ s }: { s: Settings }) {
         <ListEditor label="Content types" values={s.contentTypes} onChange={(v) => saveSettings({ contentTypes: v })} />
       </Card>
       <Card title="Custom fields">
-        <p className="mb-3 text-[13px] text-muted">Add your own fields to tasks, projects, campaigns or content. They appear in each item's editor.</p>
+        <p className="mb-3 text-body-s text-muted">Add your own fields to tasks, projects, campaigns or content. They appear in each item's editor.</p>
         {s.customFields.map((f) => (
           <div key={f.id} className="flex items-center gap-3 border-b border-line py-2 last:border-0">
             <Badge>{f.entity}</Badge>
-            <span className="flex-1 text-[13px]">{f.label}</span>
-            <span className="text-xs text-faint">
+            <span className="flex-1 text-body-s">{f.label}</span>
+            <span className="text-body-s text-faint">
               {f.kind}
               {f.options?.length ? `: ${f.options.join(', ')}` : ''}
             </span>
@@ -663,7 +661,7 @@ function Customise({ s }: { s: Settings }) {
         </div>
       </Card>
       <Card title="Statuses">
-        <p className="text-[13px] leading-relaxed text-muted">
+        <p className="text-body-s leading-relaxed text-muted">
           Task, project, campaign and content statuses are fixed in this version so that progress, analytics and reviews stay reliable. Use tags or a custom “choice list” field for extra stages. Fully custom statuses are listed as a future improvement in DEVELOPMENT_STATUS.md.
         </p>
       </Card>
@@ -687,15 +685,15 @@ function Templates() {
           </Button>
         }
       >
-        <p className="mb-3 text-[13px] text-muted">Templates create a project with milestones and tasks, dated relative to the start date. You can also save any project as a template from its “…” menu.</p>
+        <p className="mb-3 text-body-s text-muted">Templates create a project with milestones and tasks, dated relative to the start date. You can also save any project as a template from its “…” menu.</p>
         <div className="divide-y divide-line">
           {templates.map((t) => (
             <div key={t.id} className="flex items-center gap-3 py-2.5">
               <div className="min-w-0 flex-1">
-                <div className="flex items-center gap-2 text-[13.5px] font-medium">
+                <div className="flex items-center gap-2 text-body-m font-medium">
                   {t.name} {t.builtIn ? <Badge>Built-in</Badge> : <Badge tone="accent">Custom</Badge>}
                 </div>
-                <div className="text-xs text-faint">
+                <div className="text-body-s text-faint">
                   {t.milestones.length} milestones · {t.tasks.length} tasks{t.durationDays ? ` · ${t.durationDays} days` : ''}
                 </div>
               </div>
@@ -830,20 +828,20 @@ export function AISettingsPanel({ s }: { s: Settings }) {
   return (
     <>
       <Card title="AI assistant (optional)" icon={Bot}>
-        <p className="text-[13px] leading-relaxed text-muted">
+        <p className="text-body-s leading-relaxed text-muted">
           Work OS works fully without AI. If you'd like help drafting and summarising, connect a free model here. Nothing is sent anywhere until you choose a provider and ask the assistant something — and only the items you select are shared.
         </p>
         <div className="mt-4 grid gap-2 sm:grid-cols-2">
-          <button onClick={() => setAi({ ...ai, provider: 'none' })} className={cn('rounded-lg border p-3 text-left', ai.provider === 'none' ? 'border-accent bg-accent-soft/40' : 'border-line hover:border-line-strong')}>
-            <div className="text-[13.5px] font-medium">No AI</div>
-            <div className="text-xs text-muted">Default. The assistant page shows rule-based insights only.</div>
+          <button onClick={() => setAi({ ...ai, provider: 'none' })} className={cn('rounded-md border p-3 text-left', ai.provider === 'none' ? 'border-accent bg-accent-soft/40' : 'border-line hover:border-line-strong')}>
+            <div className="text-body-m font-medium">No AI</div>
+            <div className="text-body-s text-muted">Default. The assistant page shows rule-based insights only.</div>
           </button>
           {PROVIDER_PRESETS.map((p) => (
-            <button key={p.label} onClick={() => setAi({ ...ai, provider: p.provider, baseUrl: p.baseUrl, model: p.model })} className={cn('rounded-lg border p-3 text-left', preset?.label === p.label && ai.provider !== 'none' ? 'border-accent bg-accent-soft/40' : 'border-line hover:border-line-strong')}>
-              <div className="flex items-center gap-2 text-[13.5px] font-medium">
+            <button key={p.label} onClick={() => setAi({ ...ai, provider: p.provider, baseUrl: p.baseUrl, model: p.model })} className={cn('rounded-md border p-3 text-left', preset?.label === p.label && ai.provider !== 'none' ? 'border-accent bg-accent-soft/40' : 'border-line hover:border-line-strong')}>
+              <div className="flex items-center gap-2 text-body-m font-medium">
                 {p.label} {p.local ? <Badge tone="ok">Private</Badge> : <Badge tone="warn">Online</Badge>}
               </div>
-              <div className="text-xs text-muted">{p.note}</div>
+              <div className="text-body-s text-muted">{p.note}</div>
             </button>
           ))}
         </div>
@@ -878,14 +876,14 @@ export function AISettingsPanel({ s }: { s: Settings }) {
             )}
           </div>
           {isRemote && (
-            <p className="mt-3 rounded-md bg-warn/10 px-3 py-2 text-xs leading-relaxed text-warn">
+            <p className="mt-3 rounded-sm bg-warn/10 px-3 py-2 text-body-s leading-relaxed text-warn">
               This is an online provider: the text of items you select in the assistant will be sent to it and handled under its privacy terms. For full privacy, use Ollama or LM Studio on your own computer.
             </p>
           )}
           {ai.provider === 'ollama' && (
-            <p className="mt-3 text-xs leading-relaxed text-muted">
-              Set-up: install Ollama from ollama.com, then in Terminal run <code className="rounded bg-sunken px-1">ollama pull {ai.model || 'llama3.2'}</code>. If Work OS is hosted online (not on localhost), allow it by setting
-              <code className="mx-1 rounded bg-sunken px-1">OLLAMA_ORIGINS={location.origin}</code>and restarting Ollama — see the README for exact steps.
+            <p className="mt-3 text-body-s leading-relaxed text-muted">
+              Set-up: install Ollama from ollama.com, then in Terminal run <code className="rounded-sm bg-sunken px-1">ollama pull {ai.model || 'llama3.2'}</code>. If Work OS is hosted online (not on localhost), allow it by setting
+              <code className="mx-1 rounded-sm bg-sunken px-1">OLLAMA_ORIGINS={location.origin}</code>and restarting Ollama — see the README for exact steps.
             </p>
           )}
           <div className="mt-4 flex items-center gap-2">
@@ -897,9 +895,9 @@ export function AISettingsPanel({ s }: { s: Settings }) {
             </Button>
           </div>
           {result && (
-            <div className={cn('mt-3 rounded-md px-3 py-2 text-[13px]', result.ok ? 'bg-ok/10 text-ok' : 'bg-danger/10 text-danger')}>
+            <div className={cn('mt-3 rounded-sm px-3 py-2 text-body-s', result.ok ? 'bg-ok/10 text-ok' : 'bg-danger/10 text-danger')}>
               {result.text}
-              {result.hint && <div className="mt-1 text-xs text-muted">{result.hint}</div>}
+              {result.hint && <div className="mt-1 text-body-s text-muted">{result.hint}</div>}
             </div>
           )}
         </Card>
@@ -918,10 +916,10 @@ function Integrations() {
   return (
     <>
       <Card title="Export calendar (.ics)" icon={CalendarDays}>
-        <p className="mb-3 text-[13px] text-muted">
+        <p className="mb-3 text-body-s text-muted">
           Download your Work OS calendar as a file you can import into Google Calendar, Apple Calendar or Outlook. It's a one-time copy (not a live sync) — export again after big changes.
         </p>
-        <div className="mb-3 flex flex-wrap gap-4 text-[13px]">
+        <div className="mb-3 flex flex-wrap gap-4 text-body-s">
           {(Object.keys(o) as (keyof typeof o)[]).map((k) => (
             <label key={k} className="flex items-center gap-1.5 capitalize">
               <input type="checkbox" checked={o[k]} onChange={(e) => setO({ ...o, [k]: e.target.checked })} className="accent-[rgb(var(--accent))]" />
@@ -934,7 +932,7 @@ function Integrations() {
         </Button>
       </Card>
       <Card title="Planned integrations">
-        <ul className="space-y-3 text-[13px] leading-relaxed text-muted">
+        <ul className="space-y-3 text-body-s leading-relaxed text-muted">
           <li>
             <strong className="text-fg">Google Calendar (two-way)</strong> — possible later. It needs a Google Cloud project with OAuth set up (free), and is optional. Work OS's own calendar works independently.
           </li>
@@ -953,7 +951,7 @@ function Integrations() {
 function Privacy() {
   return (
     <Card title="What's stored where" icon={Shield}>
-      <div className="space-y-3 text-[13px] leading-relaxed text-muted">
+      <div className="space-y-3 text-body-s leading-relaxed text-muted">
         <p>
           <strong className="text-fg">On this device only:</strong> every task, project, note, document, file, campaign, metric and setting is stored in this browser's private database (IndexedDB). There is no account, no server and no tracking.
         </p>

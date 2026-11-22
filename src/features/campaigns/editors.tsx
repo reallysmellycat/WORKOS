@@ -29,7 +29,7 @@ function PressReleaseEditor({ id, onClose }: { id: string; onClose: () => void }
   return (
     <div className="flex h-full flex-col">
       <div className="flex h-[52px] shrink-0 items-center gap-2 border-b border-line px-5">
-        <span className="text-[13px] font-medium">Press release</span>
+        <span className="text-body-s font-medium">Press release</span>
         <div className="flex-1" />
         <SavedIndicator status={status} />
         <IconButton
@@ -44,7 +44,7 @@ function PressReleaseEditor({ id, onClose }: { id: string; onClose: () => void }
         <IconButton icon={X} label="Close" onClick={onClose} />
       </div>
       <div className="flex-1 space-y-4 overflow-y-auto px-5 py-5">
-        <Textarea autoGrow rows={1} value={draft.title} onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 text-[19px] font-semibold" aria-label="Title" />
+        <Textarea autoGrow rows={1} value={draft.title} onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 text-h4 font-semibold" aria-label="Title" />
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
           <Field label="Status">
             <Select value={draft.status} onChange={(e) => set({ status: e.target.value as PressRelease['status'] })}>
@@ -70,7 +70,7 @@ function PressReleaseEditor({ id, onClose }: { id: string; onClose: () => void }
         </div>
         <div>
           <span className="label">Draft</span>
-          <div className="rounded-lg border border-line bg-raised px-4 pt-1 pb-4">
+          <div className="rounded-md border border-line bg-raised px-4 pt-1 pb-4">
             <MarkdownEditor value={draft.body ?? ''} onChange={(body) => set({ body })} minHeight={280} owner={{ type: 'pressRelease', id }} placeholder="Headline, dateline, lead paragraph, quotes, boilerplate, media contact…" />
           </div>
         </div>

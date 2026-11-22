@@ -1,0 +1,115 @@
+/* ==========================================================================
+   WorkOS themes — SEMANTIC ROLES
+   Components and Tailwind utilities read ONLY these roles. Each role points
+   at a primitive in tokens.css. Two themes:
+     • Daylight (default): warm architectural neutrals, graphite type.
+     • Dusk: smoked graphite surfaces — deep, never black.
+   ========================================================================== */
+
+:root {
+  /* Environment & surfaces (3 levels: environment → floating → elevated) */
+  --desk: var(--color-bg-secondary);          /* deeper environment zones */
+  --bg: var(--color-bg-primary);              /* Level 1 — base environment */
+  --surface: var(--color-surface-primary);    /* Level 2 — floating work panels */
+  --raised: var(--color-surface-elevated);    /* Level 3 — menus, dialogs, popovers */
+  --sunken: var(--color-surface-muted);       /* wells, hover fills, tracks */
+
+  /* Lines */
+  --line: var(--color-border-strong);         /* dividers, input borders */
+  --line-alpha: var(--alpha-border-strong);
+  --line-strong: var(--color-border-strong);  /* hover / emphasised boundary */
+  --line-strong-alpha: 0.6;
+  --edge: var(--color-border-subtle);         /* light edge of floating & glass surfaces */
+  --edge-alpha: var(--alpha-border-subtle);
+
+  /* Type */
+  --fg: var(--color-graphite);
+  --muted: var(--color-graphite-soft);
+  --faint: var(--color-text-muted);
+
+  /* Accent (sage family by default) */
+  --accent: var(--color-accent-primary);      /* fills, indicators, focus */
+  --accent-deep: var(--color-accent-deep);    /* accent text & emphasis */
+  --accent-soft: var(--color-accent-secondary);
+  --accent-fg: var(--color-surface-elevated); /* text on accent fill */
+
+  /* Inverse "ink" panel (graphite) */
+  --ink: var(--color-graphite);
+  --ink-fg: var(--color-surface-elevated);
+  --ink-muted: var(--color-text-muted);
+  --ink-alert: var(--color-accent-warm);      /* attention text on the ink panel */
+
+  /* Supporting accents */
+  --teal: var(--color-accent-teal);
+  --violet: var(--color-accent-violet);
+  --clay: var(--color-accent-warm);
+  --clay-ink: var(--color-warm-ink);
+  --ochre: var(--color-warning);
+
+  /* Semantic (text-safe inks; raw hues are --color-success etc.) */
+  --ok: var(--color-success-ink);
+  --warn: var(--color-warning-ink);
+  --danger: var(--color-error-ink);
+  --info: var(--color-info-ink);
+
+  /* Glass */
+  --glass-fill: var(--color-surface-elevated);
+  --glass-alpha: 0.62;
+  --shadow: var(--color-shadow);
+
+  color-scheme: light;
+}
+
+/* Accent alternatives (Settings → Appearance). Each maps to the palette. */
+:root[data-accent='teal'] { --accent: var(--color-accent-teal); --accent-deep: 40 116 103; --accent-soft: 178 220 210; --accent-fg: 20 40 36; }
+:root[data-accent='warm'] { --accent: var(--color-accent-warm); --accent-deep: var(--color-warm-ink); --accent-soft: 236 205 186; --accent-fg: 44 26 16; }
+:root[data-accent='violet'] { --accent: var(--color-accent-violet); --accent-deep: 108 62 166; --accent-soft: 218 196 244; --accent-fg: var(--color-surface-elevated); }
+:root[data-accent='deep'] { --accent: var(--color-accent-deep); --accent-deep: 62 80 68; --accent-soft: var(--color-accent-secondary); }
+:root[data-accent='graphite'] { --accent: var(--color-graphite-soft); --accent-deep: var(--color-graphite); --accent-soft: var(--color-surface-muted); }
+
+/* ---------- Dusk ---------- */
+.dark {
+  --desk: var(--dusk-bg-secondary);
+  --bg: var(--dusk-bg-primary);
+  --surface: var(--dusk-surface-primary);
+  --raised: var(--dusk-surface-elevated);
+  --sunken: var(--dusk-surface-muted);
+
+  --line: 255 255 255;
+  --line-alpha: 0.10;
+  --line-strong: 255 255 255;
+  --line-strong-alpha: 0.2;
+  --edge: 255 255 255;
+  --edge-alpha: 0.09;
+
+  --fg: var(--dusk-text);
+  --muted: var(--dusk-text-secondary);
+  --faint: var(--dusk-text-muted);
+
+  --accent: var(--dusk-accent-primary);
+  --accent-deep: var(--dusk-accent-deep);
+  --accent-soft: 70 84 74;
+  --accent-fg: var(--dusk-bg-secondary);
+
+  --ink: var(--dusk-text);
+  --ink-fg: var(--dusk-bg-secondary);
+  --ink-muted: var(--color-graphite-soft);
+  --ink-alert: var(--color-error-ink);
+
+  --clay-ink: var(--dusk-warm-ink);
+  --ok: var(--dusk-success-ink);
+  --warn: var(--dusk-warning-ink);
+  --danger: var(--dusk-error-ink);
+  --info: var(--dusk-info-ink);
+
+  --glass-fill: var(--dusk-surface-elevated);
+  --glass-alpha: 0.6;
+  --shadow: 8 8 6;
+
+  color-scheme: dark;
+}
+.dark[data-accent='teal'] { --accent: var(--color-accent-teal); --accent-deep: 140 214 199; --accent-soft: 44 78 72; }
+.dark[data-accent='warm'] { --accent: var(--color-accent-warm); --accent-deep: var(--dusk-warm-ink); --accent-soft: 86 64 52; }
+.dark[data-accent='violet'] { --accent: 186 146 238; --accent-deep: 206 178 244; --accent-soft: 70 56 90; }
+.dark[data-accent='deep'] { --accent: 120 146 128; --accent-deep: 168 192 174; }
+.dark[data-accent='graphite'] { --accent: var(--dusk-text-secondary); --accent-deep: var(--dusk-text); --accent-soft: var(--dusk-surface-muted); }

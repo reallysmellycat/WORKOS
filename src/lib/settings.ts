@@ -49,7 +49,7 @@ export interface Settings {
   onboarded: boolean;
   name: string;
   theme: 'light' | 'dark' | 'system';
-  accent: 'sage' | 'clay' | 'slate' | 'ochre' | 'plum' | 'ink';
+  accent: 'sage' | 'deep' | 'teal' | 'warm' | 'violet' | 'graphite';
   sidebarCollapsed: boolean;
   weekStartsOn: 0 | 1;
   dashboard: WidgetConfig[]; // legacy widget layout (kept for old backups)
@@ -143,6 +143,7 @@ export function mergeSettings(v?: Partial<Settings>): Settings {
     ...(v ?? {}),
     notifications: { ...DEFAULT_SETTINGS.notifications, ...(v?.notifications ?? {}) },
     ai: { ...DEFAULT_SETTINGS.ai, ...(v?.ai ?? {}) },
+    accent: migrateAccent((v?.accent as string | undefined) ?? DEFAULT_SETTINGS.accent),
     home: { ...DEFAULT_HOME, ...(v?.home ?? {}), order: mergeOrder(v?.home?.order) },
   };
 }
@@ -163,4 +164,11 @@ export function useSettingsQuery(): Settings | undefined {
 function mergeOrder(order?: HomeSection[]): HomeSection[] {
   const base = (order ?? []).filter((x) => DEFAULT_HOME.order.includes(x));
   return [...base, ...DEFAULT_HOME.order.filter((x) => !base.includes(x))];
+}
+
+/** Maps accent names from earlier versions onto the current palette. */
+function migrateAccent(a: string): Settings['accent'] {
+  const old: Record<string, Settings['accent']> = { clay: 'warm', ochre: 'warm', slate: 'teal', plum: 'violet', ink: 'graphite' };
+  const valid = ['sage', 'deep', 'teal', 'warm', 'violet', 'graphite'];
+  return (valid.includes(a) ? a : old[a] ?? 'sage') as Settings['accent'];
 }

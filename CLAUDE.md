@@ -2,6 +2,9 @@
 
 Work OS is a single-user, local-first PWA. The owner is not a software engineer: explain changes in plain language, give exact commands, and never claim something is deployed or connected unless it has been verified.
 
+## Design system
+**`DESIGN.md` is the visual and UX source of truth.** Read it before any UI work. Use only token utilities (type `text-display-xl…text-micro`, semantic colour roles, the 4px spacing scale, `rounded-xs…3xl`, `shadow-xs…xl`, `duration-*`/`ease-*`); no hex values, `text-[Npx]` or arbitrary radii. Tokens live in `src/styles/tokens.css` (primitives) and `src/styles/themes.css` (semantic roles); `tailwind.config.js` only reads them; `src/lib/tokens.ts` resolves colours for SVG/charts. A missing value means: add a token + document it in DESIGN.md in the same change. There is no sidebar: navigation is `src/app/TopNav.tsx` + `src/app/nav.ts`.
+
 ## Hard rules
 - **¥0 running cost.** No paid services, no usage-billed APIs, and no dependency that needs an API key for core features. Ask before adding any external service.
 - **No API keys in source.** AI keys live only in the user's IndexedDB settings and are stripped from backups (`redactSettings` in `src/lib/backup.ts`).
@@ -30,9 +33,10 @@ Optional E2E: build, then run `npx vite preview --port 4173` and `node scripts/m
 - `src/lib/backup.ts`: export/import/validation/CSV/restore points.
 - `src/lib/ai.ts`: provider adapters + presets. `src/features/assistant/context.ts` serialises the selected context.
 - `src/features/*`: one folder per screen. Global drawers (task, content, event) live in `src/app/Layout.tsx` and open via `useApp()`.
-- UI primitives: `src/components/ui.tsx`; colour tokens: `src/index.css` (use `bg-surface`, `text-muted`, `border-line`, `text-accent`, …, never raw colours).
+- UI primitives: `src/components/ui.tsx` (incl. `Panel`, `Page`, `PageHeader`, `Section`); `ProjectPreview`, `TaskRow`, `charts.tsx`. Styles: `src/styles/` (see DESIGN.md §0).
 
 ## Gotchas
+- SVG presentation attributes (`stroke=`, `fill=`, `stopColor=`) cannot read CSS variables — use `style={{ stroke: 'rgb(var(--x))' }}` or `useChartColors()`/`resolveColor()` from `src/lib/tokens.ts`.
 - Effects must use block bodies. `useEffect(() => el.scrollIntoView())` returns a Promise in newer Chrome, and React then crashes calling it as a clean-up function.
 - Wrap `localStorage` access in try/catch (`safeGet` in `utils.ts`).
 - Blob storage in tests requires `// @vitest-environment node`.

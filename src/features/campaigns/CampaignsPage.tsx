@@ -101,37 +101,37 @@ export default function CampaignsPage() {
               const rl = releases.filter((x) => x.campaignId === c.id);
               const done = c.activities.filter((a) => a.done).length;
               return (
-                <Link key={c.id} to={`/campaigns/${c.id}`} className="card group p-4 transition-all hover:border-line-strong hover:shadow-soft">
+                <Link key={c.id} to={`/campaigns/${c.id}`} className="card group p-4 transition-all hover:border-line-strong hover:shadow-xs">
                   <div className="flex items-center gap-2">
                     <Badge tone={sm.tone} dot>
                       {sm.label}
                     </Badge>
                     {c.isDemo && <DemoBadge />}
                     <div className="flex-1" />
-                    <span className="text-xs text-faint">
+                    <span className="text-body-s text-faint">
                       {c.startDate ? fmtDate(c.startDate) : '—'} → {c.endDate ? fmtDate(c.endDate) : '—'}
                     </span>
                   </div>
-                  <h3 className="mt-3 text-[15px] font-semibold group-hover:text-accent">{c.name}</h3>
-                  {c.description && <p className="mt-1 line-clamp-2 text-[13px] text-muted">{c.description}</p>}
+                  <h3 className="mt-3 text-body-l font-semibold group-hover:text-accent-deep">{c.name}</h3>
+                  {c.description && <p className="mt-1 line-clamp-2 text-body-s text-muted">{c.description}</p>}
                   <div className="mt-4 grid grid-cols-3 gap-2 text-center">
-                    <div className="rounded-md bg-sunken/50 py-2">
-                      <div className="text-[15px] font-semibold tabular-nums">{rl.length}</div>
-                      <div className="text-2xs uppercase tracking-wide text-faint">Releases</div>
+                    <div className="rounded-sm bg-sunken/50 py-2">
+                      <div className="text-body-l font-semibold tabular-nums">{rl.length}</div>
+                      <div className="text-caption uppercase tracking-wide text-faint">Releases</div>
                     </div>
-                    <div className="rounded-md bg-sunken/50 py-2">
-                      <div className="text-[15px] font-semibold tabular-nums">{cv.length}</div>
-                      <div className="text-2xs uppercase tracking-wide text-faint">Coverage</div>
+                    <div className="rounded-sm bg-sunken/50 py-2">
+                      <div className="text-body-l font-semibold tabular-nums">{cv.length}</div>
+                      <div className="text-caption uppercase tracking-wide text-faint">Coverage</div>
                     </div>
-                    <div className="rounded-md bg-sunken/50 py-2">
-                      <div className="text-[15px] font-semibold tabular-nums">{compactNumber(cv.reduce((s, x) => s + (x.reach ?? 0), 0))}</div>
-                      <div className="text-2xs uppercase tracking-wide text-faint">Reach</div>
+                    <div className="rounded-sm bg-sunken/50 py-2">
+                      <div className="text-body-l font-semibold tabular-nums">{compactNumber(cv.reduce((s, x) => s + (x.reach ?? 0), 0))}</div>
+                      <div className="text-caption uppercase tracking-wide text-faint">Reach</div>
                     </div>
                   </div>
                   {c.activities.length > 0 && (
                     <div className="mt-3 flex items-center gap-2">
                       <Progress value={(done / c.activities.length) * 100} />
-                      <span className="shrink-0 text-xs tabular-nums text-faint">
+                      <span className="shrink-0 text-body-s tabular-nums text-faint">
                         {done}/{c.activities.length} activities
                       </span>
                     </div>
@@ -147,9 +147,9 @@ export default function CampaignsPage() {
           {releases.length === 0 ? (
             <Empty icon={FileText} title="No press releases yet" />
           ) : (
-            <table className="w-full min-w-[720px] text-[13px]">
+            <table className="w-full min-w-[720px] text-body-s">
               <thead>
-                <tr className="border-b border-line text-left text-2xs uppercase tracking-wider text-faint">
+                <tr className="border-b border-line text-left text-caption uppercase tracking-wider text-faint">
                   <th className="px-4 py-2.5 font-semibold">Title</th>
                   <th className="px-3 py-2.5 font-semibold">Status</th>
                   <th className="px-3 py-2.5 font-semibold">Campaign</th>
@@ -178,7 +178,7 @@ export default function CampaignsPage() {
               </tbody>
             </table>
           )}
-          <div className="flex flex-wrap gap-3 border-t border-line px-4 py-2.5 text-xs text-faint">
+          <div className="flex flex-wrap gap-3 border-t border-line px-4 py-2.5 text-body-s text-faint">
             {PR_STATUSES.map((s) => (
               <span key={s.value}>
                 {s.label}: <span className="text-fg tabular-nums">{releases.filter((r) => r.status === s.value).length}</span>
@@ -200,9 +200,9 @@ export function CoverageTable({ coverage, campaignName, onEdit }: { coverage: Co
   if (!coverage.length) return <div className="card"><Empty icon={Newspaper} title="No coverage logged yet" compact>Log articles, mentions and interviews as they appear.</Empty></div>;
   return (
     <div className="card overflow-x-auto">
-      <table className="w-full min-w-[640px] text-[13px]">
+      <table className="w-full min-w-[640px] text-body-s">
         <thead>
-          <tr className="border-b border-line text-left text-2xs uppercase tracking-wider text-faint">
+          <tr className="border-b border-line text-left text-caption uppercase tracking-wider text-faint">
             <th className="px-4 py-2.5 font-semibold">Date</th>
             <th className="px-3 py-2.5 font-semibold">Outlet</th>
             <th className="px-3 py-2.5 font-semibold">Headline</th>
@@ -225,7 +225,7 @@ export function CoverageTable({ coverage, campaignName, onEdit }: { coverage: Co
                 <td className="px-3 py-2.5">{c.sentiment && <Badge tone={c.sentiment === 'positive' ? 'ok' : c.sentiment === 'negative' ? 'danger' : 'neutral'}>{c.sentiment}</Badge>}</td>
                 <td className="px-2">
                   {c.url && (
-                    <a href={c.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-faint hover:text-accent" aria-label="Open article">
+                    <a href={c.url} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="text-faint hover:text-accent-deep" aria-label="Open article">
                       <ExternalLink className="h-3.5 w-3.5" />
                     </a>
                   )}

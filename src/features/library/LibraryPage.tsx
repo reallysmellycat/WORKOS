@@ -110,15 +110,15 @@ export default function LibraryPage() {
     setCollection(null);
   };
 
-  const navBtn = (active: boolean) => cn('flex w-full items-center gap-2 rounded-md px-2.5 py-1.5 text-left text-[13px]', active ? 'bg-sunken font-medium text-fg' : 'text-muted hover:bg-sunken/60');
+  const navBtn = (active: boolean) => cn('flex w-full items-center gap-2 rounded-sm px-2.5 py-1.5 text-left text-body-s', active ? 'bg-sunken font-medium text-fg' : 'text-muted hover:bg-sunken/60');
   const activeCollection = collections.find((c) => c.id === collection);
 
   return (
     <Page wide>
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">Library</h1>
-          <p className="mt-1 text-[13px] text-muted">Your professional knowledge base — notes, research, documents, links and files, all connected.</p>
+          <h1 className="flex items-center gap-2 text-h4 font-semibold tracking-tight">Library</h1>
+          <p className="mt-1 text-body-s text-muted">Your professional knowledge base — notes, research, documents, links and files, all connected.</p>
         </div>
         <div className="flex flex-wrap gap-2">
           <Button icon={Link2} onClick={() => setModal('link')}>
@@ -145,13 +145,13 @@ export default function LibraryPage() {
         <nav className="space-y-5" aria-label="Library filters">
           <div>
             <button className={navBtn(kind === 'all' && !folder && !tag && !collection && !category)} onClick={() => { setKind('all'); clearFilters(); }}>
-              <Library className="h-3.5 w-3.5" /> Everything <span className="ml-auto text-xs text-faint">{items.length}</span>
+              <Library className="h-3.5 w-3.5" /> Everything <span className="ml-auto text-body-s text-faint">{items.length}</span>
             </button>
             {(Object.keys(KIND_META) as Exclude<Kind, 'all'>[]).map((k) => {
               const M = KIND_META[k];
               return (
                 <button key={k} className={navBtn(kind === k)} onClick={() => setKind(k)}>
-                  <M.icon className="h-3.5 w-3.5" /> {M.label} <span className="ml-auto text-xs text-faint">{items.filter((i) => i.ref.type === k).length}</span>
+                  <M.icon className="h-3.5 w-3.5" /> {M.label} <span className="ml-auto text-body-s text-faint">{items.filter((i) => i.ref.type === k).length}</span>
                 </button>
               );
             })}
@@ -161,10 +161,10 @@ export default function LibraryPage() {
               <span className="section-title">Collections</span>
               <IconButton icon={Plus} size="sm" label="New collection" onClick={() => setModal('collection')} />
             </div>
-            {collections.length === 0 && <p className="px-2.5 text-xs text-faint">Group related items — e.g. “Launch research”.</p>}
+            {collections.length === 0 && <p className="px-2.5 text-body-s text-faint">Group related items — e.g. “Launch research”.</p>}
             {collections.map((c) => (
               <button key={c.id} className={navBtn(collection === c.id)} onClick={() => setCollection(collection === c.id ? null : c.id)}>
-                <Layers className="h-3.5 w-3.5" /> <span className="truncate">{c.name}</span> <span className="ml-auto text-xs text-faint">{c.items.length}</span>
+                <Layers className="h-3.5 w-3.5" /> <span className="truncate">{c.name}</span> <span className="ml-auto text-body-s text-faint">{c.items.length}</span>
               </button>
             ))}
           </div>
@@ -173,12 +173,12 @@ export default function LibraryPage() {
               <span className="section-title">Folders</span>
               <IconButton icon={FolderPlus} size="sm" label="New folder" onClick={() => setModal('folder')} />
             </div>
-            {libFolders.length === 0 && <p className="px-2.5 text-xs text-faint">No folders yet.</p>}
+            {libFolders.length === 0 && <p className="px-2.5 text-body-s text-faint">No folders yet.</p>}
             {libFolders.map((f) => (
               <div key={f.id} className="group flex items-center">
                 <button className={navBtn(folder === f.id)} onClick={() => setFolder(folder === f.id ? null : f.id)}>
                   <FolderIcon className="h-3.5 w-3.5" /> <span className="truncate">{f.name}</span>
-                  <span className="ml-auto text-xs text-faint">{items.filter((i) => i.folderId === f.id).length}</span>
+                  <span className="ml-auto text-body-s text-faint">{items.filter((i) => i.folderId === f.id).length}</span>
                 </button>
                 <Menu
                   trigger={(t) => <IconButton icon={MoreHorizontal} size="sm" label="Folder actions" onClick={t} className="opacity-0 group-hover:opacity-100" />}
@@ -220,7 +220,7 @@ export default function LibraryPage() {
               <div className="mb-1.5 px-2.5 section-title">Tags</div>
               <div className="flex flex-wrap gap-1 px-2">
                 {allTags.map((t) => (
-                  <button key={t} onClick={() => setTag(tag === t ? null : t)} className={cn('inline-flex items-center gap-0.5 rounded-full border px-2 h-[22px] text-xs', tag === t ? 'border-accent bg-accent-soft text-accent' : 'border-line text-muted hover:border-line-strong')}>
+                  <button key={t} onClick={() => setTag(tag === t ? null : t)} className={cn('inline-flex items-center gap-0.5 rounded-full border px-2 h-[22px] text-body-s', tag === t ? 'border-accent bg-accent-soft text-accent-deep' : 'border-line text-muted hover:border-line-strong')}>
                     <Hash className="h-3 w-3" />
                     {t}
                   </button>
@@ -244,10 +244,10 @@ export default function LibraryPage() {
           </div>
           {activeCollection && (
             <div className="card mb-4 flex items-center gap-3 px-4 py-3">
-              <Layers className="h-4 w-4 text-accent" />
+              <Layers className="h-4 w-4 text-accent-deep" />
               <div className="min-w-0 flex-1">
-                <div className="text-[13.5px] font-semibold">{activeCollection.name}</div>
-                {activeCollection.description && <div className="text-xs text-muted">{activeCollection.description}</div>}
+                <div className="text-body-m font-semibold">{activeCollection.name}</div>
+                {activeCollection.description && <div className="text-body-s text-muted">{activeCollection.description}</div>}
               </div>
               <Button
                 size="sm"
@@ -275,12 +275,12 @@ export default function LibraryPage() {
               {filtered.map((i) => {
                 const M = KIND_META[i.ref.type as Exclude<Kind, 'all'>];
                 return (
-                  <article key={refKey(i.ref)} className="card group flex cursor-pointer flex-col p-3.5 transition-all hover:border-line-strong hover:shadow-soft" onClick={() => open(i)}>
+                  <article key={refKey(i.ref)} className="card group flex cursor-pointer flex-col p-3.5 transition-all hover:border-line-strong hover:shadow-xs" onClick={() => open(i)}>
                     <div className="flex items-center gap-2">
-                      <span className="flex h-6 w-6 items-center justify-center rounded-md bg-sunken text-muted">
+                      <span className="flex h-6 w-6 items-center justify-center rounded-sm bg-sunken text-muted">
                         <M.icon className="h-3.5 w-3.5" />
                       </span>
-                      <span className="text-2xs uppercase tracking-wide text-faint">{M.label.replace(/s$/, '')}</span>
+                      <span className="text-caption uppercase tracking-wide text-faint">{M.label.replace(/s$/, '')}</span>
                       {i.category && <Badge>{i.category}</Badge>}
                       {i.isDemo && <DemoBadge />}
                       <div className="flex-1" />
@@ -311,12 +311,12 @@ export default function LibraryPage() {
                         />
                       </div>
                     </div>
-                    <h3 className="mt-2.5 line-clamp-2 text-[14px] font-medium leading-snug group-hover:text-accent">{i.title}</h3>
-                    {i.file?.mime.startsWith('image/') ? <Thumb file={i.file} /> : <p className="mt-1 line-clamp-2 text-xs text-faint">{i.sub}</p>}
+                    <h3 className="mt-2.5 line-clamp-2 text-body-m font-medium leading-snug group-hover:text-accent-deep">{i.title}</h3>
+                    {i.file?.mime.startsWith('image/') ? <Thumb file={i.file} /> : <p className="mt-1 line-clamp-2 text-body-s text-faint">{i.sub}</p>}
                     <div className="flex-1" />
                     <div className="mt-3 flex items-center gap-2">
                       <TagList tags={i.tags.slice(0, 3)} />
-                      <span className="ml-auto text-2xs text-faint">{timeAgo(i.updatedAt)}</span>
+                      <span className="ml-auto text-caption text-faint">{timeAgo(i.updatedAt)}</span>
                       {i.url && <ExternalLink className="h-3 w-3 text-faint" />}
                     </div>
                   </article>
@@ -336,7 +336,7 @@ export default function LibraryPage() {
 
 function Thumb({ file }: { file: StoredFile }) {
   const [url] = useState(() => URL.createObjectURL(file.blob));
-  return <img src={url} alt={file.name} className="mt-2 h-28 w-full rounded-md border border-line object-cover" onLoad={() => setTimeout(() => URL.revokeObjectURL(url), 30000)} />;
+  return <img src={url} alt={file.name} className="mt-2 h-28 w-full rounded-sm border border-line object-cover" onLoad={() => setTimeout(() => URL.revokeObjectURL(url), 30000)} />;
 }
 
 function NameModal({ title, onSave, onClose, withDescription }: { title: string; onSave: (name: string, description?: string) => Promise<void>; onClose: () => void; withDescription?: boolean }) {

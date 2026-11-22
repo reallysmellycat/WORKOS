@@ -89,16 +89,16 @@ export default function DocumentsPage() {
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {list.map((d) => (
-            <Link key={d.id} to={`/documents/${d.id}`} className="card group flex h-[190px] flex-col p-4 transition-all hover:border-line-strong hover:shadow-soft">
+            <Link key={d.id} to={`/documents/${d.id}`} className="card group flex h-[190px] flex-col p-4 transition-all hover:border-line-strong hover:shadow-xs">
               <div className="flex items-center gap-2">
                 <Badge>{docTypeLabel(d.docType)}</Badge>
                 <Badge tone={d.status === 'final' ? 'ok' : d.status === 'in_review' ? 'warn' : 'muted'}>{d.status === 'final' ? 'Final' : d.status === 'in_review' ? 'In review' : 'Draft'}</Badge>
                 {d.isDemo && <DemoBadge />}
               </div>
-              <h3 className="mt-3 line-clamp-2 font-serif text-[17px] font-medium leading-snug group-hover:text-accent">{d.title || 'Untitled'}</h3>
-              <p className="mt-1.5 line-clamp-2 text-[12.5px] text-faint">{excerpt(d.body, 140)}</p>
+              <h3 className="mt-3 line-clamp-2 font-serif text-h4 font-medium leading-snug group-hover:text-accent-deep">{d.title || 'Untitled'}</h3>
+              <p className="mt-1.5 line-clamp-2 text-body-s text-faint">{excerpt(d.body, 140)}</p>
               <div className="flex-1" />
-              <div className="flex items-center gap-2 text-2xs text-faint">
+              <div className="flex items-center gap-2 text-caption text-faint">
                 <span>{wordCount(d.body)} words</span>·<span>edited {timeAgo(d.updatedAt)}</span>
                 <span className="flex-1" />
                 <TagList tags={d.tags.slice(0, 2)} />
@@ -111,10 +111,10 @@ export default function DocumentsPage() {
       <Modal open={choosing} onClose={() => setChoosing(false)} title="New document" description="Pick a starting outline. You can change everything." width="max-w-2xl">
         <div className="grid gap-2 sm:grid-cols-3">
           {DOC_TYPES.map((t) => (
-            <button key={t.value} onClick={() => createDoc(t.value)} className={cn('rounded-lg border border-line p-3 text-left hover:border-accent hover:bg-accent-soft/30')}>
-              <FileText className="mb-2 h-4 w-4 text-accent" />
-              <div className="text-[13.5px] font-medium">{t.value === 'other' ? 'Blank document' : t.label}</div>
-              <div className="mt-0.5 line-clamp-2 text-xs text-faint">{t.value === 'other' ? 'Start from nothing' : excerpt(DOC_TEMPLATES[t.value], 60)}</div>
+            <button key={t.value} onClick={() => createDoc(t.value)} className={cn('rounded-md border border-line p-3 text-left hover:border-accent hover:bg-accent-soft/30')}>
+              <FileText className="mb-2 h-4 w-4 text-accent-deep" />
+              <div className="text-body-m font-medium">{t.value === 'other' ? 'Blank document' : t.label}</div>
+              <div className="mt-0.5 line-clamp-2 text-body-s text-faint">{t.value === 'other' ? 'Start from nothing' : excerpt(DOC_TEMPLATES[t.value], 60)}</div>
             </button>
           ))}
         </div>

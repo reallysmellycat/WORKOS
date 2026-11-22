@@ -1,12 +1,12 @@
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CalendarDays, FolderKanban, LayoutGrid, List, Plus, Search } from 'lucide-react';
+import { FolderKanban, LayoutGrid, List, Plus, Search } from 'lucide-react';
 import { useProjects, useTasks } from '@/lib/hooks';
 import { PROJECT_STATUSES, projectProgress, projectStatusMeta } from '@/lib/domain';
 import type { ProjectStatus } from '@/lib/types';
-import { cn, daysUntil, fmtDate, relativeDay } from '@/lib/utils';
+import { fmtDate } from '@/lib/utils';
 import { Badge, Button, DemoBadge, Empty, Input, Loading, Page, PageHeader, Progress, Tabs } from '@/components/ui';
-import { TagList } from '@/components/pickers';
+import { ProjectPreview } from '@/components/ProjectPreview';
 import { useApp } from '@/app/context';
 
 export default function ProjectsPage() {
@@ -75,45 +75,17 @@ export default function ProjectsPage() {
           </Empty>
         </div>
       ) : layout === 'grid' ? (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {rows.map(({ p, prog, open }) => {
-            const sm = projectStatusMeta(p.status);
-            const dd = daysUntil(p.deadline);
-            return (
-              <Link key={p.id} to={`/projects/${p.id}`} className="card group flex flex-col p-4 transition-all hover:border-line-strong hover:shadow-soft">
-                <div className="flex items-center gap-2">
-                  <Badge tone={sm.tone} dot>
-                    {sm.label}
-                  </Badge>
-                  {p.isDemo && <DemoBadge />}
-                  <div className="flex-1" />
-                  {p.deadline && (
-                    <span className={cn('inline-flex items-center gap-1 text-xs', dd !== null && dd < 0 && p.status !== 'completed' ? 'text-danger' : 'text-faint')}>
-                      <CalendarDays className="h-3 w-3" />
-                      {relativeDay(p.deadline)}
-                    </span>
-                  )}
-                </div>
-                <h3 className="mt-3 text-[15px] font-semibold leading-snug group-hover:text-accent transition-colors">{p.title}</h3>
-                {p.description && <p className="mt-1 line-clamp-2 text-[13px] text-muted">{p.description}</p>}
-                <div className="flex-1" />
-                <div className="mt-4">
-                  <div className="mb-1.5 flex items-center justify-between text-xs">
-                    <span className="text-faint">{open} open task{open === 1 ? '' : 's'}</span>
-                    <span className="font-medium tabular-nums" title={prog.explanation}>
-                      {prog.percent}%
-                    </span>
-                  </div>
-                  <Progress value={prog.percent} tone={p.status === 'completed' ? 'ok' : 'accent'} />
-                </div>
-                {p.tags.length > 0 && (
-                  <div className="mt-3">
-                    <TagList tags={p.tags} />
-                  </div>
-                )}
-              </Link>
-            );
-          })}
+        <div className="grid gap-grid sm:grid-cols-2 xl:grid-cols-12">
+          {rows.map(({ p, prog, open }, i) => (
+            <ProjectPreview
+              key={p.id}
+              project={p}
+              progress={prog}
+              openTasks={open}
+              size={i === 0 && rows.length > 2 ? 'feature' : 'standard'}
+              className={i === 0 && rows.length > 2 ? 'sm:col-span-2 xl:col-span-7 xl:row-span-2' : 'xl:col-span-5'}
+            />
+          ))}
         </div>
       ) : (
         <div className="card divide-y divide-line">
@@ -123,18 +95,18 @@ export default function ProjectsPage() {
               <Link key={p.id} to={`/projects/${p.id}`} className="flex items-center gap-4 px-4 py-3 row-hover">
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="truncate text-[13.5px] font-medium">{p.title}</span>
+                    <span className="truncate text-body-m font-medium">{p.title}</span>
                     {p.isDemo && <DemoBadge />}
                   </div>
-                  <div className="text-xs text-faint">{open} open tasks</div>
+                  <div className="text-body-s text-faint">{open} open tasks</div>
                 </div>
                 <Badge tone={sm.tone} dot>
                   {sm.label}
                 </Badge>
-                <span className="hidden w-24 text-right text-xs text-muted sm:block">{p.deadline ? fmtDate(p.deadline, 'd MMM yyyy') : '—'}</span>
+                <span className="hidden w-24 text-right text-body-s text-muted sm:block">{p.deadline ? fmtDate(p.deadline, 'd MMM yyyy') : '—'}</span>
                 <div className="hidden w-32 items-center gap-2 md:flex">
                   <Progress value={prog.percent} />
-                  <span className="w-8 text-right text-xs tabular-nums">{prog.percent}%</span>
+                  <span className="w-8 text-right text-body-s tabular-nums">{prog.percent}%</span>
                 </div>
               </Link>
             );

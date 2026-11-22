@@ -54,7 +54,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
 
   if (record === null || (record === undefined && draft === null)) {
     return record === null ? (
-      <div className="p-6 text-[13px] text-muted">This task no longer exists.</div>
+      <div className="p-6 text-body-s text-muted">This task no longer exists.</div>
     ) : (
       <div className="p-6" />
     );
@@ -88,7 +88,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
     <div className="flex h-full flex-col">
       <div className="flex items-center gap-2 border-b border-line px-5 h-[52px] shrink-0">
         <Checkbox checked={done} onChange={(v) => setTaskStatus(draft, v ? 'completed' : 'not_started')} />
-        <span className="text-xs text-muted">{done ? `Completed ${fmtTs(draft.completedAt, 'd MMM')}` : 'Mark complete'}</span>
+        <span className="text-body-s text-muted">{done ? `Completed ${fmtTs(draft.completedAt, 'd MMM')}` : 'Mark complete'}</span>
         {draft.isDemo && <DemoBadge />}
         <div className="flex-1" />
         <SavedIndicator status={status} />
@@ -106,7 +106,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
 
       <div className="flex-1 overflow-y-auto px-5 py-5 space-y-5">
         {parent && (
-          <button onClick={() => openTask(parent.id)} className="text-xs text-muted hover:text-accent">
+          <button onClick={() => openTask(parent.id)} className="text-body-s text-muted hover:text-accent-deep">
             ↑ Subtask of <span className="font-medium">{parent.title}</span>
           </button>
         )}
@@ -115,7 +115,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
           rows={1}
           value={draft.title}
           onChange={(e) => set({ title: e.target.value.replace(/\n/g, ' ') })}
-          className="!border-0 !bg-transparent !px-0 !ring-0 text-[19px] font-semibold leading-snug"
+          className="!border-0 !bg-transparent !px-0 !ring-0 text-h4 font-semibold leading-snug"
           placeholder="Task title"
           aria-label="Title"
         />
@@ -169,7 +169,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
             </Select>
             {draft.recurrence && (
               <>
-                <span className="text-xs text-muted">every</span>
+                <span className="text-body-s text-muted">every</span>
                 <Input
                   type="number"
                   min={1}
@@ -177,11 +177,11 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
                   value={draft.recurrence.interval}
                   onChange={(e) => set({ recurrence: { ...draft.recurrence!, interval: Math.max(1, Number(e.target.value) || 1) } })}
                 />
-                <span className="text-xs text-muted">{draft.recurrence.freq.replace('ly', '').replace('dai', 'day')}(s)</span>
+                <span className="text-body-s text-muted">{draft.recurrence.freq.replace('ly', '').replace('dai', 'day')}(s)</span>
               </>
             )}
           </div>
-          {draft.recurrence && <p className="mt-1 text-xs text-faint">When you complete this task, the next one is created automatically{draft.dueDate ? '' : ' (set a due date to anchor the schedule)'}.</p>}
+          {draft.recurrence && <p className="mt-1 text-body-s text-faint">When you complete this task, the next one is created automatically{draft.dueDate ? '' : ' (set a due date to anchor the schedule)'}.</p>}
         </Field>
 
         <Field label="Description">
@@ -200,9 +200,9 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
             </span>
             <div className="space-y-0.5">
               {(subtasks ?? []).map((s) => (
-                <div key={s.id} className="flex items-center gap-2 rounded-md px-1 py-1 row-hover cursor-pointer" onClick={() => openTask(s.id)}>
+                <div key={s.id} className="flex items-center gap-2 rounded-sm px-1 py-1 row-hover cursor-pointer" onClick={() => openTask(s.id)}>
                   <Checkbox size="sm" checked={s.status === 'completed'} onChange={(v) => setTaskStatus(s, v ? 'completed' : 'not_started')} />
-                  <span className={cn('flex-1 truncate text-[13px]', s.status === 'completed' && 'text-faint line-through')}>{s.title}</span>
+                  <span className={cn('flex-1 truncate text-body-s', s.status === 'completed' && 'text-faint line-through')}>{s.title}</span>
                   <DueLabel date={s.dueDate} done={s.status === 'completed'} />
                 </div>
               ))}
@@ -218,7 +218,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
                     }
                   }}
                   placeholder="Add subtask and press Enter"
-                  className="flex-1 bg-transparent text-[13px] outline-none placeholder:text-faint"
+                  className="flex-1 bg-transparent text-body-s outline-none placeholder:text-faint"
                 />
               </div>
             </div>
@@ -232,9 +232,9 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
           <div className="space-y-0.5">
             {(deps ?? []).map((d) =>
               d ? (
-                <div key={d.id} className="group flex items-center gap-2 rounded-md px-1 py-1 row-hover">
+                <div key={d.id} className="group flex items-center gap-2 rounded-sm px-1 py-1 row-hover">
                   <Badge tone={d.status === 'completed' ? 'ok' : 'warn'}>{d.status === 'completed' ? 'Done' : 'Open'}</Badge>
-                  <button className="flex-1 truncate text-left text-[13px] hover:text-accent" onClick={() => openTask(d.id)}>
+                  <button className="flex-1 truncate text-left text-body-s hover:text-accent-deep" onClick={() => openTask(d.id)}>
                     {d.title}
                   </button>
                   <IconButton icon={X} size="sm" label="Remove dependency" className="opacity-0 group-hover:opacity-100" onClick={() => set({ blockedBy: draft.blockedBy.filter((x) => x !== d.id) })} />
@@ -274,7 +274,7 @@ function TaskEditor({ id, onClose }: { id: string; onClose: () => void }) {
           <Attachments owner={{ type: 'task', id: draft.id }} />
         </div>
 
-        <p className="pt-2 text-2xs text-faint">
+        <p className="pt-2 text-caption text-faint">
           Created {fmtTs(draft.createdAt, 'd MMM yyyy, HH:mm')} · Updated {fmtTs(record?.updatedAt ?? draft.updatedAt, 'd MMM yyyy, HH:mm')}
         </p>
       </div>

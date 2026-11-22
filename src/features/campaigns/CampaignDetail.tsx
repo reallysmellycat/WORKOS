@@ -66,7 +66,7 @@ export default function CampaignDetail() {
   if (record === null || (record && record.deletedAt))
     return (
       <Page>
-        <Empty icon={Info} title="Campaign not found" action={<Link to="/campaigns" className="text-[13px] text-accent hover:underline">All campaigns</Link>} />
+        <Empty icon={Info} title="Campaign not found" action={<Link to="/campaigns" className="text-body-s text-accent-deep hover:underline">All campaigns</Link>} />
       </Page>
     );
   if (!draft || !rel || !perf) return <Loading />;
@@ -118,8 +118,8 @@ export default function CampaignDetail() {
 
       <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
         <div className="min-w-0 flex-1">
-          <Textarea autoGrow rows={1} value={draft.name} onChange={(e) => set({ name: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 font-serif text-[30px] font-medium leading-tight tracking-tight" aria-label="Campaign name" />
-          <Textarea autoGrow rows={1} value={draft.description ?? ''} onChange={(e) => set({ description: e.target.value })} placeholder="Short description" className="!border-0 !bg-transparent !px-0 !ring-0 text-[14px] text-muted" />
+          <Textarea autoGrow rows={1} value={draft.name} onChange={(e) => set({ name: e.target.value.replace(/\n/g, ' ') })} className="!border-0 !bg-transparent !px-0 !ring-0 font-serif text-h2 font-medium leading-tight tracking-tight" aria-label="Campaign name" />
+          <Textarea autoGrow rows={1} value={draft.description ?? ''} onChange={(e) => set({ description: e.target.value })} placeholder="Short description" className="!border-0 !bg-transparent !px-0 !ring-0 text-body-m text-muted" />
 
           <div className="mb-5 mt-4">
             <Tabs
@@ -169,20 +169,20 @@ export default function CampaignDetail() {
                 }
               >
                 {rel.releases.length === 0 ? (
-                  <p className="text-[13px] text-faint">No press releases yet.</p>
+                  <p className="text-body-s text-faint">No press releases yet.</p>
                 ) : (
                   rel.releases.map((r) => (
-                    <button key={r.id} onClick={() => setRelease(r.id)} className="-mx-1.5 flex w-full items-center gap-3 rounded-md px-1.5 py-2 text-left row-hover">
+                    <button key={r.id} onClick={() => setRelease(r.id)} className="-mx-1.5 flex w-full items-center gap-3 rounded-sm px-1.5 py-2 text-left row-hover">
                       <FileText className="h-3.5 w-3.5 text-faint" />
-                      <span className="flex-1 truncate text-[13.5px]">{r.title}</span>
-                      <span className="text-xs text-faint">{r.distributionDate ? fmtDate(r.distributionDate) : 'No date'}</span>
+                      <span className="flex-1 truncate text-body-m">{r.title}</span>
+                      <span className="text-body-s text-faint">{r.distributionDate ? fmtDate(r.distributionDate) : 'No date'}</span>
                       <Badge tone={prStatusMeta(r.status).tone}>{prStatusMeta(r.status).label}</Badge>
                     </button>
                   ))
                 )}
               </Card>
               <div className="flex items-center justify-between">
-                <h3 className="flex items-center gap-1.5 text-[13px] font-semibold">
+                <h3 className="flex items-center gap-1.5 text-body-s font-semibold">
                   <Newspaper className="h-3.5 w-3.5 text-faint" /> Coverage
                 </h3>
                 <Button size="xs" icon={Plus} onClick={() => setCov('new')}>
@@ -208,15 +208,15 @@ export default function CampaignDetail() {
                 }
               >
                 {rel.content.length === 0 ? (
-                  <p className="text-[13px] text-faint">No content linked. Set the campaign on a content item to see it here.</p>
+                  <p className="text-body-s text-faint">No content linked. Set the campaign on a content item to see it here.</p>
                 ) : (
                   rel.content
                     .sort((a, b) => (a.publishDate ?? '').localeCompare(b.publishDate ?? ''))
                     .map((c) => (
-                      <button key={c.id} onClick={() => openContent(c.id)} className="-mx-1.5 flex w-full items-center gap-3 rounded-md px-1.5 py-2 text-left row-hover">
-                        <span className="w-20 shrink-0 text-xs text-faint">{c.publishDate ? fmtDate(c.publishDate) : 'No date'}</span>
-                        <span className="flex-1 truncate text-[13.5px]">{c.title}</span>
-                        <span className="text-xs text-faint">{c.platform}</span>
+                      <button key={c.id} onClick={() => openContent(c.id)} className="-mx-1.5 flex w-full items-center gap-3 rounded-sm px-1.5 py-2 text-left row-hover">
+                        <span className="w-20 shrink-0 text-body-s text-faint">{c.publishDate ? fmtDate(c.publishDate) : 'No date'}</span>
+                        <span className="flex-1 truncate text-body-m">{c.title}</span>
+                        <span className="text-body-s text-faint">{c.platform}</span>
                         <Badge tone={contentStatusMeta(c.status).tone}>{contentStatusMeta(c.status).label}</Badge>
                       </button>
                     ))
@@ -231,7 +231,7 @@ export default function CampaignDetail() {
                   </Button>
                 }
               >
-                {rel.tasks.length === 0 ? <p className="text-[13px] text-faint">No tasks linked to this campaign.</p> : <div className="-mx-2">{rel.tasks.map((t) => <TaskRow key={t.id} task={t} compact />)}</div>}
+                {rel.tasks.length === 0 ? <p className="text-body-s text-faint">No tasks linked to this campaign.</p> : <div className="-mx-2">{rel.tasks.map((t) => <TaskRow key={t.id} task={t} compact />)}</div>}
               </Card>
             </div>
           )}
@@ -248,13 +248,13 @@ export default function CampaignDetail() {
                 {perf.timeline.length ? (
                   <Bars data={perf.timeline} x="month" series={[{ key: 'coverage', label: 'Coverage' }, { key: 'posts', label: 'Posts published' }]} height={220} />
                 ) : (
-                  <p className="text-[13px] text-faint">Log coverage or publish linked content to see results over time.</p>
+                  <p className="text-body-s text-faint">Log coverage or publish linked content to see results over time.</p>
                 )}
               </Card>
               <Card title="Results summary">
                 <MarkdownEditor value={draft.results ?? ''} onChange={(v) => set({ results: v })} minHeight={120} placeholder="What happened? What worked, what didn't, what you'd repeat." />
               </Card>
-              <p className="text-xs text-faint">Figures are calculated from coverage and content you've logged. Nothing is pulled automatically from external platforms.</p>
+              <p className="text-body-s text-faint">Figures are calculated from coverage and content you've logged. Nothing is pulled automatically from external platforms.</p>
             </div>
           )}
 
@@ -311,7 +311,7 @@ export default function CampaignDetail() {
             <CustomFields entity="campaign" values={draft.custom} onChange={(custom) => set({ custom })} />
           </div>
           <div className="card space-y-3 p-4">
-            <div className="text-[13px] font-semibold">Budget (optional)</div>
+            <div className="text-body-s font-semibold">Budget (optional)</div>
             <div className="grid grid-cols-2 gap-2">
               <Field label={`Budget (${draft.currency ?? settings.currency})`}>
                 <Input type="number" min={0} value={draft.budget ?? ''} onChange={(e) => set({ budget: e.target.value === '' ? null : Number(e.target.value) })} />
@@ -323,7 +323,7 @@ export default function CampaignDetail() {
             {!!draft.budget && (
               <div>
                 <Progress value={budgetPct} tone={budgetPct > 100 ? 'warn' : 'accent'} />
-                <p className={cn('mt-1.5 text-xs', budgetPct > 100 ? 'text-warn' : 'text-muted')}>
+                <p className={cn('mt-1.5 text-body-s', budgetPct > 100 ? 'text-warn' : 'text-muted')}>
                   {fmtNumber(draft.spent ?? 0)} of {fmtNumber(draft.budget)} spent ({Math.round(budgetPct)}%)
                 </p>
               </div>
@@ -351,10 +351,10 @@ function Activities({ campaign, onChange }: { campaign: Campaign; onChange: (a: 
   return (
     <div>
       {list.map((a) => (
-        <div key={a.id} className="group flex items-center gap-2 rounded-md px-1 py-1.5 row-hover">
+        <div key={a.id} className="group flex items-center gap-2 rounded-sm px-1 py-1.5 row-hover">
           <Checkbox size="sm" checked={a.done} onChange={(v) => onChange(campaign.activities.map((x) => (x.id === a.id ? { ...x, done: v } : x)))} />
-          <input value={a.title} onChange={(e) => onChange(campaign.activities.map((x) => (x.id === a.id ? { ...x, title: e.target.value } : x)))} className={cn('min-w-0 flex-1 bg-transparent text-[13.5px] outline-none', a.done && 'text-faint line-through')} />
-          <input type="date" value={a.date ?? ''} onChange={(e) => onChange(campaign.activities.map((x) => (x.id === a.id ? { ...x, date: e.target.value || null } : x)))} className="w-[130px] bg-transparent text-xs text-muted outline-none" />
+          <input value={a.title} onChange={(e) => onChange(campaign.activities.map((x) => (x.id === a.id ? { ...x, title: e.target.value } : x)))} className={cn('min-w-0 flex-1 bg-transparent text-body-m outline-none', a.done && 'text-faint line-through')} />
+          <input type="date" value={a.date ?? ''} onChange={(e) => onChange(campaign.activities.map((x) => (x.id === a.id ? { ...x, date: e.target.value || null } : x)))} className="w-[130px] bg-transparent text-body-s text-muted outline-none" />
           <IconButton icon={X} size="sm" label="Remove" className="opacity-0 group-hover:opacity-100" onClick={() => onChange(campaign.activities.filter((x) => x.id !== a.id))} />
         </div>
       ))}

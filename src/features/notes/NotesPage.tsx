@@ -51,12 +51,12 @@ export default function NotesPage() {
   const showEditor = !isNarrow || !!id;
 
   return (
-    <div className="flex h-full">
+    <div className="flex h-[calc(100dvh-var(--nav-height)-60px)] mt-3 border-t border-line">
       {showList && (
         <div className={cn('flex h-full shrink-0 flex-col border-r border-line bg-surface/50', isNarrow ? 'w-full' : 'w-[320px]')}>
           <div className="space-y-2 border-b border-line p-3">
             <div className="flex items-center gap-2">
-              <h1 className="flex-1 text-[15px] font-semibold">Notes</h1>
+              <h1 className="flex-1 text-body-l font-semibold">Notes</h1>
               <NewFolderButton scope="library" />
               <IconButton icon={Plus} label="New note" onClick={newNote} />
             </div>
@@ -86,21 +86,21 @@ export default function NotesPage() {
           </div>
           <div className="flex-1 overflow-y-auto p-1.5">
             {list.length === 0 ? (
-              <Empty icon={NotebookPen} title={notes.length ? 'No matching notes' : 'No notes yet'} compact action={<button onClick={newNote} className="text-[13px] text-accent hover:underline">Write a note</button>} />
+              <Empty icon={NotebookPen} title={notes.length ? 'No matching notes' : 'No notes yet'} compact action={<button onClick={newNote} className="text-body-s text-accent-deep hover:underline">Write a note</button>} />
             ) : (
               list.map((n) => (
                 <button
                   key={n.id}
                   onClick={() => navigate(`/notes/${n.id}`)}
-                  className={cn('mb-0.5 block w-full rounded-md px-3 py-2.5 text-left transition-colors', n.id === id ? 'bg-sunken' : 'hover:bg-sunken/60')}
+                  className={cn('mb-0.5 block w-full rounded-sm px-3 py-2.5 text-left transition-colors', n.id === id ? 'bg-sunken' : 'hover:bg-sunken/60')}
                 >
                   <div className="flex items-center gap-1.5">
-                    {n.pinned && <Pin className="h-3 w-3 shrink-0 text-accent" />}
-                    <span className="truncate text-[13.5px] font-medium">{n.title || 'Untitled'}</span>
+                    {n.pinned && <Pin className="h-3 w-3 shrink-0 text-accent-deep" />}
+                    <span className="truncate text-body-m font-medium">{n.title || 'Untitled'}</span>
                     {n.isDemo && <DemoBadge />}
                   </div>
-                  <div className="mt-0.5 line-clamp-2 text-xs text-faint">{excerpt(n.body, 110) || 'Empty note'}</div>
-                  <div className="mt-1 flex items-center gap-2 text-2xs text-faint">
+                  <div className="mt-0.5 line-clamp-2 text-body-s text-faint">{excerpt(n.body, 110) || 'Empty note'}</div>
+                  <div className="mt-1 flex items-center gap-2 text-caption text-faint">
                     <span>{timeAgo(n.updatedAt)}</span>
                     {n.category && <span>· {n.category}</span>}
                   </div>
@@ -221,19 +221,19 @@ function NoteEditor({ id, folders, onBack }: { id: string; folders: Folder[]; on
             <span className="label">Backlinks</span>
             {backlinks?.length ? (
               backlinks.map((b) => (
-                <button key={b.id} onClick={() => navigate(`/notes/${b.id}`)} className="block w-full truncate rounded-md px-1 py-1 text-left text-[13px] row-hover">
+                <button key={b.id} onClick={() => navigate(`/notes/${b.id}`)} className="block w-full truncate rounded-sm px-1 py-1 text-left text-body-s row-hover">
                   ← {b.title || 'Untitled'}
                 </button>
               ))
             ) : (
-              <p className="text-xs text-faint">No other notes link here. Use [[{draft.title || 'this title'}]] in another note.</p>
+              <p className="text-body-s text-faint">No other notes link here. Use [[{draft.title || 'this title'}]] in another note.</p>
             )}
           </div>
           <div>
             <span className="label">Attachments</span>
             <Attachments owner={{ type: 'note', id }} />
           </div>
-          <p className="text-2xs text-faint">Created {fmtTs(draft.createdAt, 'd MMM yyyy')}</p>
+          <p className="text-caption text-faint">Created {fmtTs(draft.createdAt, 'd MMM yyyy')}</p>
     </>
   );
 
@@ -242,7 +242,7 @@ function NoteEditor({ id, folders, onBack }: { id: string; folders: Folder[]; on
       <div className="mx-auto w-full max-w-[760px] px-5 py-6 sm:px-10">
         <div className="mb-4 flex items-center gap-2">
           {onBack && <IconButton icon={ArrowLeft} label="Back to notes" onClick={onBack} />}
-          <span className="text-xs text-faint">
+          <span className="text-body-s text-faint">
             {wordCount(draft.body)} words · edited {timeAgo(record?.updatedAt ?? draft.updatedAt)}
           </span>
           {draft.isDemo && <DemoBadge />}
@@ -264,11 +264,11 @@ function NoteEditor({ id, folders, onBack }: { id: string; folders: Folder[]; on
           onChange={(e) => set({ title: e.target.value })}
           placeholder="Untitled"
           autoFocus={!draft.title}
-          className="mb-4 w-full bg-transparent font-serif text-[30px] font-medium leading-tight tracking-tight outline-none placeholder:text-faint"
+          className="mb-4 w-full bg-transparent font-serif text-h2 font-medium leading-tight tracking-tight outline-none placeholder:text-faint"
         />
         <MarkdownEditor value={draft.body} onChange={(body) => set({ body })} owner={{ type: 'note', id }} minHeight={420} />
-        <details className="mt-8 rounded-lg border border-line p-4 xl:hidden">
-          <summary className="cursor-pointer text-[13px] font-medium">Details, links & attachments</summary>
+        <details className="mt-8 rounded-md border border-line p-4 xl:hidden">
+          <summary className="cursor-pointer text-body-s font-medium">Details, links & attachments</summary>
           <div className="mt-4 space-y-4">{meta}</div>
         </details>
       </div>
