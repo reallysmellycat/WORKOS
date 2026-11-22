@@ -121,8 +121,8 @@ function General({ s }: { s: Settings }) {
           ))}
         </Select>
       </Row>
-      <Row label="Dashboard layout" hint="Customise widgets from the dashboard (grid icon, top right).">
-        <Button size="sm" icon={RotateCcw} onClick={async () => { const { DEFAULT_DASHBOARD } = await import('@/lib/settings'); await saveSettings({ dashboard: DEFAULT_DASHBOARD }); }}>
+      <Row label="Home layout" hint="Reorder or hide home sections with the arrange button (top right of the home page).">
+        <Button size="sm" icon={RotateCcw} onClick={async () => { const { DEFAULT_HOME } = await import('@/lib/settings'); await saveSettings({ home: DEFAULT_HOME }); }}>
           Reset to default
         </Button>
       </Row>

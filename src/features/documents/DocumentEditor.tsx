@@ -79,7 +79,7 @@ export default function DocumentEditor() {
   return (
     <div className="flex min-h-full">
       <div className="min-w-0 flex-1">
-        <div className="glass sticky top-0 z-10 flex h-11 items-center gap-2 border-b border-line px-4">
+        <div className="glass sticky top-[var(--sticky-top,0px)] z-10 flex h-11 items-center gap-2 border-b border-line px-4">
           <Button variant="ghost" size="sm" icon={ArrowLeft} onClick={() => navigate('/documents')}>
             Documents
           </Button>
@@ -108,7 +108,7 @@ export default function DocumentEditor() {
           <IconButton icon={PanelRight} label="Toggle details" active={side && !focus} onClick={() => setSide((s) => !s)} className="hidden lg:inline-flex" />
           <Menu trigger={(t) => <IconButton icon={MoreHorizontal} label="Document actions" onClick={t} />} items={[{ label: 'Move to Trash', icon: Trash2, danger: true, onClick: remove }]} />
         </div>
-        <div className="mx-auto max-w-[780px] px-5 py-8 sm:px-12">
+        <div className="mx-auto max-w-[780px] px-5 py-8 sm:px-12" style={{ ["--sticky-top" as string]: "94px" } as React.CSSProperties}>
           <input
             value={draft.title}
             onChange={(e) => set({ title: e.target.value })}

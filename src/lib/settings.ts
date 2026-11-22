@@ -52,7 +52,8 @@ export interface Settings {
   accent: 'sage' | 'clay' | 'slate' | 'ochre' | 'plum' | 'ink';
   sidebarCollapsed: boolean;
   weekStartsOn: 0 | 1;
-  dashboard: WidgetConfig[];
+  dashboard: WidgetConfig[]; // legacy widget layout (kept for old backups)
+  home: HomeLayout;
   notifications: {
     enabled: boolean;
     browser: boolean;
@@ -73,6 +74,16 @@ export interface Settings {
   autoSnapshot: boolean;
   lastExportAt: number | null;
 }
+
+export type HomeSection = 'focus' | 'schedule' | 'projects' | 'activity' | 'performance' | 'ideas' | 'campaigns' | 'notes';
+export interface HomeLayout {
+  order: HomeSection[];
+  hidden: HomeSection[];
+}
+export const DEFAULT_HOME: HomeLayout = {
+  order: ['focus', 'schedule', 'projects', 'activity', 'performance', 'ideas', 'campaigns', 'notes'],
+  hidden: [],
+};
 
 export const DEFAULT_DASHBOARD: WidgetConfig[] = [
   { id: 'w-priorities', type: 'priorities', size: 'l' },
@@ -97,6 +108,7 @@ export const DEFAULT_SETTINGS: Settings = {
   sidebarCollapsed: false,
   weekStartsOn: 1,
   dashboard: DEFAULT_DASHBOARD,
+  home: DEFAULT_HOME,
   notifications: {
     enabled: true,
     browser: false,
@@ -131,6 +143,7 @@ export function mergeSettings(v?: Partial<Settings>): Settings {
     ...(v ?? {}),
     notifications: { ...DEFAULT_SETTINGS.notifications, ...(v?.notifications ?? {}) },
     ai: { ...DEFAULT_SETTINGS.ai, ...(v?.ai ?? {}) },
+    home: { ...DEFAULT_HOME, ...(v?.home ?? {}), order: mergeOrder(v?.home?.order) },
   };
 }
 
@@ -144,4 +157,10 @@ export async function saveSettings(patch: Partial<Settings>) {
 /** Live settings. Returns undefined while loading. */
 export function useSettingsQuery(): Settings | undefined {
   return useLiveQuery(getSettings, []);
+}
+
+/** Keeps user order but appends any sections added in newer versions. */
+function mergeOrder(order?: HomeSection[]): HomeSection[] {
+  const base = (order ?? []).filter((x) => DEFAULT_HOME.order.includes(x));
+  return [...base, ...DEFAULT_HOME.order.filter((x) => !base.includes(x))];
 }

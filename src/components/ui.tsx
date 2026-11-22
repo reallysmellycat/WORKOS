@@ -26,16 +26,16 @@ export interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const VARIANTS: Record<Variant, string> = {
-  primary: 'bg-accent text-accent-fg hover:brightness-[1.06] active:brightness-95 shadow-soft',
-  secondary: 'bg-raised border border-line text-fg hover:border-line-strong hover:bg-surface shadow-soft',
-  ghost: 'text-muted hover:text-fg hover:bg-sunken/70',
-  subtle: 'bg-sunken/70 text-fg hover:bg-sunken',
-  danger: 'bg-danger text-white hover:brightness-110',
+  primary: 'bg-ink text-ink-fg hover:opacity-90 active:scale-[0.98] shadow-soft',
+  secondary: 'bg-raised text-fg shadow-[inset_0_0_0_1px_rgb(var(--line))] hover:shadow-[inset_0_0_0_1px_rgb(var(--line-strong))] active:scale-[0.98]',
+  ghost: 'text-muted hover:text-fg hover:bg-sunken/80 active:scale-[0.98]',
+  subtle: 'bg-sunken text-fg hover:bg-line/60 active:scale-[0.98]',
+  danger: 'bg-danger text-white hover:brightness-110 active:scale-[0.98]',
 };
 const SIZES: Record<Size, string> = {
-  xs: 'h-6 px-2 text-xs gap-1',
-  sm: 'h-7 px-2.5 text-[12.5px] gap-1.5',
-  md: 'h-8 px-3 text-[13px] gap-1.5',
+  xs: 'h-6 px-2 text-xs gap-1 rounded-md',
+  sm: 'h-7 px-2.5 text-[12.5px] gap-1.5 rounded-md',
+  md: 'h-8 px-3.5 text-[13px] gap-1.5 rounded-lg',
 };
 
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
@@ -47,7 +47,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ref={ref}
       type={type}
       className={cn(
-        'inline-flex items-center justify-center rounded-md font-medium whitespace-nowrap transition-all disabled:opacity-45 disabled:pointer-events-none select-none',
+        'inline-flex items-center justify-center font-medium whitespace-nowrap transition-all duration-150 disabled:opacity-40 disabled:pointer-events-none select-none',
         VARIANTS[variant],
         SIZES[size],
         className,
@@ -138,7 +138,8 @@ export function Field({ label, children, hint, className }: { label: string; chi
   );
 }
 
-export function Checkbox({ checked, onChange, label, className, size = 'md', tone }: { checked: boolean; onChange: (v: boolean) => void; label?: string; className?: string; size?: 'sm' | 'md'; tone?: string }) {
+export function Checkbox({ checked, onChange, label, className, size = 'md', tone }: { checked: boolean; onChange: (v: boolean) => void; label?: string; className?: string; size?: 'sm' | 'md' | 'lg'; tone?: string }) {
+  const dim = size === 'sm' ? 'h-3.5 w-3.5' : size === 'lg' ? 'h-6 w-6' : 'h-[18px] w-[18px]';
   return (
     <button
       type="button"
@@ -150,13 +151,21 @@ export function Checkbox({ checked, onChange, label, className, size = 'md', ton
         onChange(!checked);
       }}
       className={cn(
-        'shrink-0 inline-flex items-center justify-center rounded-full border transition-all',
-        size === 'sm' ? 'h-3.5 w-3.5' : 'h-[17px] w-[17px]',
-        checked ? 'bg-accent border-accent text-accent-fg' : cn('border-line-strong hover:border-accent bg-raised', tone),
+        'group/cb relative shrink-0 inline-flex items-center justify-center rounded-full transition-all duration-200',
+        dim,
+        checked ? 'bg-accent text-accent-fg animate-pop' : cn('shadow-[inset_0_0_0_1.5px_rgb(var(--line-strong))] hover:shadow-[inset_0_0_0_1.5px_rgb(var(--accent))]', tone),
         className,
       )}
     >
-      {checked && <Check className={size === 'sm' ? 'h-2.5 w-2.5' : 'h-3 w-3'} strokeWidth={3} />}
+      {checked ? (
+        <svg viewBox="0 0 16 16" className={size === 'lg' ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5'} fill="none" stroke="currentColor" strokeWidth={2.6} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.5 8.5l3 3 6-7" strokeDasharray={20} className="animate-draw" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 16 16" className={cn('opacity-0 transition-opacity group-hover/cb:opacity-40', size === 'lg' ? 'h-3.5 w-3.5' : 'h-2.5 w-2.5')} fill="none" stroke="currentColor" strokeWidth={2.4} strokeLinecap="round" strokeLinejoin="round">
+          <path d="M3.5 8.5l3 3 6-7" />
+        </svg>
+      )}
     </button>
   );
 }
@@ -178,26 +187,27 @@ export function Toggle({ checked, onChange, label }: { checked: boolean; onChang
 
 // ---------- Badge ----------
 const TONES: Record<Tone, string> = {
-  neutral: 'bg-sunken text-muted',
-  muted: 'bg-sunken text-muted',
-  accent: 'bg-accent-soft text-accent',
-  info: 'bg-info/10 text-info',
-  warn: 'bg-warn/15 text-warn',
-  danger: 'bg-danger/10 text-danger',
-  ok: 'bg-ok/15 text-ok',
+  neutral: 'text-muted',
+  muted: 'text-muted',
+  accent: 'text-accent',
+  info: 'text-info',
+  warn: 'text-warn',
+  danger: 'text-danger',
+  ok: 'text-ok',
 };
-export function Badge({ tone = 'neutral', children, className, dot }: { tone?: Tone; children: ReactNode; className?: string; dot?: boolean }) {
+/** Quiet status label: a coloured dot + text on a hairline pill (no loud fills). */
+export function Badge({ tone = 'neutral', children, className, dot = true }: { tone?: Tone; children: ReactNode; className?: string; dot?: boolean }) {
   return (
-    <span className={cn('inline-flex items-center gap-1 rounded px-1.5 h-[19px] text-2xs font-medium whitespace-nowrap', TONES[tone], className)}>
-      {dot && <span className="h-1.5 w-1.5 rounded-full bg-current opacity-80" />}
-      {children}
+    <span className={cn('inline-flex items-center gap-1.5 rounded-full px-2 h-[20px] text-[11px] font-medium whitespace-nowrap bg-raised/70 shadow-[inset_0_0_0_1px_rgb(var(--line))]', TONES[tone], className)}>
+      {dot && <span className="h-1.5 w-1.5 rounded-full bg-current" />}
+      <span className={tone === 'neutral' || tone === 'muted' ? 'text-muted' : 'text-fg/80'}>{children}</span>
     </span>
   );
 }
 
 export function DemoBadge() {
   return (
-    <span className="inline-flex items-center rounded border border-dashed border-line-strong px-1 text-[10px] font-medium uppercase tracking-wider text-faint" title="Demo content — remove it in Settings → Data">
+    <span className="inline-flex items-center rounded-sm border border-dashed border-line-strong px-1 font-mono text-[9px] uppercase tracking-[0.1em] text-faint" title="Demo content — remove it in Settings → Data">
       Demo
     </span>
   );
@@ -205,7 +215,7 @@ export function DemoBadge() {
 
 export function Tag({ name, color, onRemove }: { name: string; color?: string; onRemove?: () => void }) {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full border border-line bg-raised px-2 h-[20px] text-2xs text-muted">
+    <span className="inline-flex items-center gap-1 rounded-full bg-sunken/80 px-2 h-[20px] text-[11px] text-muted">
       <span className="h-1.5 w-1.5 rounded-full" style={{ background: color ?? 'rgb(var(--faint))' }} />
       {name}
       {onRemove && (
@@ -218,11 +228,11 @@ export function Tag({ name, color, onRemove }: { name: string; color?: string; o
 }
 
 // ---------- Progress ----------
-export function Progress({ value, className, tone = 'accent' }: { value: number; className?: string; tone?: 'accent' | 'ok' | 'warn' }) {
-  const bg = tone === 'ok' ? 'bg-ok' : tone === 'warn' ? 'bg-warn' : 'bg-accent';
+export function Progress({ value, className, tone = 'accent' }: { value: number; className?: string; tone?: 'accent' | 'ok' | 'warn' | 'ink' }) {
+  const bg = tone === 'ok' ? 'bg-ok' : tone === 'warn' ? 'bg-warn' : tone === 'ink' ? 'bg-fg' : 'bg-accent';
   return (
-    <div className={cn('h-1.5 w-full rounded-full bg-sunken overflow-hidden', className)} role="progressbar" aria-valuenow={value} aria-valuemin={0} aria-valuemax={100}>
-      <div className={cn('h-full rounded-full transition-all duration-500', bg)} style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
+    <div className={cn('h-[3px] w-full rounded-full bg-line/70 overflow-hidden', className)} role="progressbar" aria-valuenow={Math.round(value)} aria-valuemin={0} aria-valuemax={100}>
+      <div className={cn('h-full origin-left rounded-full transition-[width] duration-700 ease-out animate-grow', bg)} style={{ width: `${Math.max(0, Math.min(100, value))}%` }} />
     </div>
   );
 }
@@ -233,7 +243,7 @@ export function Ring({ value, size = 36, stroke = 3.5, label }: { value: number;
   return (
     <div className="relative inline-flex items-center justify-center shrink-0" style={{ width: size, height: size }}>
       <svg width={size} height={size} className="-rotate-90">
-        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(var(--sunken))" strokeWidth={stroke} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none" stroke="rgb(var(--line))" strokeWidth={stroke} />
         <circle
           cx={size / 2}
           cy={size / 2}
@@ -244,10 +254,10 @@ export function Ring({ value, size = 36, stroke = 3.5, label }: { value: number;
           strokeLinecap="round"
           strokeDasharray={c}
           strokeDashoffset={c * (1 - Math.max(0, Math.min(100, value)) / 100)}
-          className="transition-all duration-700"
+          className="transition-all duration-1000 ease-out"
         />
       </svg>
-      <span className="absolute text-[10px] font-semibold tabular-nums text-muted">{label ?? `${Math.round(value)}`}</span>
+      <span className="absolute font-mono text-[10px] tabular-nums text-muted">{label ?? `${Math.round(value)}`}</span>
     </div>
   );
 }
@@ -255,15 +265,17 @@ export function Ring({ value, size = 36, stroke = 3.5, label }: { value: number;
 // ---------- Empty state ----------
 export function Empty({ icon: Icon, title, children, action, compact }: { icon?: LucideIcon; title: string; children?: ReactNode; action?: ReactNode; compact?: boolean }) {
   return (
-    <div className={cn('flex flex-col items-center justify-center text-center', compact ? 'py-6 px-4' : 'py-14 px-6')}>
+    <div className={cn('flex flex-col items-center justify-center text-center animate-in', compact ? 'py-7 px-4' : 'py-16 px-6')}>
       {Icon && (
-        <div className={cn('mb-3 flex items-center justify-center rounded-xl bg-sunken text-faint', compact ? 'h-8 w-8' : 'h-11 w-11')}>
-          <Icon className={compact ? 'h-4 w-4' : 'h-5 w-5'} strokeWidth={1.6} />
+        <div className={cn('relative mb-4 flex items-center justify-center', compact ? 'h-10 w-10' : 'h-16 w-16')}>
+          <span className="absolute inset-0 rounded-full border border-dashed border-line-strong" />
+          <span className={cn('absolute rounded-full bg-sunken', compact ? 'inset-1.5' : 'inset-2.5')} />
+          <Icon className={cn('relative text-faint', compact ? 'h-4 w-4' : 'h-5 w-5')} strokeWidth={1.5} />
         </div>
       )}
-      <p className={cn('font-medium text-fg', compact ? 'text-[13px]' : 'text-sm')}>{title}</p>
-      {children && <p className="mt-1 max-w-sm text-[13px] text-muted leading-relaxed">{children}</p>}
-      {action && <div className="mt-4">{action}</div>}
+      <p className={cn(compact ? 'text-[13px] font-medium' : 'display text-[26px]')}>{title}</p>
+      {children && <p className="mt-1.5 max-w-sm text-[13px] leading-relaxed text-muted">{children}</p>}
+      {action && <div className="mt-5">{action}</div>}
     </div>
   );
 }
@@ -274,8 +286,14 @@ export function Spinner({ className }: { className?: string }) {
 
 export function Loading() {
   return (
-    <div className="flex h-40 items-center justify-center">
-      <Spinner />
+    <div className="mx-auto w-full max-w-[1180px] space-y-4 px-6 py-10 sm:px-10" aria-busy="true" aria-label="Loading">
+      <div className="skeleton h-3 w-28" />
+      <div className="skeleton h-10 w-72" />
+      <div className="grid gap-4 pt-4 sm:grid-cols-3">
+        <div className="skeleton h-32" />
+        <div className="skeleton h-32" />
+        <div className="skeleton h-32" />
+      </div>
     </div>
   );
 }
@@ -311,19 +329,19 @@ export function Modal({
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-[10vh] animate-fade" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/25 dark:bg-black/50 backdrop-blur-[2px]" onClick={onClose} />
-      <div className={cn('relative w-full rounded-xl border border-line bg-surface shadow-pop animate-in max-h-[80vh] flex flex-col', width)}>
+      <div className="absolute inset-0 bg-[rgb(var(--desk)/0.55)] backdrop-blur-[6px]" onClick={onClose} />
+      <div className={cn('relative w-full rounded-2xl bg-surface shadow-pop animate-scale max-h-[80vh] flex flex-col ring-1 ring-line/80', width)}>
         {title && (
           <div className="flex items-start justify-between gap-4 px-5 pt-4 pb-3">
             <div>
-              <h2 className="text-[15px] font-semibold">{title}</h2>
+              <h2 className="display text-[24px]">{title}</h2>
               {description && <p className="mt-0.5 text-[13px] text-muted">{description}</p>}
             </div>
             <IconButton icon={X} label="Close" onClick={onClose} className="-mr-1.5 -mt-0.5" />
           </div>
         )}
         <div className="px-5 pb-4 overflow-y-auto">{children}</div>
-        {footer && <div className="flex items-center justify-end gap-2 border-t border-line px-5 py-3 bg-raised/50 rounded-b-xl">{footer}</div>}
+        {footer && <div className="flex items-center justify-end gap-2 border-t border-line px-5 py-3 bg-sunken/40 rounded-b-2xl">{footer}</div>}
       </div>
     </div>,
     document.body,
@@ -335,8 +353,8 @@ export function Drawer({ open, onClose, children, width = 'max-w-[560px]' }: { o
   if (!open) return null;
   return createPortal(
     <div className="fixed inset-0 z-40 flex justify-end animate-fade" role="dialog" aria-modal="true">
-      <div className="absolute inset-0 bg-black/15 dark:bg-black/40" onClick={onClose} />
-      <div className={cn('relative h-full w-full border-l border-line bg-surface shadow-pop flex flex-col animate-in', width)}>{children}</div>
+      <div className="absolute inset-0 bg-[rgb(var(--desk)/0.35)] backdrop-blur-[2px]" onClick={onClose} />
+      <div className={cn('relative m-0 h-full w-full bg-surface shadow-pop ring-1 ring-line/80 flex flex-col animate-drawer sm:m-2 sm:h-[calc(100%-1rem)] sm:rounded-2xl overflow-hidden', width)}>{children}</div>
     </div>,
     document.body,
   );
@@ -369,7 +387,7 @@ export function Menu({ trigger, items, align = 'right', width = 'w-48' }: { trig
     <div className="relative inline-block" ref={ref}>
       {trigger(() => setOpen((o) => !o))}
       {open && (
-        <div className={cn('absolute z-30 mt-1 rounded-lg border border-line bg-raised p-1 shadow-pop animate-in', width, align === 'right' ? 'right-0' : 'left-0')} role="menu">
+        <div className={cn('absolute z-30 mt-1.5 rounded-xl bg-raised/95 backdrop-blur p-1 shadow-pop ring-1 ring-line/80 animate-scale origin-top', width, align === 'right' ? 'right-0 origin-top-right' : 'left-0 origin-top-left')} role="menu">
           {items.map((it, i) =>
             it === 'divider' ? (
               <div key={i} className="my-1 h-px bg-line" />
@@ -402,63 +420,101 @@ export function Menu({ trigger, items, align = 'right', width = 'w-48' }: { trig
 }
 
 // ---------- Tabs ----------
+/** Editorial tabs: text labels with a sliding underline. */
 export function Tabs<T extends string>({ value, onChange, tabs, className }: { value: T; onChange: (v: T) => void; tabs: { value: T; label: string; icon?: LucideIcon; count?: number }[]; className?: string }) {
+  const wrap = useRef<HTMLDivElement>(null);
+  const [bar, setBar] = useState<{ left: number; width: number } | null>(null);
+  useEffect(() => {
+    const el = wrap.current?.querySelector<HTMLElement>(`[data-tab="${value}"]`);
+    if (el) setBar({ left: el.offsetLeft, width: el.offsetWidth });
+  }, [value, tabs.length]);
   return (
-    <div className={cn('flex items-center gap-0.5 rounded-lg bg-sunken/70 p-0.5 w-fit max-w-full overflow-x-auto', className)} role="tablist">
+    <div ref={wrap} className={cn('relative flex items-center gap-5 overflow-x-auto max-w-full w-fit', className)} role="tablist">
       {tabs.map((t) => (
         <button
           key={t.value}
+          data-tab={t.value}
           role="tab"
           type="button"
           aria-selected={value === t.value}
           onClick={() => onChange(t.value)}
-          className={cn(
-            'flex items-center gap-1.5 rounded-md px-2.5 h-7 text-[12.5px] font-medium transition-all whitespace-nowrap',
-            value === t.value ? 'bg-raised text-fg shadow-soft' : 'text-muted hover:text-fg',
-          )}
+          className={cn('flex items-center gap-1.5 pb-2 pt-1 text-[13px] transition-colors whitespace-nowrap', value === t.value ? 'text-fg font-medium' : 'text-faint hover:text-muted')}
         >
-          {t.icon && <t.icon className="h-3.5 w-3.5" />}
+          {t.icon && <t.icon className="h-3.5 w-3.5" strokeWidth={1.8} />}
           {t.label}
-          {t.count !== undefined && <span className="text-faint tabular-nums">{t.count}</span>}
+          {t.count !== undefined && <span className="font-mono text-[10.5px] tabular-nums text-faint">{t.count}</span>}
         </button>
       ))}
+      <span className="pointer-events-none absolute bottom-0 left-0 right-0 h-px bg-line" />
+      {bar && <span className="pointer-events-none absolute bottom-0 h-[1.5px] bg-fg transition-all duration-300 ease-out" style={{ left: bar.left, width: bar.width }} />}
     </div>
   );
 }
 
-// ---------- Layout ----------
-export function PageHeader({ title, subtitle, actions, icon: Icon }: { title: ReactNode; subtitle?: ReactNode; actions?: ReactNode; icon?: LucideIcon }) {
+/**
+ * Editorial page masthead: mono eyebrow, large serif title, quiet subtitle.
+ * The eyebrow defaults to the section of the current page (e.g. "Work — 04").
+ */
+export function PageHeader({ title, subtitle, actions, eyebrow, children }: { title: ReactNode; subtitle?: ReactNode; actions?: ReactNode; icon?: LucideIcon; eyebrow?: ReactNode; children?: ReactNode }) {
   return (
-    <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
-      <div className="min-w-0">
-        <h1 className="flex items-center gap-2 text-xl font-semibold tracking-tight">
-          {Icon && <Icon className="h-5 w-5 text-faint" strokeWidth={1.8} />}
-          {title}
-        </h1>
-        {subtitle && <p className="mt-1 text-[13px] text-muted">{subtitle}</p>}
+    <header className="mb-8 animate-in">
+      <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+        <div className="min-w-0 max-w-3xl">
+          {eyebrow !== null && <div className="eyebrow mb-3">{eyebrow ?? <AutoEyebrow />}</div>}
+          <h1 className="display text-[40px] sm:text-[52px]">{title}</h1>
+          {subtitle && <p className="mt-3 max-w-xl text-[14px] leading-relaxed text-muted">{subtitle}</p>}
+        </div>
+        {actions && <div className="flex flex-wrap items-center gap-2 pb-1">{actions}</div>}
       </div>
-      {actions && <div className="flex flex-wrap items-center gap-2">{actions}</div>}
-    </div>
+      {children}
+    </header>
   );
+}
+
+function AutoEyebrow() {
+  const n = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] || 'home' : '';
+  const map: Record<string, string> = {
+    home: 'Home', 'my-day': 'Home — Today', calendar: 'Home — Calendar', tasks: 'Work — 01', projects: 'Work — 02', campaigns: 'Work — 03', content: 'Work — 04', ideas: 'Work — 05',
+    library: 'Knowledge — 01', documents: 'Knowledge — 02', notes: 'Knowledge — 03', analytics: 'Performance — 01', reviews: 'Performance — 02', assistant: 'System — AI', settings: 'System — Settings',
+  };
+  return <>{map[n] ?? 'Work OS'}</>;
 }
 
 export function Page({ children, className, wide }: { children: ReactNode; className?: string; wide?: boolean }) {
-  return <div className={cn('mx-auto w-full px-4 sm:px-8 py-6 sm:py-8', wide ? 'max-w-[1440px]' : 'max-w-[1180px]', className)}>{children}</div>;
+  return <div className={cn('mx-auto w-full px-5 sm:px-10 py-8 sm:py-10', wide ? 'max-w-[1480px]' : 'max-w-[1220px]', className)}>{children}</div>;
+}
+
+/** A titled region separated by a hairline rule — the default way to group content (instead of boxing everything). */
+export function Section({ title, children, action, className, eyebrow }: { title?: ReactNode; children: ReactNode; action?: ReactNode; className?: string; eyebrow?: ReactNode }) {
+  return (
+    <section className={cn('animate-in', className)}>
+      {(title || action) && (
+        <header className="mb-4 flex items-end justify-between gap-3 border-b border-line pb-2.5">
+          <div>
+            {eyebrow && <div className="eyebrow mb-1.5">{eyebrow}</div>}
+            {title && <h2 className="display text-[22px]">{title}</h2>}
+          </div>
+          {action}
+        </header>
+      )}
+      {children}
+    </section>
+  );
 }
 
 export function Card({ children, className, title, action, icon: Icon, padded = true }: { children: ReactNode; className?: string; title?: ReactNode; action?: ReactNode; icon?: LucideIcon; padded?: boolean }) {
   return (
     <section className={cn('card', className)}>
       {title && (
-        <header className="flex items-center justify-between gap-2 px-4 pt-3.5 pb-2">
-          <h3 className="flex items-center gap-1.5 text-[13px] font-semibold">
-            {Icon && <Icon className="h-3.5 w-3.5 text-faint" strokeWidth={2} />}
+        <header className="flex items-center justify-between gap-2 px-5 pt-4 pb-2.5">
+          <h3 className="flex items-center gap-2 eyebrow !text-muted">
+            {Icon && <Icon className="h-3 w-3" strokeWidth={2} />}
             {title}
           </h3>
           {action}
         </header>
       )}
-      <div className={cn(padded && 'px-4 pb-4', !title && padded && 'pt-4')}>{children}</div>
+      <div className={cn(padded && 'px-5 pb-5', !title && padded && 'pt-5')}>{children}</div>
     </section>
   );
 }
@@ -466,21 +522,21 @@ export function Card({ children, className, title, action, icon: Icon, padded = 
 export function Stat({ label, value, sub, tone }: { label: string; value: ReactNode; sub?: ReactNode; tone?: 'ok' | 'danger' | 'muted' }) {
   return (
     <div className="min-w-0">
-      <div className="text-2xs font-medium uppercase tracking-[0.06em] text-faint">{label}</div>
-      <div className="mt-1 text-[22px] font-semibold tracking-tight tabular-nums leading-none">{value}</div>
-      {sub && <div className={cn('mt-1 text-xs', tone === 'ok' ? 'text-ok' : tone === 'danger' ? 'text-danger' : 'text-muted')}>{sub}</div>}
+      <div className="eyebrow">{label}</div>
+      <div className="num mt-2.5 text-[40px]">{value}</div>
+      {sub && <div className={cn('meta mt-1.5', tone === 'ok' ? 'text-ok' : tone === 'danger' ? 'text-danger' : 'text-muted')}>{sub}</div>}
     </div>
   );
 }
 
 export function Kbd({ children }: { children: ReactNode }) {
-  return <kbd className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-line bg-raised px-1 text-[10px] font-medium text-faint font-sans">{children}</kbd>;
+  return <kbd className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded border border-line bg-raised px-1 font-mono text-[10px] text-faint">{children}</kbd>;
 }
 
 export function SavedIndicator({ status }: { status: 'idle' | 'pending' | 'saving' | 'saved' | 'error' }) {
   const text = { idle: 'All changes saved', pending: 'Editing…', saving: 'Saving…', saved: 'Saved', error: 'Could not save' }[status];
   return (
-    <span className={cn('inline-flex items-center gap-1.5 text-xs', status === 'error' ? 'text-danger' : 'text-faint')} aria-live="polite">
+    <span className={cn('inline-flex items-center gap-1.5 font-mono text-[10.5px]', status === 'error' ? 'text-danger' : 'text-faint')} aria-live="polite">
       <span className={cn('h-1.5 w-1.5 rounded-full', status === 'pending' || status === 'saving' ? 'bg-warn animate-pulse' : status === 'error' ? 'bg-danger' : 'bg-ok')} />
       {text}
     </span>

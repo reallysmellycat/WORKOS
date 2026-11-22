@@ -266,7 +266,7 @@ export function MarkdownEditor({
 
   return (
     <div className={cn('flex flex-col', className)}>
-      <div className="sticky top-0 z-10 -mx-1 mb-3 flex items-center gap-0.5 overflow-x-auto border-b border-line bg-surface/95 px-1 py-1 backdrop-blur">
+      <div className="sticky top-[var(--sticky-top,0px)] z-10 -mx-1 mb-3 flex items-center gap-0.5 overflow-x-auto border-b border-line bg-bg/90 px-1 py-1 backdrop-blur">
         {mode !== 'preview' &&
           tools.map((t) => <IconButton key={t.label} icon={t.icon} label={t.label} size="sm" onMouseDown={(e) => e.preventDefault()} onClick={t.run} />)}
         <div className="flex-1" />

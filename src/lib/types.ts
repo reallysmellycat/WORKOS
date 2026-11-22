@@ -155,6 +155,7 @@ export interface Campaign extends BaseRecord {
   mediaLinks: LinkItem[];
   results?: string;
   notes?: string;
+  cover?: string | null; // "motif|palette" for generative cover art
   projectId?: ID | null;
   tags: string[];
   custom?: CustomValues;

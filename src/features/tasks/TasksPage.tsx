@@ -258,7 +258,7 @@ export default function TasksPage() {
       )}
 
       {selected.size > 0 && (
-        <div className="glass sticky top-2 z-10 mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-line px-3 py-2 shadow-pop animate-in">
+        <div className="glass sticky top-[calc(var(--sticky-top,0px)+8px)] z-10 mb-3 flex flex-wrap items-center gap-2 rounded-lg border border-line px-3 py-2 shadow-pop animate-in">
           <span className="text-[13px] font-medium">{selected.size} selected</span>
           <div className="h-4 w-px bg-line" />
           <Button size="sm" icon={CheckSquare} onClick={bulk.complete}>
